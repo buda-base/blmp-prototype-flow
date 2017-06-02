@@ -154,6 +154,7 @@ class App extends Component {
                                 value={'classes'}
                                 primaryText={'Classes'}
                                 nestedItems={classItems}
+                                primaryTogglesNestedList={true}
                             />
                         </SelectableList>
                     </Drawer>
