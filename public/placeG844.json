@@ -1,0 +1,229 @@
+{
+  "@graph": [
+    {
+      "rdfs:label": {
+        "@language": "bo",
+        "@value": "བྱ་ཡུལ"
+      },
+      "status": "released",
+      "@id": "plc:G844",
+      "@type": [
+        "plc:Place",
+        "plc:RgyalPhran"
+      ],
+      "name": [
+        {
+          "@language": "bo",
+          "@value": "བྱ་པ་ཁྲི་དཔོན་གྱི་མངའ་ཁོངས"
+        },
+        {
+          "@language": "bo",
+          "@value": "བྱ་པའི་ཡུལ"
+        },
+        {
+          "@language": "bo",
+          "@value": "བྱ་ཡུལ"
+        }
+      ],
+      "note": [
+        {
+          "@id": "http://purl.bdrc.io/ontology/root/G844_Note2",
+          "@type": "Note",
+          "note_content": {
+            "@language": "bo",
+            "@value": "བྱ་པ་ཁྲི་དཔོན་དང་འབྲེལ་བའི་ཆོས་རྒྱལ་བྱ་པའི་ལོ་རྒྱུས་དཔྱིད་ཀྱི་རྒྱལ་མོའི་གླུ་དབྱངས་ཀྱི་ནང་དོན་དང་འབྲེལ་ནས་བཀོད་པ་གསལ།"
+          },
+          "note_location": "p.1467-1468",
+          "note_work": {
+            "@id": "wor:W26372"
+          }
+        },
+        {
+          "@id": "http://purl.bdrc.io/ontology/root/G844_Note1",
+          "@type": "Note",
+          "note_content": {
+            "@language": "en",
+            "@value": "the region of the rulers of the bya principality in southern tibet"
+          }
+        }
+      ],
+      "plc:contains": [
+        {
+          "@id": "plc:G1183"
+        },
+        {
+          "@id": "plc:G3478"
+        },
+        {
+          "@id": "plc:G229"
+        },
+        {
+          "@id": "plc:G3JT12502"
+        },
+        {
+          "@id": "plc:G4885"
+        },
+        {
+          "@id": "plc:G2CN10883"
+        }
+      ],
+      "plc:hasEvent": {
+        "@id": "plc:G844_Event1",
+        "@type": "plc:Founded",
+        "plc:event_circa": "13uu/17uu"
+      },
+      "plc:isLocatedIn": {
+        "@id": "plc:G843"
+      },
+      "log_entry": [
+        {
+          "@id": "_:b3",
+          "@type": "LogEntry",
+          "log_content": {
+            "@language": "en",
+            "@value": "added location"
+          },
+          "log_when": {
+            "@type": "xsd:dateTime",
+            "@value": "2014-01-06T14:22:58.026Z"
+          },
+          "log_who": {
+            "@language": "en",
+            "@value": "Chungdak Nangpa"
+          }
+        },
+        {
+          "@id": "_:b0",
+          "@type": "LogEntry",
+          "log_content": {
+            "@language": "en",
+            "@value": "added name & note"
+          },
+          "log_when": {
+            "@type": "xsd:dateTime",
+            "@value": "2014-02-19T14:10:50.715Z"
+          },
+          "log_who": {
+            "@language": "en",
+            "@value": "Chungdak Nangpa"
+          }
+        },
+        {
+          "@id": "_:b4",
+          "@type": "LogEntry",
+          "log_content": {
+            "@language": "en",
+            "@value": "added type & location & contains"
+          },
+          "log_when": {
+            "@type": "xsd:dateTime",
+            "@value": "2013-04-01T09:36:07.005Z"
+          },
+          "log_who": {
+            "@language": "en",
+            "@value": "Chungdak Nangpa"
+          }
+        },
+        {
+          "@id": "_:b2",
+          "@type": "LogEntry",
+          "log_content": {
+            "@language": "en",
+            "@value": "added place contained"
+          },
+          "log_when": {
+            "@type": "xsd:dateTime",
+            "@value": "2013-05-29T12:18:47.035Z"
+          },
+          "log_who": {
+            "@language": "en",
+            "@value": "Michael R. Sheehy"
+          }
+        },
+        {
+          "@id": "_:b5",
+          "@type": "LogEntry",
+          "log_content": {
+            "@language": "en",
+            "@value": "added contain"
+          },
+          "log_when": {
+            "@type": "xsd:dateTime",
+            "@value": "2012-10-12T12:21:11.602Z"
+          },
+          "log_who": {
+            "@language": "en",
+            "@value": "Chungdak Nangpa"
+          }
+        },
+        {
+          "@id": "_:b6",
+          "@type": "LogEntry",
+          "log_content": {
+            "@language": "en",
+            "@value": "type changed from traditionalPlaceName to srolRgyunGyiSaMing"
+          },
+          "log_when": {
+            "@type": "xsd:dateTime",
+            "@value": "2012-12-11T17:39:05.287Z"
+          },
+          "log_who": {
+            "@language": "en",
+            "@value": "msheehy"
+          }
+        },
+        {
+          "@id": "_:b1",
+          "@type": "LogEntry",
+          "log_content": {
+            "@language": "en",
+            "@value": "added byams pa chos gling gzhis ka'i par khang"
+          },
+          "log_when": {
+            "@type": "xsd:dateTime",
+            "@value": "2013-02-05T10:28:55.426Z"
+          },
+          "log_who": {
+            "@language": "en",
+            "@value": "Jigme Namgyal"
+          }
+        },
+        {
+          "@id": "_:b7",
+          "@type": "LogEntry",
+          "log_content": {
+            "@language": "en",
+            "@value": "added contain"
+          },
+          "log_when": {
+            "@type": "xsd:dateTime",
+            "@value": "2013-02-25T16:44:50.079Z"
+          },
+          "log_who": {
+            "@language": "en",
+            "@value": "Chungdak Nangpa"
+          }
+        }
+      ]
+    }
+  ],
+  "@context": {
+    "@vocab": "http://purl.bdrc.io/ontology/root#",
+    "com": "http://purl.bdrc.io/ontology/common#",
+    "crp": "http://purl.bdrc.io/ontology/corporation#",
+    "prd": "http://purl.bdrc.io/ontology/product#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "plc": "http://purl.bdrc.io/ontology/place#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "ofc": "http://purl.bdrc.io/ontology/office#",
+    "out": "http://purl.bdrc.io/ontology/outline#",
+    "lin": "http://purl.bdrc.io/ontology/lineage#",
+    "top": "http://purl.bdrc.io/ontology/topic#",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "wor": "http://purl.bdrc.io/ontology/work#",
+    "per": "http://purl.bdrc.io/ontology/person#",
+    "vol": "http://purl.bdrc.io/ontology/volumes#",
+    "desc": "http://onto.bdrc.io/ontology/description#"
+  }
+}
