@@ -1,0 +1,42 @@
+.App {
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.individualEditor {
+  margin-left: 300px;
+  width: 500px;
+  font-size: 18px;
+}
+
+.individualEditor h3 {
+  font-size: 18px;
+}
+
+.individualEditor h2 {
+  font-size: 24px;
+  font-weight: normal;
+}
+
+.individualEditor ul {
+  list-style: none;
+}
