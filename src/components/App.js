@@ -152,7 +152,7 @@ class App extends Component {
                         <SelectableList>
                             <ListItem
                                 value={'classes'}
-                                primaryText={'Classes'}
+                                primaryText={<div>Classes</div>}
                                 nestedItems={classItems}
                                 primaryTogglesNestedList={true}
                             />

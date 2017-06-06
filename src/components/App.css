@@ -37,6 +37,12 @@
   font-weight: normal;
 }
 
+.individualEditor h2 button {
+  position: relative;
+  top: 3px;
+}
+
 .individualEditor ul {
   list-style: none;
+  padding: 0;
 }
