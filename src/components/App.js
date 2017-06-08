@@ -68,7 +68,6 @@ class App extends Component {
                 individual: place
             }
         });
-        console.log('place: %o', place);
     }
 
     _fetchText(url) {
@@ -90,7 +89,6 @@ class App extends Component {
             try {
                 Ontology.create(data, 'http://purl.bdrc.io/ontology/root#', mimeType)
                     .then((ontology) => {
-                        console.log('ontology: %o', ontology);
                         this.setState((prevState, props) => {
                             return {
                                 ...prevState,
@@ -144,7 +142,6 @@ class App extends Component {
             );
         }
 
-
         return (
             <MuiThemeProvider>
                 <div className="App">
@@ -161,6 +158,7 @@ class App extends Component {
 
                     <IndividualEditor
                         individual={this.state.individual}
+                        ontology={this.state.ontology}
                     />
                 </div>
             </MuiThemeProvider>
