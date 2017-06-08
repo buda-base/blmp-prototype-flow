@@ -98,6 +98,11 @@ export default class Ontology {
         return properties;
     }
 
+    getPropertyRanges(iri: string): string {
+        const typeData = this._properties[iri];
+        return typeData['ranges'];
+    }
+
     // TODO: need to process inverseOf
     getProperties(propertyType: NamedNode): {} {
         const propsStatements = this.getStatements(undefined, TYPE, propertyType);
