@@ -11,8 +11,12 @@ export default class Individual {
         this._types = [];
     }
 
-    get id() {
+    get id(): string {
         return this._id;
+    }
+
+    set id(newId: string) {
+        this._id = newId;
     }
 
     get types(): string[] {

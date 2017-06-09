@@ -1,7 +1,9 @@
 
+export const STRING_TYPE = "http://www.w3.org/2001/XMLSchema#string";
+
 const languageTypes = [
-    "http://www.w3.org/2001/XMLSchema#string",
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral",
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
 ];
 
 const dateTypes = [

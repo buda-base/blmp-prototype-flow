@@ -4,21 +4,38 @@ import './LiteralView.css';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Literal from '../lib/Literal';
 
 const styles = {
     inlineSelect: {
-        width: 80,
+        width: '80px',
         float: 'left'
     },
+    valueField: {
+        width: 'calc(100% - 80px)'
+    }
 };
 
 const langs = ['bo', 'en', 'fr'];
+
+interface Props {
+    literal: Literal,
+    onChange?: (value: string, language: string) => void
+}
+
+interface State {
+    language: string,
+    value: string
+}
 
 export default class LiteralView extends Component {
     _languageControl: Component<any>;
     _valueControl: Component<any>;
 
-    constructor(props: {}) {
+    props: Props;
+    state: State;
+
+    constructor(props: Props) {
         super(props);
 
         this.state = {
@@ -27,7 +44,7 @@ export default class LiteralView extends Component {
         }
     }
 
-    valueChanged(event, value) {
+    valueChanged(event: {}, value: string) {
         this.props.literal.value = value;
         this.setState((prevState, props) => {
             return {
@@ -37,14 +54,21 @@ export default class LiteralView extends Component {
         this.literalChanged();
     }
 
-    languageChanged(event, index, value) {
+    languageChanged(event: {}, index: number, value: string) {
         this.props.literal.language = value;
         this.setState((prevState, props) => {
             return {
                 language: value
             }
         });
-        this.literalChanged();
+        this.literalChanged(value);
+    }
+
+    literalChanged() {
+        if (this.props.onChange) {
+            const literal = this.props.literal;
+            this.props.onChange(literal.value, literal.language);
+        }
     }
 
     render() {
@@ -53,12 +77,14 @@ export default class LiteralView extends Component {
             value = new Date(value);
         }
         if (this.props.isEditable) {
+            const valueFloatingLabel = (this.props.literal.hasLanguage && this.props.isEditable) ? " " : "";
             value = <TextField
-                floatingLabelText=" "
+                floatingLabelText={valueFloatingLabel}
                 floatingLabelFixed={true}
                 defaultValue={this.state.value}
                 ref={(textField) => this._valueControl = textField}
                 onChange={this.valueChanged.bind(this)}
+                style={styles.valueField}
             />
         }
         let langItems = [];
@@ -66,9 +92,8 @@ export default class LiteralView extends Component {
             langItems.push(<MenuItem key={lang} value={lang} primaryText={lang}/>);
         }
 
-
         return (
-            <div className={styles.literalView}>
+            <div className="literalView">
                 {this.props.literal.language && !this.props.isEditable &&
                 <strong>{this.props.literal.language}: </strong>
                 }

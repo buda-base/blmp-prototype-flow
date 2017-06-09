@@ -16,6 +16,7 @@ export default class IndividualEditor extends Component {
                 isEditable={true}
                 isExpanded={true}
                 ontology={this.props.ontology}
+                nested={false}
             />
         } else {
             editor = <div>Nothing selected</div>

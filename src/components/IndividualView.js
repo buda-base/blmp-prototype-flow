@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import './IndividualView.css';
-import Literal from '../lib/Literal';
+import Literal, { STRING_TYPE } from '../lib/Literal';
 import Individual from '../lib/Individual';
 import LiteralView from './LiteralView';
 import formatIRI from '../lib/formatIRI';
@@ -89,11 +89,43 @@ export default class IndividualView extends React.Component {
                 };
             }
 
+            let listHeaderStyles = {
+                paddingLeft: 0,
+                color: '#444'
+            };
+            if (!this.props.nested) {
+                listHeaderStyles = {
+                    ...listHeaderStyles,
+                    fontSize: '18px'
+                }
+            }
+            const listItemStyles = {
+                border: 0,
+                padding: "0 0 5px 0"
+            };
+            
+            if (this.props.isEditable) {
+                const onChange = (value) => {
+                    this.props.individual.id = value;
+                    this.forceUpdate();
+                };
+                const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
+                const idView = <LiteralView
+                    literal={idLiteral}
+                    isEditable={this.props.isEditable}
+                    onChange={onChange.bind(this)}
+                />;
+                rows.push(<Subheader style={listHeaderStyles}>ID</Subheader>);
+                rows.push(<ListItem innerDivStyle={listItemStyles}>{idView}</ListItem>);
+            }
+
             for (let propertyType in properties) {
                 const onTap = (event) => {
                     this.addProperty(propertyType);
                 };
-                rows.push(<Subheader>
+                rows.push(<Subheader
+                    style={listHeaderStyles}
+                >
                     {formatIRI(propertyType)}
                     {this.props.isEditable &&
                     <IconButton
@@ -104,6 +136,7 @@ export default class IndividualView extends React.Component {
                     </IconButton>
                     }
                 </Subheader>);
+
                 let propertyValues = properties[propertyType];
                 for (let propertyValue of propertyValues) {
                     let view;
@@ -117,9 +150,10 @@ export default class IndividualView extends React.Component {
                                                isExpanded={isEditable}
                                                isEditable={isEditable}
                                                ontology={this.props.ontology}
+                                               nested={true}
                         />;
                     }
-                    rows.push(<ListItem>{view}</ListItem>);
+                    rows.push(<ListItem innerDivStyle={listItemStyles}>{view}</ListItem>);
                 }
             }
         }
@@ -131,13 +165,32 @@ export default class IndividualView extends React.Component {
         if (this.props.isExpanded) {
             classes.push("isExpanded");
         }
+        let cardStyles = {};
+        let titleStyles = {};
+        let headerStyles = {};
+        if (this.props.nested) {
+            cardStyles = {
+                padding: 0
+            };
+            headerStyles = {
+                padding: '7px'
+            };
+        } else {
+            titleStyles = {
+                fontSize: '21px'
+            };
+        }
+
         return (
+
             <div className={classnames(...classes)}>
-                <Card initiallyExpanded={this.props.isExpanded}>
+                <Card initiallyExpanded={this.props.isExpanded} style={cardStyles}>
                     <CardHeader
                         title={title}
                         subtitle={subtitle}
                         showExpandableButton={rows.length > 0}
+                        titleStyle={titleStyles}
+                        style={headerStyles}
                     />
                     {rows.length > 0 &&
                     <CardText expandable={true}>
