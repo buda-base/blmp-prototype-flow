@@ -1,7 +1,6 @@
 
 export default class Individual {
     _id: string;
-    // TODO: type needs to be an array of strings as individuals can have multiple types
     _types: string[];
     _properties: {};
 
@@ -37,6 +36,12 @@ export default class Individual {
         }
 
         this._properties[name].push(value);
+    }
+
+    removeProperty(name: string, value: {}) {
+        if (this._properties[name]) {
+            this._properties[name] = this._properties[name].filter(val => val !== value);
+        }
     }
 
     getProperties() {

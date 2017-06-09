@@ -14,6 +14,7 @@ import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
+import RemoveCircle from 'material-ui/svg-icons/content/remove-circle';
 import {red800, green800} from 'material-ui/styles/colors';
 
 const iconSizes = {
@@ -51,6 +52,11 @@ export default class IndividualView extends React.Component {
             const literal = new Literal(ranges[0], '');
             individual.addProperty(propertyType, literal);
         }
+        this.forceUpdate();
+    }
+
+    removeProperty(propertyType: string, value: any) {
+        this.props.individual.removeProperty(propertyType, value);
         this.forceUpdate();
     }
 
@@ -101,9 +107,11 @@ export default class IndividualView extends React.Component {
             }
             const listItemStyles = {
                 border: 0,
-                padding: "0 0 5px 0"
+                padding: "0 0 5px 0",
+                display: 'flex',
+                alignItems: 'flex-end'
             };
-            
+
             if (this.props.isEditable) {
                 const onChange = (value) => {
                     this.props.individual.id = value;
@@ -116,11 +124,11 @@ export default class IndividualView extends React.Component {
                     onChange={onChange.bind(this)}
                 />;
                 rows.push(<Subheader style={listHeaderStyles}>ID</Subheader>);
-                rows.push(<ListItem innerDivStyle={listItemStyles}>{idView}</ListItem>);
+                rows.push(<ListItem innerDivStyle={listItemStyles} key={this.props.individual.id + '_id_row'}>{idView}</ListItem>);
             }
 
             for (let propertyType in properties) {
-                const onTap = (event) => {
+                const onTapAdd = (event) => {
                     this.addProperty(propertyType);
                 };
                 rows.push(<Subheader
@@ -130,7 +138,7 @@ export default class IndividualView extends React.Component {
                     {this.props.isEditable &&
                     <IconButton
                         iconStyle={iconSizes.small}
-                        onTouchTap={onTap.bind(this)}
+                        onTouchTap={onTapAdd.bind(this)}
                     >
                         <AddCircle color={green800}/>
                     </IconButton>
@@ -138,22 +146,49 @@ export default class IndividualView extends React.Component {
                 </Subheader>);
 
                 let propertyValues = properties[propertyType];
+                let row = 0;
                 for (let propertyValue of propertyValues) {
                     let view;
+                    let isEditable = this.props.isEditable;
+                    let key = propertyType + '_';
                     if (propertyValue instanceof Literal) {
                         view = <LiteralView literal={propertyValue}
-                                            isEditable={this.props.isEditable}
+                                            isEditable={isEditable}
                         />;
+                        key += propertyValue.value;
                     } else if (propertyValue instanceof Individual) {
-                        const isEditable = (this._editableIndividuals.indexOf(propertyValue) !== -1);
+                        isEditable = (this._editableIndividuals.indexOf(propertyValue) !== -1);
                         view = <IndividualView individual={propertyValue}
                                                isExpanded={isEditable}
                                                isEditable={isEditable}
                                                ontology={this.props.ontology}
                                                nested={true}
                         />;
+                        key += propertyValue.id + '_' + row;
                     }
-                    rows.push(<ListItem innerDivStyle={listItemStyles}>{view}</ListItem>);
+                    const onTapRemove = (event) => {
+                        this.removeProperty(propertyType, propertyValue);
+                    };
+                    let removeButton = "";
+                    if (isEditable) {
+                        removeButton = <IconButton
+                            iconStyle={iconSizes.small}
+                            onTouchTap={onTapRemove.bind(this)}
+                            className="removeButton"
+                        >
+                            <RemoveCircle color={red800}/>
+                        </IconButton>;
+                    }
+
+                    rows.push(<ListItem
+                            innerDivStyle={listItemStyles}
+                            className="individualRow"
+                            key={key}
+                    >
+                        {view}{removeButton}
+                    </ListItem>);
+
+                    row++;
                 }
             }
         }

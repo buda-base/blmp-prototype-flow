@@ -1,10 +1,12 @@
 .individualView {
-    /*padding: 10px;*/
-    /*background-color: #eee;*/
-    /*border-radius: 4px;*/
+    flex-grow: 1;
 }
 
 .individualView.isEditable {
     background-color: #fff;
     border-radius: 0px;
+}
+
+.individualRow {
+    display: flex;
 }
