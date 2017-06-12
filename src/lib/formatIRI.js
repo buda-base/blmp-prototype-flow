@@ -3,6 +3,7 @@ import capitalize from './capitalize'
 
 const BDRC_ONTOLOGY = 'http://purl.bdrc.io/ontology/';
 const RDF = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
+const RDFS = 'http://www.w3.org/2000/01/rdf-schema#';
 
 export default function formatIRI(IRI: string): string {
     let value = (IRI) ? IRI : "";
@@ -19,8 +20,13 @@ export default function formatIRI(IRI: string): string {
 
             }
         }
-    } else if (IRI.indexOf(RDF) !== -1) {
-        value = IRI.replace(RDF, '');
+    } else {
+        for (let ns of [RDF, RDFS]) {
+            if (IRI.indexOf(ns) !== -1) {
+                value = IRI.replace(ns, '');
+                break;
+            }
+        }
     }
 
     return capitalize(value);
