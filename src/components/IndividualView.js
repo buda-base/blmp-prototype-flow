@@ -102,14 +102,17 @@ export default class IndividualView extends React.Component {
             if (!this.props.nested) {
                 listHeaderStyles = {
                     ...listHeaderStyles,
-                    fontSize: '18px'
+                    fontSize: '14px',
+                    fontWeight: 'bold'
                 }
             }
             const listItemStyles = {
                 border: 0,
-                padding: "0 0 5px 0",
+                padding: "0 0 5px 10px",
                 display: 'flex',
-                alignItems: 'flex-end'
+                alignItems: 'flex-end',
+                borderLeft: "1px solid #bbb",
+                marginLeft: '5px'
             };
 
             if (this.props.isEditable) {
@@ -151,11 +154,17 @@ export default class IndividualView extends React.Component {
                     let view;
                     let isEditable = this.props.isEditable;
                     let key = propertyType + '_';
+                    let classes = ['individualRow'];
                     if (propertyValue instanceof Literal) {
                         view = <LiteralView literal={propertyValue}
                                             isEditable={isEditable}
                         />;
                         key += propertyValue.value;
+                        if (isEditable) {
+                            classes.push('individualLiteralRowEditable');
+                        } else {
+                            classes.push('individualLiteralRow');
+                        }
                     } else if (propertyValue instanceof Individual) {
                         isEditable = (this._editableIndividuals.indexOf(propertyValue) !== -1);
                         view = <IndividualView individual={propertyValue}
@@ -165,6 +174,7 @@ export default class IndividualView extends React.Component {
                                                nested={true}
                         />;
                         key += propertyValue.id + '_' + row;
+
                     }
                     const onTapRemove = (event) => {
                         this.removeProperty(propertyType, propertyValue);
@@ -182,8 +192,9 @@ export default class IndividualView extends React.Component {
 
                     rows.push(<ListItem
                             innerDivStyle={listItemStyles}
-                            className="individualRow"
+                            className={classnames(...classes)}
                             key={key}
+                            primaryTogglesNestedList={true}
                     >
                         {view}{removeButton}
                     </ListItem>);
@@ -212,29 +223,29 @@ export default class IndividualView extends React.Component {
             };
         } else {
             titleStyles = {
-                fontSize: '21px'
+                fontSize: '30px'
             };
         }
+
+        const listItemStyles = {
+            border: 0,
+            padding: "0 0 5px 0"
+        };
 
         return (
 
             <div className={classnames(...classes)}>
-                <Card initiallyExpanded={this.props.isExpanded} style={cardStyles}>
-                    <CardHeader
-                        title={title}
-                        subtitle={subtitle}
-                        showExpandableButton={rows.length > 0}
-                        titleStyle={titleStyles}
-                        style={headerStyles}
+                <List>
+                    <ListItem
+                        primaryText={title}
+                        secondaryText={subtitle}
+                        nestedItems={rows}
+                        initiallyOpen={this.props.isExpanded}
+                        innerDivStyle={listItemStyles}
+                        primaryTogglesNestedList={true}
+                        style={titleStyles}
                     />
-                    {rows.length > 0 &&
-                    <CardText expandable={true}>
-                        <List>
-                            {rows}
-                        </List>
-                    </CardText>
-                    }
-                </Card>
+                </List>
             </div>
         );
     }

@@ -10,3 +10,25 @@
 .individualRow {
     display: flex;
 }
+
+.individualRow:before {
+    content: "•";
+    position: absolute;
+    left: 1px;
+    top: 9px;
+    font-size: 25px;
+    color: #bbb;
+}
+
+.individualLiteralRow:before {
+    top: 2px;
+}
+
+.individualLiteralRowEditable:before {
+    top: 18px;
+}
+
+/* The nested toggle buttons. TODO: find better way of doing this */
+.individualView button {
+    top: 0px !important;
+}
