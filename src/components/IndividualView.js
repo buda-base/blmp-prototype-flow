@@ -170,7 +170,7 @@ export default class IndividualView extends React.Component {
                         this.removeProperty(propertyType, propertyValue);
                     };
                     let removeButton = "";
-                    if (isEditable) {
+                    if (isEditable || this.props.isEditable) {
                         removeButton = <IconButton
                             iconStyle={iconSizes.small}
                             onTouchTap={onTapRemove.bind(this)}
