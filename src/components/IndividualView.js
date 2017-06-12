@@ -8,13 +8,15 @@ import formatIRI from '../lib/formatIRI';
 import classnames from 'classnames';
 
 // Material-UI
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import Divider from 'material-ui/Divider';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import RemoveCircle from 'material-ui/svg-icons/content/remove-circle';
+import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import {red800, green800} from 'material-ui/styles/colors';
 
 const iconSizes = {
@@ -29,6 +31,11 @@ export default class IndividualView extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            popoversOpen: {},
+            popoversEl: {}
+        }
     }
 
     addProperty(propertyType: string) {
@@ -132,19 +139,74 @@ export default class IndividualView extends React.Component {
 
             for (let propertyType in properties) {
                 const onTapAdd = (event) => {
-                    this.addProperty(propertyType);
+                    const el = event.currentTarget;
+                    this.setState((prevState, props) => {
+                        return {
+                            ...prevState,
+                            popoversOpen: {
+                                ...prevState.popoversOpen,
+                                [propertyType]: true
+                            },
+                            popoversEl: {
+                                ...prevState.popoversEl,
+                                [propertyType]: el
+                            }
+                        }
+                    });
+                };
+                const popoverClosed = (event) => {
+                    this.setState((prevState, props) => {
+                        return {
+                            ...prevState,
+                            popoversOpen: {
+                                ...prevState.popoversOpen,
+                                [propertyType]: false
+                            }
+                        }
+                    });
                 };
                 rows.push(<Subheader
                     style={listHeaderStyles}
                 >
                     {formatIRI(propertyType)}
                     {this.props.isEditable &&
-                    <IconButton
-                        iconStyle={iconSizes.small}
-                        onTouchTap={onTapAdd.bind(this)}
-                    >
-                        <AddCircle color={green800}/>
-                    </IconButton>
+                        <span>
+                        <IconButton
+                            iconStyle={iconSizes.small}
+                            onTouchTap={onTapAdd.bind(this)}
+                        >
+                            <AddCircle color={green800}/>
+                        </IconButton>
+                        <Popover
+                            open={this.state.popoversOpen[propertyType]}
+                            anchorEl={this.state.popoversEl[propertyType]}
+                            onRequestClose={popoverClosed}
+                        >
+                            <Menu>
+                                <MenuItem
+                                    primaryText="Create New..."
+                                    onTouchTap={(e) => {
+                                        this.addProperty(propertyType);
+                                        popoverClosed(e);
+                                    }}
+                                />
+                                <MenuItem
+                                    primaryText="Select"
+                                    rightIcon={<ArrowDropRight/>}
+                                    menuItems={[
+                                        <MenuItem
+                                            primaryText="Existing Place 1"
+                                            onTouchTap={popoverClosed}
+                                        />,
+                                        <MenuItem
+                                            primaryText="Existing Place 2"
+                                            onTouchTap={popoverClosed}
+                                        />
+                                    ]}
+                                />
+                            </Menu>
+                        </Popover>
+                        </span>
                     }
                 </Subheader>);
 
