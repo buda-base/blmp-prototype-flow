@@ -31,6 +31,7 @@ interface State {
 export default class LiteralView extends Component {
     _languageControl: Component<any>;
     _valueControl: Component<any>;
+    _id: {} = {};
 
     props: Props;
     state: State;
@@ -71,6 +72,13 @@ export default class LiteralView extends Component {
         }
     }
 
+    generateId(type: string) {
+        if (!this._id[type]) {
+            this._id[type] = type + Date.now();
+        }
+        return this._id[type];
+    }
+
     render() {
         let value = this.props.literal.value;
         if (this.props.literal.isDate) {
@@ -85,6 +93,7 @@ export default class LiteralView extends Component {
                 ref={(textField) => this._valueControl = textField}
                 onChange={this.valueChanged.bind(this)}
                 style={styles.valueField}
+                id={this.generateId('TextField')}
             />
         }
         let langItems = [];
@@ -106,6 +115,7 @@ export default class LiteralView extends Component {
                     value={this.state.language}
                     ref={(select) => this._languageControl = select}
                     onChange={this.languageChanged.bind(this)}
+                    id={this.generateId('SelectField')}
                 >
                     {langItems}
                 </SelectField>
