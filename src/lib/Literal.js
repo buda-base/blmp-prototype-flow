@@ -41,6 +41,14 @@ export default class Literal {
         this._value = newValue;
     }
 
+    get unserializedValue(): string | Date {
+        let value = this._value;
+        if (this.isDate) {
+            value = new Date(value);
+        }
+        return value;
+    }
+
     get language(): string {
         return this._language;
     }
