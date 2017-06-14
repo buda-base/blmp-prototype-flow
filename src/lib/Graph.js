@@ -115,7 +115,11 @@ export default class Graph {
             for (let blankStatement of blankProperties) {
                 const blankProp = blankStatement.predicate.value;
                 const blankObject = blankStatement.object;
-                this._updateIndividual(blankIndividual, blankProp, propertyRange, blankObject);
+                let blankPropType = propertyRange;
+                if (blankObject.hasOwnProperty('datatype')) {
+                    blankPropType = blankObject.datatype.value;
+                }
+                this._updateIndividual(blankIndividual, blankProp, blankPropType, blankObject);
             }
             individual.addProperty(property, blankIndividual);
         } else {
