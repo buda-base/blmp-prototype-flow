@@ -55,12 +55,50 @@ export default class Ontology {
     }
 
     init() {
+        const datatypeProps = this.addPropertyType(
+            DATATYPE_PROPERTY.value,
+            this.getProperties(DATATYPE_PROPERTY)
+        );
+        const objectProperties = this.addPropertyType(
+            OBJECT_PROPERTY.value,
+            this.getProperties(OBJECT_PROPERTY)
+        );
+        const annotationProperties = this.addPropertyType(
+            ANNOTATION_PROPERTY.value,
+            this.getProperties(ANNOTATION_PROPERTY)
+        );
         this._properties = {
-            ...this.getProperties(DATATYPE_PROPERTY),
-            ...this.getProperties(OBJECT_PROPERTY),
-            ...this.getProperties(ANNOTATION_PROPERTY)
+            ...datatypeProps,
+            ...objectProperties,
+            ...annotationProperties
         };
+
         this.processInverseOf();
+        this.generatePropertyChildren(this._properties);
+    }
+
+    addPropertyType(type: string, properties: {}): {} {
+        for (let prop in properties) {
+            if (properties.hasOwnProperty(prop)) {
+                properties[prop].propertyType = type;
+            }
+        }
+        return properties;
+    }
+
+    generatePropertyChildren(properties: {}) {
+        for (let propertyIRI in properties) {
+            if (properties.hasOwnProperty(propertyIRI)) {
+                const property = properties[propertyIRI];
+                if (property.parent && properties[property.parent]) {
+                    const parent = properties[property.parent];
+                    if (!parent.children) {
+                        parent.children = {};
+                    }
+                    parent.children[propertyIRI] = property;
+                }
+            }
+        }
     }
 
     getStatements(subject?: NamedNode, predicate?: NamedNode, object?: NamedNode) {
@@ -87,8 +125,8 @@ export default class Ontology {
             let propertyData = this._properties[availableProperty];
             if (propertyData) {
                 let property = {
-                    name: availableProperty,
-                    ranges: propertyData[rangeKey]
+                    ...propertyData,
+                    name: availableProperty
                 };
 
                 properties.push(property);
@@ -103,7 +141,6 @@ export default class Ontology {
         return typeData['ranges'];
     }
 
-    // TODO: need to process inverseOf
     getProperties(propertyType: NamedNode): {} {
         const propsStatements = this.getStatements(undefined, TYPE, propertyType);
         let props = {};
@@ -111,6 +148,7 @@ export default class Ontology {
             props[property.subject.value] = {};
             props[property.subject.value].domains = this.getDomains(property.subject);
             props[property.subject.value].ranges = this.getRanges(property.subject);
+            props[property.subject.value].parent = this.getSuperproperty(property.subject);
         }
 
         return props;
