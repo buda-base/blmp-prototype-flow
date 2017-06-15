@@ -1,6 +1,11 @@
+// @flow
+
+export const DATATYPE_PROPERTY = "http://www.w3.org/2002/07/owl#DatatypeProperty";
+export const OBJECT_PROPERTY = "http://www.w3.org/2002/07/owl#ObjectProperty";
+export const ANNOTATION_PROPERTY = "http://www.w3.org/2002/07/owl#AnnotationProperty";
 
 export default class Individual {
-    _id: string;
+    _id: ?string;
     _types: string[];
     _properties: {};
 
@@ -10,7 +15,7 @@ export default class Individual {
         this._types = [];
     }
 
-    get id(): string {
+    get id(): ?string {
         return this._id;
     }
 
@@ -26,25 +31,31 @@ export default class Individual {
         this._types.push(type);
     }
 
-    getProperty(name: string): {} {
-        return this._properties[name];
-    }
-
-    addProperty(name: string, value: {}) {
-        if (!this._properties.hasOwnProperty(name)) {
-            this._properties[name] = [];
+    getProperty(name: string, type:string="NULL"): {} | null {
+        let value = null;
+        if (this._properties[type]) {
+            value = this._properties[type][name];
         }
-
-        this._properties[name].push(value);
+        return value;
     }
 
-    removeProperty(name: string, value: {}) {
-        if (this._properties[name]) {
+    addProperty(name: string, value: {}, type: string) {
+        if (!this._properties[type]) {
+            this._properties[type] = {};
+        }
+        this._properties[type][name] = value;
+    }
+
+    removeProperty(type: string, name: string, value: {}) {
+        if (this._properties[name] && this._properties[name][type]) {
             this._properties[name] = this._properties[name].filter(val => val !== value);
         }
     }
 
-    getProperties() {
+    getProperties(type: ?string) {
+        if (type) {
+            return this._properties[type];
+        }
         return this._properties;
     }
 }
