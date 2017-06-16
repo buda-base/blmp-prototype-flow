@@ -18,6 +18,7 @@ import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import RemoveCircle from 'material-ui/svg-icons/content/remove-circle';
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import {red800, green800} from 'material-ui/styles/colors';
+import { DATATYPE_PROPERTY, OBJECT_PROPERTY, ANNOTATION_PROPERTY } from '../lib/Ontology';
 
 const iconSizes = {
     small: {
@@ -74,6 +75,34 @@ export default class IndividualView extends React.Component {
         const properties = ontology.getClassProperties(type);
 
         return properties;
+    }
+
+    getGroupedProperties(properties: {}) {
+        let dataTypeProps = properties.filter(prop => prop.propertyType === DATATYPE_PROPERTY.value);
+        let objectTypeProps = properties.filter(prop => prop.propertyType === OBJECT_PROPERTY.value);
+        let annotationTypeProps = properties.filter(prop => prop.propertyType === ANNOTATION_PROPERTY.value);
+        const groupedProps = {
+            [DATATYPE_PROPERTY.value]: this.getTopLevelProps(dataTypeProps),
+            [OBJECT_PROPERTY.value]: this.getTopLevelProps(objectTypeProps),
+            [ANNOTATION_PROPERTY.value]: this.getTopLevelProps(annotationTypeProps)
+        };
+
+        return groupedProps;
+    }
+
+    getTopLevelProps(properties: {}[]) {
+        let tree = properties.reduce((obj, cur) => {
+            obj[cur.name] = cur;
+            return obj;
+        }, {});
+        console.log('tree: %o', tree);
+        let topLevelProps = [];
+        for (let prop of properties) {
+            if (!tree[prop.parent]) {
+                topLevelProps.push(prop);
+            }
+        }
+        return topLevelProps;
     }
 
     render() {
