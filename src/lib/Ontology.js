@@ -15,9 +15,9 @@ const SUBCLASS_OF = RDFS('subClassOf');
 const SUBPROPERTY_OF = RDFS('subPropertyOf');
 const RANGE = RDFS('range');
 const DOMAIN = RDFS('domain');
-const DATATYPE_PROPERTY = OWL('DatatypeProperty');
-const OBJECT_PROPERTY = OWL('ObjectProperty');
-const ANNOTATION_PROPERTY = OWL('AnnotationProperty');
+export const DATATYPE_PROPERTY = OWL('DatatypeProperty');
+export const OBJECT_PROPERTY = OWL('ObjectProperty');
+export const ANNOTATION_PROPERTY = OWL('AnnotationProperty');
 const UNION_OF = OWL('unionOf');
 
 type PropertyData = {
