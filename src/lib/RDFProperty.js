@@ -5,6 +5,8 @@ export default class RDFProperty {
     _superProperties: RDFProperty[];
     _ranges: string[] = [];
     _domains: string[] = [];
+    _propertyType: string;
+    _children: RDFProperty[] = [];
 
     constructor(IRI: string) {
         this._IRI = IRI;
@@ -15,14 +17,40 @@ export default class RDFProperty {
     }
 
     get superProperties(): ?RDFProperty[] {
-        return this._superProperties;
+        let superProperties = null;
+
+        if (this._superProperties) {
+            superProperties = [];
+            for (let superProperty of this._superProperties) {
+                superProperties.push(superProperty);
+            }
+        }
+
+        return superProperties;
+    }
+
+    get propertyType(): string {
+        return this._propertyType;
+    }
+
+    set propertyType(propertyType: string) {
+        this._propertyType = propertyType;
+    }
+
+    hasSuperProperty(superPropertyIRI: string): boolean {
+        return this._superProperties
+                .filter(superProperty => superProperty.IRI === superPropertyIRI)
+                .length > 0;
     }
 
     addSuperProperty(property: RDFProperty) {
         if (!this._superProperties) {
             this._superProperties = [];
         }
-        this._superProperties.push(property);
+        if (!this.hasSuperProperty(property.IRI)) {
+            this._superProperties.push(property);
+            property.addChild(this);
+        }
     }
 
     get ranges(): string[] {
@@ -47,5 +75,15 @@ export default class RDFProperty {
 
     addDomain(domain: string) {
         this._domains.push(domain);
+    }
+
+    get children(): RDFProperty[] {
+        return this._children;
+    }
+
+    addChild(child: RDFProperty) {
+        if (this._children.indexOf(child) === -1) {
+            this._children.push(child);
+        }
     }
 }

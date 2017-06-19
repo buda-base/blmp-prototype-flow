@@ -2,6 +2,8 @@
 import * as rdf from 'rdflib';
 import { IndexedFormula, Namespace, Node, NamedNode, Statement } from 'rdflib';
 import {BlankNode} from 'rdflib';
+import RDFClass from './RDFClass';
+import RDFProperty from './RDFProperty';
 
 const RDF  = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 const RDFS = Namespace('http://www.w3.org/2000/01/rdf-schema#');
@@ -29,6 +31,8 @@ export default class Ontology {
     _store: IndexedFormula;
     _classes = {};
     _properties = {};
+    // store annotation properties as they are available for all classes
+    _annotationProperties = {};
 
     static create(data: string, baseIRI: string, mimeType: string): Promise<Ontology> {
         return new Promise((resolve, reject) => {
@@ -67,6 +71,7 @@ export default class Ontology {
             ANNOTATION_PROPERTY.value,
             this.getProperties(ANNOTATION_PROPERTY)
         );
+        this._annotationProperties = annotationProperties;
         this._properties = {
             ...datatypeProps,
             ...objectProperties,
@@ -74,7 +79,7 @@ export default class Ontology {
         };
 
         this.processInverseOf();
-        this.generatePropertyChildren(this._properties);
+        this.extractClasses();
     }
 
     addPropertyType(type: string, properties: {}): {} {
@@ -86,23 +91,15 @@ export default class Ontology {
         return properties;
     }
 
-    generatePropertyChildren(properties: {}) {
-        for (let propertyIRI in properties) {
-            if (properties.hasOwnProperty(propertyIRI)) {
-                const property = properties[propertyIRI];
-                if (property.parent && properties[property.parent]) {
-                    const parent = properties[property.parent];
-                    if (!parent.children) {
-                        parent.children = {};
-                    }
-                    parent.children[propertyIRI] = property;
-                }
-            }
-        }
-    }
-
     getStatements(subject?: NamedNode, predicate?: NamedNode, object?: NamedNode) {
         return this._store.statementsMatching(subject, predicate, object);
+    }
+
+    extractClasses() {
+        let classes = this.getStatements(undefined, TYPE, CLASS);
+        classes = classes.reduce((result, cur) => {
+            this.addClass(cur.subject.value);
+        }, []);
     }
 
     getClasses() {
@@ -115,25 +112,17 @@ export default class Ontology {
 
     getClassProperties(iri: string): {}[] {
         let properties = [];
-        const availableProperties = this._classes[iri];
-        if (!availableProperties) {
+        let rdfClass = this._classes[iri];
+        if (!rdfClass) {
             return properties;
         }
-
-        const rangeKey = 'ranges';
-        for (let availableProperty of availableProperties) {
-            let propertyData = this._properties[availableProperty];
-            if (propertyData) {
-                let property = {
-                    ...propertyData,
-                    name: availableProperty
-                };
-
-                properties.push(property);
-            }
-        }
+        properties = rdfClass.properties;
 
         return properties;
+    }
+
+    get annotationProperties(): {} {
+        return this._annotationProperties;
     }
 
     getPropertyRanges(iri: string): string {
@@ -145,10 +134,27 @@ export default class Ontology {
         const propsStatements = this.getStatements(undefined, TYPE, propertyType);
         let props = {};
         for (let property of propsStatements) {
-            props[property.subject.value] = {};
-            props[property.subject.value].domains = this.getDomains(property.subject);
-            props[property.subject.value].ranges = this.getRanges(property.subject);
-            props[property.subject.value].parent = this.getSuperproperty(property.subject);
+            let prop = this._properties[property.subject.value];
+            if (!prop) {
+                prop = new RDFProperty(property.subject.value);
+                this._properties[prop.IRI] = prop;
+            }
+            this.getDomains(property.subject).map(domain => prop.addDomain(domain));
+            let ranges = this.getRanges(property.subject);
+            ranges.map(range => prop.addRange(range));
+            const superProperties = this.getSuperProperties(property.subject);
+            if (superProperties) {
+                superProperties.map(superPropertyIRI => {
+                    let superProperty = this.addProperty(superPropertyIRI);
+                    if (superProperty) {
+                        prop.addSuperProperty(superProperty);
+                        let superPropertyNode = rdf.sym(superPropertyIRI);
+                        this.getProperties(superPropertyNode);
+                    }
+                });
+            }
+
+            props[property.subject.value] = prop;
         }
 
         return props;
@@ -180,38 +186,16 @@ export default class Ontology {
         }
     }
 
-    getSuperclass(node: Node): ?string {
+    getSuperclasses(node: Node): ?string[] {
         let superclasses = this.getObjects(node, SUBCLASS_OF);
 
-        if (superclasses.length > 1) {
-            console.warn('more superclasses than expected for %o: %o', node, superclasses);
-        }
-        let validSuperclass;
-        for (let superclass of superclasses) {
-            if (superclass !== node.value) {
-                validSuperclass = superclass;
-                break;
-            }
-        }
-
-        return validSuperclass;
+        return superclasses;
     }
 
-    getSuperproperty(node: Node): ?string {
+    getSuperProperties(node: Node): ?string[] {
         let superProperties = this.getObjects(node, SUBPROPERTY_OF);
 
-        if (superProperties.length > 1) {
-            console.warn('more superProperties than expected for %o: %o', node, superProperties);
-        }
-        let validSuperProperty;
-        for (let superclass of superProperties) {
-            if (superclass !== node.value) {
-                validSuperProperty = superclass;
-                break;
-            }
-        }
-
-        return validSuperProperty;
+        return superProperties;
     }
 
     getObjects(node: Node, property: Node): string[] {
@@ -235,15 +219,21 @@ export default class Ontology {
             );
         }
 
-        let superclass = this.getSuperclass(node);
-        if (superclass) {
-            nodeDomains = nodeDomains.concat(this.getDomains(superclass));
+        let superclasses = this.getSuperclasses(node);
+        if (superclasses) {
+            for (let superclass of superclasses) {
+                nodeDomains = nodeDomains.concat(this.getDomains(superclass));
+            }
         }
 
-        let superProperty = this.getSuperproperty(node);
-        if (superProperty) {
-            let superPropertyDomains = this.getDomains(new NamedNode(superProperty));
-            nodeDomains = nodeDomains.concat(superPropertyDomains);
+        let superProperties = this.getSuperProperties(node);
+        if (superProperties) {
+            for (let superProperty of superProperties) {
+                if (superProperty !== node.value) {
+                    let superPropertyDomains = this.getDomains(new NamedNode(superProperty));
+                    nodeDomains = nodeDomains.concat(superPropertyDomains);
+                }
+            }
         }
 
         for (let domain of nodeDomains) {
@@ -263,15 +253,21 @@ export default class Ontology {
             );
         }
 
-        let superclass = this.getSuperclass(node);
-        if (superclass) {
-            ranges = ranges.concat(this.getRanges(superclass));
+        let superclasses = this.getSuperclasses(node);
+        if (superclasses) {
+            for (let superclass of superclasses) {
+                ranges = ranges.concat(this.getRanges(superclass));
+            }
         }
 
-        let superProperty = this.getSuperproperty(node);
-        if (superProperty) {
-            let superPropertyRanges = this.getRanges(new NamedNode(superProperty));
-            ranges = ranges.concat(superPropertyRanges);
+        let superProperties = this.getSuperProperties(node);
+        if (superProperties) {
+            for (let superProperty of superProperties) {
+                if (superProperty !== node.value) {
+                    let superPropertyRanges = this.getRanges(new NamedNode(superProperty));
+                    ranges = ranges.concat(superPropertyRanges);
+                }
+            }
         }
 
         // get any more ranges in store properties
@@ -304,14 +300,68 @@ export default class Ontology {
         return values;
     }
 
-    addPropertyToClass(propertyIRI: string, classIRI: string) {
-        if (this._classes[classIRI] === undefined) {
-            this._classes[classIRI] = [];
+    addClass(classIRI: string): ?RDFClass {
+        if (!classIRI.includes(':')) {
+            return;
         }
-        // There should only be a single instance of each propertyIRI
-        // associated with a classIRI.
-        if (this._classes[classIRI].indexOf(propertyIRI) === -1) {
-            this._classes[classIRI].push(propertyIRI);
+        let rdfClass = this._classes[classIRI];
+        if (!rdfClass) {
+            rdfClass = new RDFClass(classIRI);
+            this._classes[classIRI] = rdfClass;
+        }
+        if (!rdfClass.superclasses) {
+            let superclasses = this.getSuperclasses(rdf.sym(classIRI));
+            if (superclasses) {
+                for (let superclassIRI of superclasses) {
+                    let superclass = this._classes[superclassIRI];
+                    if (!superclass) {
+                        superclass = new RDFClass(superclassIRI);
+                    }
+                    superclass.addSuperclass(superclass);
+                }
+            }
+        }
+        for  (let annotationPropIRI in this._annotationProperties) {
+            let annotationProp = this._annotationProperties[annotationPropIRI];
+            if (annotationProp.domains.length === 0 || annotationProp.hasDomain(classIRI)) {
+                rdfClass.addProperty(annotationProp);
+            }
+        }
+
+        return rdfClass;
+    }
+    
+    addProperty(propertyIRI: string): ?RDFProperty {
+        if (!propertyIRI.includes(':')) {
+            return;
+        }
+        let rdfProperty = this._properties[propertyIRI];
+        if (!rdfProperty) {
+            rdfProperty = new RDFProperty(propertyIRI);
+            this._properties[propertyIRI] = rdfProperty;
+        }
+        if (!rdfProperty.superProperties) {
+            let superProperties = this.getSuperProperties(rdf.sym(propertyIRI));
+            if (superProperties) {
+                for (let superpropertyIRI of superProperties) {
+                    let superproperty = this._properties[superpropertyIRI];
+                    if (!superproperty) {
+                        superproperty = new RDFProperty(superpropertyIRI);
+                        this._properties[superpropertyIRI] = superproperty;
+                    }
+                    rdfProperty.addSuperProperty(superproperty);
+                }
+            }
+        }
+
+        return rdfProperty;
+    }
+
+    addPropertyToClass(propertyIRI: string, classIRI: string) {
+        let rdfClass = this.addClass(classIRI);
+        let rdfProperty = this.addProperty(propertyIRI);
+        if (rdfClass && rdfProperty) {
+            rdfClass.addProperty(rdfProperty);
         }
     }
 
@@ -321,9 +371,5 @@ export default class Ontology {
 
     isClass(IRI: string): boolean {
         return this._classes.hasOwnProperty(IRI);
-    }
-
-    resourceMatchesRange(resourceIRI: string, rangeIRI: string) {
-
     }
 }
