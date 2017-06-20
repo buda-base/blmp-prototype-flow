@@ -35,9 +35,10 @@ export default class RDFClass {
     }
 
     hasSuperclass(superclassIRI: string): boolean {
-        return this._superclasses
-                .filter(superclass => superclass.IRI === superclassIRI)
-                .length > 0;
+        return this._superclasses &&
+                this._superclasses
+                    .filter(superclass => superclass.IRI === superclassIRI)
+                    .length > 0;
     }
 
     addProperty(property: RDFProperty) {

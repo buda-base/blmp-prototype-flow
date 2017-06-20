@@ -317,13 +317,23 @@ export default class Ontology {
                     if (!superclass) {
                         superclass = new RDFClass(superclassIRI);
                     }
-                    superclass.addSuperclass(superclass);
+                    rdfClass.addSuperclass(superclass);
                 }
             }
         }
         for  (let annotationPropIRI in this._annotationProperties) {
             let annotationProp = this._annotationProperties[annotationPropIRI];
-            if (annotationProp.domains.length === 0 || annotationProp.hasDomain(classIRI)) {
+            let addToClass = annotationProp.domains.length === 0;
+            if (!addToClass) {
+                for (let domain of annotationProp.domains) {
+                    if (annotationProp.hasDomain(classIRI) ||
+                        rdfClass.hasSuperclass(domain)
+                    ) {
+                        addToClass = true;
+                    }
+                }
+            }
+            if (addToClass) {
                 rdfClass.addProperty(annotationProp);
             }
         }
