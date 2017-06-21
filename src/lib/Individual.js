@@ -27,7 +27,7 @@ export default class Individual {
         this._types.push(type);
     }
 
-    getProperty(name: string): {} | null {
+    getProperty(name: string): [] | null {
         return this._properties[name];
     }
 
@@ -44,14 +44,19 @@ export default class Individual {
         }
     }
 
-    getProperties(type: string) {
+    getProperties(type: ?string) {
+        let props = {};
         if (type) {
             for (let prop in this._properties) {
                 if (this._properties.hasOwnProperty(prop)) {
-
+                    if (prop === type) {
+                        props[prop] = this._properties[prop];
+                    }
                 }
             }
+        } else {
+            props = this._properties;
         }
-        return this._properties;
+        return props;
     }
 }
