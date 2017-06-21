@@ -50,14 +50,20 @@ export default class Serializer {
                 let valueNode;
                 if (value instanceof Individual) {
                     if (value.id) {
-                        valueNode = rdf.sym(value.id);
+                        if (value.id.indexOf(':' !== -1)) {
+                            valueNode = rdf.sym(value.id);
+                        }
                     } else {
                         valueNode = rdf.blankNode();
                     }
                     this.addIndividualToStore(value, store);
                 } else if (value instanceof Literal) {
+                    let type;
+                    if (value.type) {
+                        type = rdf.sym(value.type);
+                    }
                     try {
-                        valueNode = store.literal(value.value, value.language, rdf.sym(value.type));
+                        valueNode = store.literal(value.value, value.language, type);
                     } catch(e) {
                         console.log('error parsing literal: %o, error: %e', value, e);
                     }
