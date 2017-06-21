@@ -158,7 +158,7 @@ export default class IndividualView extends React.Component {
             <Subheader
                 style={headerStyles}
             >
-                {propertyType}
+                {formatIRI(propertyType)}
                 {this.props.isEditable &&
                     <span>
                     <IconButton
