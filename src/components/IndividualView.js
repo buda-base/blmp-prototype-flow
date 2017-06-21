@@ -118,7 +118,7 @@ export default class IndividualView extends React.Component {
         return topLevelProps;
     }
 
-    propertyGroupRows(propType: string, availableProps: [], setProps: {}, headerStyles: {}, itemStyles: {}): Array<mixed> {
+    propertyGroupRows(propType: string, availableProps: RDFProperty[], setProps: {}, headerStyles: {}, itemStyles: {}): Array<mixed> {
         let rows = [];
 
         rows.push(<h3>{formatIRI(propType)}</h3>);
@@ -132,86 +132,103 @@ export default class IndividualView extends React.Component {
             existingProps[propKey] = setProps[propKey];
         }
 
-        for (let propertyType in existingProps) {
-            const onTapAdd = (event) => {
-                this.addProperty(propertyType);
-            };
-            rows.push(
-                <Subheader
-                    style={headerStyles}
-                >
-                    {propertyType}
-                    {this.props.isEditable &&
-                        <span>
-                        <IconButton
-                            iconStyle={iconSizes.small}
-                            onTouchTap={onTapAdd.bind(this)}
-                        >
-                            <AddCircle color={green800}/>
-                        </IconButton>
-                        </span>
-                    }
-                </Subheader>
-            );
-
-
-            let propertyValues = existingProps[propertyType];
-            // TODO: need to get all available props as well;
-
-            let row = 0;
-            for (let propertyValue of propertyValues) {
-                let view;
-                let isEditable = this.props.isEditable;
-                let key = propertyType + '_';
-                let classes = ['individualRow'];
-                if (propertyValue instanceof Literal) {
-                    view = <LiteralView literal={propertyValue}
-                                        isEditable={isEditable}
-                                        onChange={this.props.onIndividualUpdated}
-                    />;
-                    key += propertyValue.value;
-                    if (isEditable) {
-                        classes.push('individualLiteralRowEditable');
-                    } else {
-                        classes.push('individualLiteralRow');
-                    }
-                } else if (propertyValue instanceof Individual) {
-                    isEditable = (this._editableIndividuals.indexOf(propertyValue) !== -1);
-                    view = <IndividualView individual={propertyValue}
-                                           isExpanded={isEditable}
-                                           isEditable={isEditable}
-                                           ontology={this.props.ontology}
-                                           nested={true}
-                                           onIndividualUpdated={this.props.onIndividualUpdated}
-                    />;
-                    key += propertyValue.id + '_' + row;
-
-                }
-                const onTapRemove = (event) => {
-                    this.removeProperty(propertyType, propertyValue);
-                };
-                let removeButton = "";
-                if (isEditable || this.props.isEditable) {
-                    removeButton = <IconButton
-                        iconStyle={iconSizes.small}
-                        onTouchTap={onTapRemove.bind(this)}
-                        className="removeButton"
-                    >
-                        <RemoveCircle color={red800}/>
-                    </IconButton>;
-                }
-
-                rows.push(<ListItem
-                        innerDivStyle={itemStyles}
-                        className={classnames(...classes)}
-                        key={key}
-                        primaryTogglesNestedList={true}
-                >
-                    {view}{removeButton}
-                </ListItem>);
-
-                row++;
+        for (let availableProp of availableProps) {
+            if (!existingProps[availableProp.IRI] && availableProp.ranges.length > 0) {
+                existingProps[availableProp.IRI] = [];
             }
+        }
+
+        for (let propertyType in existingProps) {
+            let propertyValues = existingProps[propertyType];
+            rows = rows.concat(this.rowsForProperty(propertyType, propertyValues, headerStyles, itemStyles));
+        }
+
+
+        return rows;
+    }
+
+
+    rowsForProperty(propertyType: string, propertyValues: Array<mixed>, headerStyles: {}, itemStyles: {}): Array<mixed> {
+        let rows = [];
+
+        const onTapAdd = (event) => {
+            this.addProperty(propertyType);
+        };
+        rows.push(
+            <Subheader
+                style={headerStyles}
+            >
+                {propertyType}
+                {this.props.isEditable &&
+                    <span>
+                    <IconButton
+                        iconStyle={iconSizes.small}
+                        onTouchTap={onTapAdd.bind(this)}
+                    >
+                        <AddCircle color={green800}/>
+                    </IconButton>
+                    </span>
+                }
+            </Subheader>
+        );
+
+
+        // let propertyValues = existingProps[propertyType];
+        // TODO: need to get all available props as well;
+
+        let row = 0;
+        for (let propertyValue of propertyValues) {
+            let view;
+            let isEditable = this.props.isEditable;
+            let key = propertyType + '_';
+            let classes = ['individualRow'];
+            if (propertyValue instanceof Literal) {
+                view = <LiteralView literal={propertyValue}
+                                    isEditable={isEditable}
+                                    onChange={this.props.onIndividualUpdated}
+                />;
+                key += propertyValue.value;
+                if (isEditable) {
+                    classes.push('individualLiteralRowEditable');
+                } else {
+                    classes.push('individualLiteralRow');
+                }
+            } else if (propertyValue instanceof Individual) {
+                isEditable = (this._editableIndividuals.indexOf(propertyValue) !== -1);
+                view = <IndividualView individual={propertyValue}
+                                       isExpanded={isEditable}
+                                       isEditable={isEditable}
+                                       ontology={this.props.ontology}
+                                       nested={true}
+                                       onIndividualUpdated={this.props.onIndividualUpdated}
+                />;
+                key += propertyValue.id + '_' + row;
+
+            }
+            const onTapRemove = (event) => {
+                this.removeProperty(propertyType, propertyValue);
+            };
+            let removeButton = "";
+            if (isEditable || this.props.isEditable) {
+                removeButton = <IconButton
+                    iconStyle={iconSizes.small}
+                    onTouchTap={onTapRemove.bind(this)}
+                    className="removeButton"
+                >
+                    <RemoveCircle color={red800}/>
+                </IconButton>;
+            }
+
+            rows.push(<ListItem
+                    innerDivStyle={itemStyles}
+                    className={classnames(...classes)}
+                    key={key}
+                    primaryTogglesNestedList={true}
+            >
+                {view}{removeButton}
+            </ListItem>);
+
+            row++;
         }
 
         return rows;
