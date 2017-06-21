@@ -63,11 +63,13 @@ export default class IndividualView extends React.Component {
             individual.addProperty(propertyType, literal);
         }
         this.forceUpdate();
+        this.props.onIndividualUpdated();
     }
 
     removeProperty(propertyType: string, value: any) {
         this.props.individual.removeProperty(propertyType, value);
         this.forceUpdate();
+        this.props.onIndividualUpdated();
     }
 
     getAvailableProperties(): {} {
@@ -165,6 +167,7 @@ export default class IndividualView extends React.Component {
                 if (propertyValue instanceof Literal) {
                     view = <LiteralView literal={propertyValue}
                                         isEditable={isEditable}
+                                        onChange={this.props.onIndividualUpdated}
                     />;
                     key += propertyValue.value;
                     if (isEditable) {
@@ -179,6 +182,7 @@ export default class IndividualView extends React.Component {
                                            isEditable={isEditable}
                                            ontology={this.props.ontology}
                                            nested={true}
+                                           onIndividualUpdated={this.props.onIndividualUpdated}
                     />;
                     key += propertyValue.id + '_' + row;
 
@@ -218,6 +222,7 @@ export default class IndividualView extends React.Component {
         const onChange = (value) => {
             this.props.individual.id = value;
             this.forceUpdate();
+            this.props.onIndividualUpdated();
         };
         const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
         const idView = <LiteralView

@@ -5,8 +5,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Drawer from 'material-ui/Drawer';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
 import IndividualEditor from './IndividualEditor'
+import Preview from './Preview'
 import Ontology from '../lib/Ontology';
 import Graph from '../lib/Graph'
+import Serializer from '../lib/Serializer'
 
 let SelectableList = makeSelectable(List);
 
@@ -48,7 +50,8 @@ class App extends Component {
         this.state = {
             ontology: null,
             graph: null,
-            individual: null
+            individual: null,
+            graphText: null
         };
 
         this.init();
@@ -126,6 +129,19 @@ class App extends Component {
         });
     }
 
+    updateGraphText() {
+        let serializer = new Serializer();
+        serializer.serialize(this.state.individual)
+            .then((str) => {
+                this.setState((prevState, props) => {
+                    return {
+                        ...prevState,
+                        graphText: str
+                    }
+                });
+            });
+    }
+
     render() {
         let classes = [];
         if (this.state.ontology) {
@@ -142,23 +158,26 @@ class App extends Component {
             );
         }
 
+
+        if (!this.state.graphText && this.state.individual) {
+            this.updateGraphText();
+        }
+
+        let onIndividualUpdated = () => {
+            this.updateGraphText();
+        };
+
+
         return (
             <MuiThemeProvider>
                 <div className="App">
-                    <Drawer open={true}>
-                        <SelectableList>
-                            <ListItem
-                                value={'classes'}
-                                primaryText={<div>Classes</div>}
-                                nestedItems={classItems}
-                                primaryTogglesNestedList={true}
-                            />
-                        </SelectableList>
-                    </Drawer>
-
                     <IndividualEditor
                         individual={this.state.individual}
                         ontology={this.state.ontology}
+                        onIndividualUpdated={onIndividualUpdated}
+                    />
+                    <Preview
+                        graphText={this.state.graphText}
                     />
                 </div>
             </MuiThemeProvider>
