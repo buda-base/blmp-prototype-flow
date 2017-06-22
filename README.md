@@ -11,7 +11,7 @@ The main code is currently in `/src/lib`:
 
 ## Install
 
-Make sure nodejs is installed. Then, after cloning the repo, simply run
+Make sure [nodejs is installed](https://nodejs.org/en/). Then, after cloning the repo, simply run
 
     npm install
     
