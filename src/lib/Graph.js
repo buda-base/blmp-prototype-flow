@@ -1,6 +1,6 @@
 // @flow
 import * as rdf from 'rdflib';
-import { Namespace, NamedNode, BlankNode } from 'rdflib';
+import { Namespace, NamedNode, BlankNode, Literal as LiteralNode } from 'rdflib';
 import Ontology from './Ontology'
 import Individual from './Individual'
 import Literal from './Literal'
@@ -74,34 +74,39 @@ export default class Graph {
         for (let statement of statements) {
             const prop = statement.predicate;
             let value = statement.object.value;
-            const valueTypes = this.getIndividualTypes(value);
-            const ranges = this._ontology.getRanges(prop);
-            let individualRange = ranges[0];
-            if (ranges.length > 1) {
-                for (let range of ranges) {
-                    if (this._ontology.isClass(range)) {
-                        if (valueTypes.indexOf(range) !== -1) {
-                            individualRange = range;
-                            break;
-                        }
-                    } else if (statement.object.hasOwnProperty('datatype')) {
-                        // a literal
-                        if (statement.object.datatype.value === range) {
-                            individualRange = range;
-                            break;
+            if (statement.object instanceof LiteralNode) {
+                individual.addProperty(prop, value);
+            } else {
+                const valueTypes = this.getIndividualTypes(value);
+                const ranges = this._ontology.getRanges(prop);
+                let individualRange = ranges[0];
+                if (ranges.length > 1) {
+                    for (let range of ranges) {
+                        if (this._ontology.isClass(range)) {
+                            if (valueTypes.indexOf(range) !== -1) {
+                                individualRange = range;
+                                break;
+                            }
+                        } else if (statement.object.hasOwnProperty('datatype')) {
+                            // a literal
+                            if (statement.object.datatype.value === range) {
+                                individualRange = range;
+                                break;
+                            }
                         }
                     }
                 }
+
+                this._updateIndividual(individual, prop.value, individualRange, statement.object);
             }
 
-            this._updateIndividual(individual, prop.value, individualRange, statement.object);
         }
 
         return individual;
     }
 
-    _updateIndividual(individual: Individual, property: string, propertyRange: string, object: NamedNode) {
-        if (this._ontology.isClass(propertyRange)) {
+    _updateIndividual(individual: Individual, property: string, propertyRange: string, object: Node) {
+        if (this._ontology.isClass(propertyRange) && object instanceof NamedNode) {
             let value = this.getIndividualWithId(object.value);
             value.addType(propertyRange);
             individual.addProperty(property, value);

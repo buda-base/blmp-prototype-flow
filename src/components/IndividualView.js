@@ -265,6 +265,11 @@ export default class IndividualView extends React.Component {
             title = <i>&lt;no id&gt;</i>;
         }
         subtitle = formatIRI(this.props.individual.types[0]);
+        if (this.props.individual.types[0]) {
+            subtitle = formatIRI(this.props.individual.types[0]);
+        } else {
+            subtitle = '';
+        }
         let rows = [];
         if (this.props.isExpanded || true) {
             let availableProperties = this.getAvailableProperties();

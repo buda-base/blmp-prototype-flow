@@ -64,7 +64,7 @@ class App extends Component {
         ]);
         const ontology = await this._processOntology(owlText);
         const graph = await this._processGraph(graphText, ontology);
-        let place = graph.getIndividualWithId('http://purl.bdrc.io/ontology/place#G844');
+        let place = graph.getIndividualWithId('http://purl.bdrc.io/resource/G844');
         this.setState((prevState, props) => {
             return {
                 ...prevState,
