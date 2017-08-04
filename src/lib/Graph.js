@@ -74,12 +74,13 @@ export default class Graph {
         for (let statement of statements) {
             const prop = statement.predicate;
             let value = statement.object.value;
+            let individualRange;
             if (statement.object instanceof LiteralNode) {
-                individual.addProperty(prop, value);
+                individualRange = statement.object.datatype.value;
             } else {
                 const valueTypes = this.getIndividualTypes(value);
                 const ranges = this._ontology.getRanges(prop);
-                let individualRange = ranges[0];
+                individualRange = ranges[0];
                 if (ranges.length > 1) {
                     for (let range of ranges) {
                         if (this._ontology.isClass(range)) {
@@ -96,9 +97,9 @@ export default class Graph {
                         }
                     }
                 }
-
-                this._updateIndividual(individual, prop.value, individualRange, statement.object);
             }
+
+            this._updateIndividual(individual, prop.value, individualRange, statement.object);
 
         }
 
