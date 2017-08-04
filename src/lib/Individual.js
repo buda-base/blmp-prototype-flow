@@ -16,6 +16,9 @@ export default class Individual {
     }
 
     set id(newId: string) {
+        if (newId.indexOf(":") === -1) {
+            newId = ":" + newId;
+        }
         this._id = newId;
     }
 
