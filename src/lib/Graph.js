@@ -114,8 +114,12 @@ export default class Graph {
         } else if (object instanceof BlankNode) {
             let blankIndividual = new Individual();
             let blankTypes = this._store.statementsMatching(object, TYPE, undefined);
-            for (let blankType of blankTypes) {
-                blankIndividual.addType(blankType.object.value);
+            if (blankTypes.length > 0) {
+                for (let blankType of blankTypes) {
+                    blankIndividual.addType(blankType.object.value);
+                }
+            } else {
+                blankIndividual.addType(propertyRange);
             }
             let blankProperties = this._store.statementsMatching(object, undefined, undefined);
             for (let blankStatement of blankProperties) {
