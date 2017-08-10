@@ -78,8 +78,7 @@ export default class IndividualView extends React.Component {
         const type = individual.types[0];
         const properties = ontology.getClassProperties(type);
         const groupedProps = this.getGroupedProperties(properties);
-
-        //return properties;
+        
         return groupedProps;
     }
 
@@ -151,7 +150,6 @@ export default class IndividualView extends React.Component {
         return rows;
     }
 
-
     rowsForProperty(propertyType: string, propertyValues: Array<mixed>, headerStyles: {}, itemStyles: {}): Array<mixed> {
         let rows = [];
 
@@ -175,10 +173,6 @@ export default class IndividualView extends React.Component {
                 }
             </Subheader>
         );
-
-
-        // let propertyValues = existingProps[propertyType];
-        // TODO: need to get all available props as well;
 
         let row = 0;
         for (let propertyValue of propertyValues) {
