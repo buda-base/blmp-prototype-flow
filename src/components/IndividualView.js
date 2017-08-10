@@ -304,6 +304,17 @@ export default class IndividualView extends React.Component {
                 rows = rows.concat(idRows);
                 console.log('idRows: %o', idRows);
             }
+        if (labels) {
+            rows.push(<Subheader style={listHeaderStyles}>Labels</Subheader>);
+            rows = rows.concat(labels.map((label, index) => {
+                const labelLiteral = new Literal(STRING_TYPE, label.value);
+                const labelView = <LiteralView
+                    literal={labelLiteral}
+                    isEditable={this.props.isEditable}
+                />;
+                return <ListItem innerDivStyle={listItemStyles} key={this.props.individual.id + '_label_row_'+index}>{labelView}</ListItem>
+            }));
+        }
 
             rows = rows.concat(
                 this.propertyGroupRows('Datatype Properties', dataTypeProps, properties, listHeaderStyles, listItemStyles),
