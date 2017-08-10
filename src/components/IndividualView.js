@@ -118,10 +118,12 @@ export default class IndividualView extends React.Component {
         return topLevelProps;
     }
 
-    propertyGroupRows(propType: string, availableProps: RDFProperty[], setProps: {}, headerStyles: {}, itemStyles: {}): Array<mixed> {
+    propertyGroupRows(propType: ?string, availableProps: RDFProperty[], setProps: {}, headerStyles: {}, itemStyles: {}, removeUnsetProps:boolean=false): Array<mixed> {
         let rows = [];
-
-        rows.push(<h3>{formatIRI(propType)}</h3>);
+        
+        if (propType) {
+            rows.push(<h3>{formatIRI(propType)}</h3>);
+        }
 
         const availablePropsIRIs = availableProps.map(prop => prop.IRI);
         let existingProps = {};
