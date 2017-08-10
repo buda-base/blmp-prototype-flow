@@ -260,6 +260,8 @@ export default class IndividualView extends React.Component {
     render() {
         let title;
         let subtitle;
+        let rows = [];
+
         let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
         if (labels) {
             title = labels[0].value;
@@ -268,46 +270,39 @@ export default class IndividualView extends React.Component {
         } else {
             title = <i>&lt;no id&gt;</i>;
         }
-        subtitle = formatIRI(this.props.individual.types[0]);
+
         if (this.props.individual.types[0]) {
             subtitle = formatIRI(this.props.individual.types[0]);
         } else {
             subtitle = '';
         }
-        let rows = [];
-        if (this.props.isExpanded || true) {
-            let availableProperties = this.getAvailableProperties();
 
-            let dataTypeProps = availableProperties[DATATYPE_PROPERTY.value];
-            let objectProps = availableProperties[OBJECT_PROPERTY.value];
-            let annotationProps = availableProperties[ANNOTATION_PROPERTY.value];
-            let properties = this.props.individual.getProperties();
+        let availableProperties = this.getAvailableProperties();
+        let dataTypeProps = availableProperties[DATATYPE_PROPERTY.value];
+        let objectProps = availableProperties[OBJECT_PROPERTY.value];
+        let annotationProps = availableProperties[ANNOTATION_PROPERTY.value];
+        let properties = this.props.individual.getProperties();
 
-            let listHeaderStyles = {
-                paddingLeft: 0,
-                color: '#444'
-            };
-            if (!this.props.nested) {
-                listHeaderStyles = {
-                    ...listHeaderStyles,
-                    fontSize: '14px',
-                    fontWeight: 'bold'
-                }
+        let listHeaderStyles = {
+            paddingLeft: 0,
+            color: '#444'
+        };
+        if (!this.props.nested) {
+            listHeaderStyles = {
+                ...listHeaderStyles,
+                fontSize: '14px',
+                fontWeight: 'bold'
             }
-            const listItemStyles = {
-                border: 0,
-                padding: "0 0 5px 10px",
-                display: 'flex',
-                alignItems: 'flex-end',
-                borderLeft: "1px solid #bbb",
-                marginLeft: '5px'
-            };
+        }
+        let listItemStyles = {
+            border: 0,
+            padding: "0 0 5px 10px",
+            display: 'flex',
+            alignItems: 'flex-end',
+            borderLeft: "1px solid #bbb",
+            marginLeft: '5px'
+        };
 
-            if (this.props.isEditable) {
-                let idRows = this.idPropertyRows(listHeaderStyles, listItemStyles);
-                rows = rows.concat(idRows);
-                console.log('idRows: %o', idRows);
-            }
         if (labels) {
             rows.push(<Subheader style={listHeaderStyles}>Labels</Subheader>);
             rows = rows.concat(labels.map((label, index) => {
@@ -332,6 +327,16 @@ export default class IndividualView extends React.Component {
             removeUnsetProperties = false;
         }
 
+        const datatypeHeading = (!this.props.nested) ? 'Datatype Properties' : null;
+        const objectHeading = (!this.props.nested) ? 'Datatype Properties' : null;
+        const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : null;
+
+        rows = rows.concat(
+            this.propertyGroupRows(datatypeHeading, dataTypeProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties),
+            this.propertyGroupRows(objectHeading, objectProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties),
+            this.propertyGroupRows(annotationHeading, annotationProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties)
+        );
+
         let classes = ["individualView"];
         if (this.props.isEditable) {
             classes.push("isEditable");
@@ -348,13 +353,12 @@ export default class IndividualView extends React.Component {
             };
         }
 
-        const listItemStyles = {
+        listItemStyles = {
             border: 0,
             padding: "0 0 5px 0"
         };
 
         return (
-
             <div className={classnames(...classes)}>
                 <List>
                     <ListItem
