@@ -315,11 +315,6 @@ export default class IndividualView extends React.Component {
             }));
         }
 
-            rows = rows.concat(
-                this.propertyGroupRows('Datatype Properties', dataTypeProps, properties, listHeaderStyles, listItemStyles),
-                this.propertyGroupRows('Object Properties', objectProps, properties, listHeaderStyles, listItemStyles),
-                this.propertyGroupRows('Annotation Properties', annotationProps, properties, listHeaderStyles, listItemStyles)
-            );
         let removeUnsetProperties = true;
         if (this.props.isEditable) {
             let idRows = this.idPropertyRows(listHeaderStyles, listItemStyles);
