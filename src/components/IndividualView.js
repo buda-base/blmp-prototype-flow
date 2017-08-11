@@ -185,7 +185,7 @@ export default class IndividualView extends React.Component {
                                     isEditable={isEditable}
                                     onChange={this.props.onIndividualUpdated}
                 />;
-                key += propertyValue.value;
+                key += propertyValue.uniqueId;
                 if (isEditable) {
                     classes.push('individualLiteralRowEditable');
                 } else {
@@ -200,7 +200,7 @@ export default class IndividualView extends React.Component {
                                        nested={true}
                                        onIndividualUpdated={this.props.onIndividualUpdated}
                 />;
-                key += propertyValue.id + '_' + row;
+                key += propertyValue.id + '_' + propertyValue.uniqueId;
 
             }
             const onTapRemove = (event) => {
