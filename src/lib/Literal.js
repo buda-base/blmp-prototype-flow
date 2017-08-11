@@ -10,15 +10,23 @@ const dateTypes = [
     "http://www.w3.org/2001/XMLSchema#dateTime"
 ];
 
+let UNIQUE_ID = 0;
+
 export default class Literal {
     _type: string;
     _language: string;
     _value: string;
+    _uniqueId: string;
 
     constructor(type: string, value: string, language: ?string) {
         this._type = type;
         this._value = value;
         this._language = language;
+        this._uniqueId = 'LITERAL_' + UNIQUE_ID++;
+    }
+
+    get uniqueId(): string {
+        return this._uniqueId;
     }
 
     get hasLanguage(): boolean {

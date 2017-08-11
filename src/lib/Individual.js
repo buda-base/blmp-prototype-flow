@@ -1,14 +1,26 @@
 // @flow
 
+let UNIQUE_ID = 0;
+
 export default class Individual {
     _id: ?string;
     _types: string[];
     _properties: {};
+    _uniqueId: string;
 
     constructor(id: ?string) {
         this._id = id;
         this._properties = {};
         this._types = [];
+        this._uniqueId = 'INDIVIDUAL_' + UNIQUE_ID++;
+    }
+    
+    get uniqueId(): string {
+        if (this._id) {
+            return this._id;
+        } else {
+            return this._uniqueId;
+        }
     }
 
     get id(): ?string {
