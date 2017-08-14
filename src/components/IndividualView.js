@@ -317,7 +317,7 @@ export default class IndividualView extends React.Component {
         }
 
         const datatypeHeading = (!this.props.nested) ? 'Datatype Properties' : null;
-        const objectHeading = (!this.props.nested) ? 'Datatype Properties' : null;
+        const objectHeading = (!this.props.nested) ? 'Object Properties' : null;
         const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : null;
 
         rows = rows.concat(
