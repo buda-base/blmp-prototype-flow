@@ -53,7 +53,7 @@ export default class Individual {
         this._properties[name].push(value);
     }
 
-    removeProperty(type: string, name: string, value: {}) {
+    removeProperty(name: string, value: {}) {
         if (this._properties[name]) {
             this._properties[name] = this._properties[name].filter(val => val !== value);
         }
