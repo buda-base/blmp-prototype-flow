@@ -1,6 +1,7 @@
 // @flow
 
 let UNIQUE_ID = 0;
+let ID = 0;
 
 export default class Individual {
     _id: ?string;
@@ -24,6 +25,9 @@ export default class Individual {
     }
 
     get id(): ?string {
+        if (!this._id) {
+            this._id = '_:b' + ID++;
+        }
         return this._id;
     }
 
