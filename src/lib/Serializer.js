@@ -14,17 +14,33 @@ export default class Serializer {
 
     serialize(individual: Individual) {
         let store = new rdf.graph();
-
         this.addIndividualToStore(individual, store);
 
+        const prefixes = {
+            'adm': 'http://purl.bdrc.io/ontology/admin/',
+            'xsd': 'http://www.w3.org/2001/XMLSchema#',
+            'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
+            'bdr': 'http://purl.bdrc.io/resource/'
+        };
+
         return new Promise((resolve, reject) => {
-            rdf.serialize(undefined, store, 'BASE', 'text/turtle', function(err, str) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(str);
+            try {
+                // This is adapted from serialize.js
+                // We can't use that as we have to call suggestPrefix to set
+                // our preferred prefixes.
+                let serializer = rdf.Serializer(store);
+                serializer.setBase('http://purl.bdrc.io/ontology/');
+                let storeStatements = store.statementsMatching(undefined, undefined, undefined, undefined);
+                serializer.suggestNamespaces(store.namespaces);
+                for (let prefix in prefixes) {
+                  serializer.suggestPrefix(prefix, prefixes[prefix]);
                 }
-            });
+                serializer.setFlags('si'); // Suppress = for sameAs and => for implies
+                let documentString = serializer.statementsToN3(storeStatements);
+                resolve(documentString);
+            } catch (e) {
+                reject(e);
+            }
         });
     }
 
