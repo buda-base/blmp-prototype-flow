@@ -4,6 +4,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import Drawer from 'material-ui/Drawer';
 import { List, ListItem, makeSelectable } from 'material-ui/List';
+import SplitPane from 'react-split-pane';
 import IndividualEditor from './IndividualEditor'
 import Preview from './Preview'
 import Ontology from '../lib/Ontology';
@@ -51,7 +52,8 @@ class App extends Component {
             ontology: null,
             graph: null,
             individual: null,
-            graphText: null
+            graphText: null,
+            hidePreview: false
         };
 
         this.init();
@@ -171,14 +173,16 @@ class App extends Component {
         return (
             <MuiThemeProvider>
                 <div className="App">
-                    <IndividualEditor
-                        individual={this.state.individual}
-                        ontology={this.state.ontology}
-                        onIndividualUpdated={onIndividualUpdated}
-                    />
-                    <Preview
-                        graphText={this.state.graphText}
-                    />
+                    <SplitPane split="vertical" minSize={350} defaultSize={this.state.hidePreview ? '100%' : 600} size={this.state.splitWidth} allowResize={true}>
+                        <IndividualEditor
+                            individual={this.state.individual}
+                            ontology={this.state.ontology}
+                            onIndividualUpdated={onIndividualUpdated}
+                        />
+                        <Preview
+                            graphText={this.state.graphText}
+                        />
+                    </SplitPane>
                 </div>
             </MuiThemeProvider>
         );
