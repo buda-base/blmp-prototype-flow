@@ -290,10 +290,9 @@ export default class IndividualView extends React.Component {
         }
         let listItemStyles = {
             border: 0,
-            padding: "0 0 5px 10px",
+            padding: "0 0 5px 20px",
             display: 'flex',
             alignItems: 'flex-end',
-            borderLeft: "1px solid #bbb",
             marginLeft: '5px'
         };
 

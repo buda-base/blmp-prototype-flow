@@ -11,15 +11,6 @@
     display: flex;
 }
 
-.individualRow:before {
-    content: "•";
-    position: absolute;
-    left: 1px;
-    top: 9px;
-    font-size: 25px;
-    color: #bbb;
-}
-
 .individualLiteralRow:before {
     top: 2px;
 }
