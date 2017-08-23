@@ -45,6 +45,9 @@ SelectableList = wrapState(SelectableList);
 
 class App extends Component {
     _rootIRI = 'http://purl.bdrc.io/ontology/';
+    _mainSplitPane = null;
+    _mainSplitPaneWidth = 600;
+
     constructor(props) {
         super(props);
 
@@ -53,7 +56,8 @@ class App extends Component {
             graph: null,
             individual: null,
             graphText: null,
-            hidePreview: false
+            hidePreview: false,
+            splitWidth: this._mainSplitPaneWidth
         };
 
         this.init();
@@ -169,16 +173,52 @@ class App extends Component {
             this.updateGraphText();
         };
 
+        const previewToggleStyle = {
+            position: 'absolute',
+            top: '20px',
+            right: '0px'
+        };
+
+        const toggleShowPreview = () => {
+            this.setState((prevState, props) => {
+                let visibleWidth = this._mainSplitPaneWidth;
+                if (this._mainSplitPane) {
+                    if (!prevState.hidePreview) {
+                        this._mainSplitPaneWidth = this._mainSplitPane.state.draggedSize;
+                    } else {
+                        visibleWidth = this._mainSplitPaneWidth;
+                    }
+                }
+                const width = (prevState.hidePreview) ? visibleWidth : '100%';
+                return {
+                    ...prevState,
+                    hidePreview: !(prevState.hidePreview),
+                    splitWidth: width
+                }
+            });
+
+        };
 
         return (
             <MuiThemeProvider>
                 <div className="App">
-                    <SplitPane split="vertical" minSize={350} defaultSize={this.state.hidePreview ? '100%' : 600} size={this.state.splitWidth} allowResize={true}>
-                        <IndividualEditor
-                            individual={this.state.individual}
-                            ontology={this.state.ontology}
-                            onIndividualUpdated={onIndividualUpdated}
-                        />
+                    <SplitPane
+                        split="vertical"
+                        minSize={350}
+                        size={this.state.splitWidth}
+                        allowResize={true}
+                        ref={(split) => this._mainSplitPane = split}
+                    >
+                        <SplitPane split="horizontal" size={80} allowResize={false}>
+                            <div>
+                                <RaisedButton label={(this.state.hidePreview ? "Show" : "Hide") +  " Preview"} style={previewToggleStyle} onClick={toggleShowPreview} />
+                            </div>
+                            <IndividualEditor
+                                individual={this.state.individual}
+                                ontology={this.state.ontology}
+                                onIndividualUpdated={onIndividualUpdated}
+                            />
+                        </SplitPane>
                         <Preview
                             graphText={this.state.graphText}
                         />

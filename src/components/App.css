@@ -106,7 +106,8 @@
 }
 
 .Resizer.disabled {
-    cursor: not-allowed;
+    border: 0;
+    height: 0;
 }
 
 .Resizer.disabled:hover {
