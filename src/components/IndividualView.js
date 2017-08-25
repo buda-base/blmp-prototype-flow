@@ -350,8 +350,8 @@ export default class IndividualView extends React.Component {
             <div className={classnames(...classes)}>
                 <List>
                     <ListItem
-                        primaryText={title}
-                        secondaryText={subtitle}
+                        primaryText={this.props.nested ? title : null}
+                        secondaryText={this.props.nested ? subtitle : null}
                         nestedItems={rows}
                         initiallyOpen={this.props.isExpanded}
                         innerDivStyle={listItemStyles}

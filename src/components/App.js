@@ -7,6 +7,7 @@ import { List, ListItem, makeSelectable } from 'material-ui/List';
 import SplitPane from 'react-split-pane';
 import IndividualEditor from './IndividualEditor'
 import Preview from './Preview'
+import IndividualHeading from './IndividualHeading';
 import Ontology from '../lib/Ontology';
 import Graph from '../lib/Graph'
 import Serializer from '../lib/Serializer'
@@ -209,8 +210,9 @@ class App extends Component {
                         allowResize={true}
                         ref={(split) => this._mainSplitPane = split}
                     >
-                        <SplitPane split="horizontal" size={80} allowResize={false}>
+                        <SplitPane split="horizontal" size={90} allowResize={false}>
                             <div>
+                                <IndividualHeading individual={this.state.individual} />
                                 <RaisedButton label={(this.state.hidePreview ? "Show" : "Hide") +  " Preview"} style={previewToggleStyle} onClick={toggleShowPreview} />
                             </div>
                             <IndividualEditor

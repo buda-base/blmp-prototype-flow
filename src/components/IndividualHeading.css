@@ -1,0 +1,14 @@
+.IndividualHeading h1 {
+    font-weight: normal;
+    font-size: 30px;
+    padding: 0;
+    margin: 20px 0 5px 40px;
+}
+
+.IndividualHeading h2 {
+    font-weight: normal;
+    font-size: 18px;
+    color: #bbb;
+    padding: 0;
+    margin: 0 0 0 40px;
+}
