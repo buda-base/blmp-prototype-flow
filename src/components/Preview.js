@@ -20,7 +20,6 @@ export default class Preview extends Component {
     render() {
         return (
             <div className="graphPreview">
-                <h3>Turtle Preview</h3>
                 <pre>
                     <code className="turtle"
                         ref={(el => this._code = el).bind(this)}

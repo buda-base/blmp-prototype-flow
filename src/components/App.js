@@ -221,9 +221,14 @@ class App extends Component {
                                 onIndividualUpdated={onIndividualUpdated}
                             />
                         </SplitPane>
-                        <Preview
-                            graphText={this.state.graphText}
-                        />
+                        <SplitPane split="horizontal" size={90} allowResize={false}>
+                            <div className="preview">
+                                <h2>Turtle Preview</h2>
+                            </div>
+                            <Preview
+                                graphText={this.state.graphText}
+                            />
+                        </SplitPane>
                     </SplitPane>
                 </div>
             </MuiThemeProvider>

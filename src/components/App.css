@@ -52,6 +52,13 @@
     padding: 0;
 }
 
+.preview h2 {
+    font-weight: normal;
+    font-size: 30px;
+    padding: 0;
+    margin: 20px 0 5px 40px;
+}
+
 /* Split pane */
 .Pane {
     overflow: auto;
