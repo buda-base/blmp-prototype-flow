@@ -7,6 +7,7 @@
     "highlight.js": "^9.12.0",
     "material-ui": "^0.18.1",
     "rdflib": "^0.15.0",
+    "rdflib": "^0.16.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-split-pane": "^0.1.66",
