@@ -355,7 +355,8 @@ export default class IndividualView extends React.Component {
                         nestedItems={rows}
                         initiallyOpen={this.props.isExpanded}
                         innerDivStyle={listItemStyles}
-                        primaryTogglesNestedList={true}
+                        autoGenerateNestedIndicator={this.props.nested}
+                        primaryTogglesNestedList={this.props.nested}
                         style={titleStyles}
                     />
                 </List>
