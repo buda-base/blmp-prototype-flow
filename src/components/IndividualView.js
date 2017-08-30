@@ -117,12 +117,8 @@ export default class IndividualView extends React.Component {
         return topLevelProps;
     }
 
-    propertyGroupRows(propType: ?string, availableProps: RDFProperty[], setProps: {}, headerStyles: {}, itemStyles: {}, removeUnsetProps:boolean=false): Array<mixed> {
+    propertyGroupRows(availableProps: RDFProperty[], setProps: {}, headerStyles: {}, itemStyles: {}, removeUnsetProps:boolean=false): Array<mixed> {
         let rows = [];
-        
-        if (propType) {
-            rows.push(<h3>{formatIRI(propType)}</h3>);
-        }
 
         const availablePropsIRIs = availableProps.map(prop => prop.IRI);
         let existingProps = {};
@@ -145,7 +141,6 @@ export default class IndividualView extends React.Component {
             let propertyValues = existingProps[propertyType];
             rows = rows.concat(this.rowsForProperty(propertyType, propertyValues, headerStyles, itemStyles));
         }
-
 
         return rows;
     }
@@ -271,14 +266,8 @@ export default class IndividualView extends React.Component {
             subtitle = '';
         }
 
-        let availableProperties = this.getAvailableProperties();
-        let dataTypeProps = availableProperties[DATATYPE_PROPERTY.value];
-        let objectProps = availableProperties[OBJECT_PROPERTY.value];
-        let annotationProps = availableProperties[ANNOTATION_PROPERTY.value];
-        let properties = this.props.individual.getProperties();
-
         let listHeaderStyles = {
-            paddingLeft: 0,
+            paddingLeft: '20px',
             color: '#444'
         };
         if (!this.props.nested) {
@@ -290,7 +279,7 @@ export default class IndividualView extends React.Component {
         }
         let listItemStyles = {
             border: 0,
-            padding: "0 0 5px 20px",
+            padding: "0 0 5px 40px",
             display: 'flex',
             alignItems: 'flex-end',
             marginLeft: '5px'
@@ -315,14 +304,50 @@ export default class IndividualView extends React.Component {
             removeUnsetProperties = false;
         }
 
-        const datatypeHeading = (!this.props.nested) ? 'Datatype Properties' : null;
-        const objectHeading = (!this.props.nested) ? 'Object Properties' : null;
-        const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : null;
+        let availableProperties = this.getAvailableProperties();
+        let dataTypeProps = availableProperties[DATATYPE_PROPERTY.value];
+        let objectProps = availableProperties[OBJECT_PROPERTY.value];
+        let annotationProps = availableProperties[ANNOTATION_PROPERTY.value];
+        let properties = this.props.individual.getProperties();
 
-        rows = rows.concat(
-            this.propertyGroupRows(datatypeHeading, dataTypeProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties),
-            this.propertyGroupRows(objectHeading, objectProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties),
-            this.propertyGroupRows(annotationHeading, annotationProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties)
+        const headingStyles = {
+            fontSize: '21px',
+            fontWeight: 'bold',
+            padding: '20px 0 20px 0',
+            margin: '0'
+        };
+
+        const datatypeHeading = (!this.props.nested) ? 'Datatype Properties' : null;
+        const datatypeRows = this.propertyGroupRows(dataTypeProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties);
+        rows.push(
+            <ListItem
+                primaryText={datatypeHeading}
+                innerDivStyle={headingStyles}
+                nestedItems={datatypeRows}
+                primaryTogglesNestedList={true}
+            />
+        );
+
+        const objectHeading = (!this.props.nested) ? 'Object Properties' : null;
+        const objectRows = this.propertyGroupRows(objectProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties);
+        rows.push(
+            <ListItem
+                primaryText={objectHeading}
+                innerDivStyle={headingStyles}
+                nestedItems={objectRows}
+                primaryTogglesNestedList={true}
+            />
+        );
+
+        const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : null;
+        const annotationRows = this.propertyGroupRows(annotationProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties);
+        rows.push(
+            <ListItem
+                primaryText={annotationHeading}
+                innerDivStyle={headingStyles}
+                nestedItems={annotationRows}
+                primaryTogglesNestedList={true}
+            />
         );
 
         let classes = ["individualView"];
