@@ -32,7 +32,6 @@ export default class Serializer {
                 // We can't use that as we have to call suggestPrefix to set
                 // our preferred prefixes.
                 let serializer = rdf.Serializer(store);
-                serializer.setBase('http://purl.bdrc.io/ontology/');
                 let storeStatements = store.statementsMatching(undefined, undefined, undefined, undefined);
                 serializer.suggestNamespaces(store.namespaces);
                 for (let prefix in prefixes) {
