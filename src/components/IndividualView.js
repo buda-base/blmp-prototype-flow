@@ -8,18 +8,13 @@ import formatIRI from '../lib/formatIRI';
 import classnames from 'classnames';
 import { DATATYPE_PROPERTY, OBJECT_PROPERTY, ANNOTATION_PROPERTY } from '../lib/Ontology';
 import RDFProperty from '../lib/RDFProperty';
-import RDFClass from '../lib/RDFClass';
 
 // Material-UI
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import Popover from 'material-ui/Popover';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import RemoveCircle from 'material-ui/svg-icons/content/remove-circle';
-import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import {red800, green800} from 'material-ui/styles/colors';
 
 const iconSizes = {
@@ -93,28 +88,6 @@ export default class IndividualView extends React.Component {
         };
 
         return groupedProps;
-    }
-
-    getTopLevelProps(properties: RDFProperty[]) {
-        let tree = properties.reduce((obj, cur) => {
-            obj[cur.IRI] = cur;
-            return obj;
-        }, {});
-        let topLevelProps = [];
-        for (let prop of properties) {
-            let isTopLevel = true;
-            if (prop.superProperties) {
-                for (let superProperty of prop.superProperties) {
-                    if (tree[superProperty.IRI]) {
-                        isTopLevel = false;
-                    }
-                }
-            }
-            if (isTopLevel) {
-                topLevelProps.push(prop);
-            }
-        }
-        return topLevelProps;
     }
 
     propertyGroupRows(availableProps: RDFProperty[], setProps: {}, headerStyles: {}, itemStyles: {}, removeUnsetProps:boolean=false): Array<mixed> {
