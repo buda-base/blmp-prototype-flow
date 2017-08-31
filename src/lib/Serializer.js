@@ -8,12 +8,15 @@ const RDF  = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 const TYPE = RDF('type');
 
 export default class Serializer {
+    _addTypes: boolean;
+
     constructor() {
 
     }
 
-    serialize(individual: Individual) {
+    serialize(individual: Individual, addTypes=false) {
         let store = new rdf.graph();
+        this._addTypes = addTypes;
         this.addIndividualToStore(individual, store);
 
         const prefixes = {
@@ -52,7 +55,7 @@ export default class Serializer {
             mainNode = rdf.blankNode();
         }
 
-        if (individual.types) {
+        if (this._addTypes && individual.types) {
             for (let type of individual.types) {
                 store.add(mainNode, TYPE, rdf.sym(type));
             }
