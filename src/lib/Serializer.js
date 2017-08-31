@@ -48,10 +48,10 @@ export default class Serializer {
 
     addIndividualToStore(individual: Individual, store: IndexedFormula) {
         let mainNode;
-        if (individual.id) {
+        if (individual.id && !individual.hasGeneratedId) {
             mainNode = rdf.sym(individual.id);
         } else {
-            mainNode = rdf.blankNode();
+            mainNode = rdf.blankNode(individual.id);
         }
 
         if (this._addTypes && individual.types) {
@@ -67,12 +67,12 @@ export default class Serializer {
             for (let value of values) {
                 let valueNode;
                 if (value instanceof Individual) {
-                    if (value.id) {
+                    if (value.id && !value._hasGeneratedId) {
                         if (value.id.indexOf(':' !== -1)) {
                             valueNode = rdf.sym(value.id);
                         }
                     } else {
-                        valueNode = rdf.blankNode();
+                        valueNode = rdf.blankNode(value.id);
                     }
                     this.addIndividualToStore(value, store);
                 } else if (value instanceof Literal) {
@@ -85,7 +85,6 @@ export default class Serializer {
                     } catch(e) {
                         console.log('error parsing literal: %o, error: %e', value, e);
                     }
-
                 }
                 try {
                     store.add(mainNode, propertyNode, valueNode);
