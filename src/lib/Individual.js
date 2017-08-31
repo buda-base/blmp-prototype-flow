@@ -5,6 +5,7 @@ let ID = 0;
 
 export default class Individual {
     _id: ?string;
+    _hasGeneratedId: boolean;
     _types: string[];
     _properties: {};
     _uniqueId: string;
@@ -14,6 +15,7 @@ export default class Individual {
         this._properties = {};
         this._types = [];
         this._uniqueId = 'INDIVIDUAL_' + UNIQUE_ID++;
+        this._hasGeneratedId = false;
     }
     
     get uniqueId(): string {
@@ -27,6 +29,7 @@ export default class Individual {
     get id(): ?string {
         if (!this._id) {
             this._id = '_:b' + ID++;
+            this._hasGeneratedId = true;
         }
         return this._id;
     }
@@ -36,6 +39,10 @@ export default class Individual {
             newId = ":" + newId;
         }
         this._id = newId;
+    }
+
+    get hasGeneratedId(): boolean {
+        return this._hasGeneratedId;
     }
 
     get types(): string[] {
