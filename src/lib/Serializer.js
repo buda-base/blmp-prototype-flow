@@ -32,6 +32,15 @@ export default class Serializer {
                 // We can't use that as we have to call suggestPrefix to set
                 // our preferred prefixes.
                 let serializer = rdf.Serializer(store);
+
+                // We need to wrap stringToN3 as there is no API
+                // to set what encoding flags it should use.
+                let stringToN3 = serializer.__proto__.stringToN3;
+                serializer.__proto__.stringToN3 = function(str) {
+                    // Force displaying as unicode.
+                    // Use anything other than 'e' as a flag.
+                    return stringToN3(str, 'a');
+                };
                 let storeStatements = store.statementsMatching(undefined, undefined, undefined, undefined);
                 serializer.suggestNamespaces(store.namespaces);
                 for (let prefix in prefixes) {
