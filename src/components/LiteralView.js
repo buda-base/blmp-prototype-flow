@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import './LiteralView.css';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
+import DatePicker from 'material-ui/DatePicker';
 import MenuItem from 'material-ui/MenuItem';
 import Literal from '../lib/Literal';
 
@@ -16,7 +17,7 @@ const styles = {
     }
 };
 
-const langs = ['bo', 'en', 'fr'];
+const langs = ['bo', 'bo-x-ewts', 'en', 'fr'];
 
 interface Props {
     literal: Literal,
@@ -45,10 +46,14 @@ export default class LiteralView extends Component {
         }
     }
 
-    valueChanged(event: {}, value: string) {
+    valueChanged(event: {}, value: string | Date) {
+        if (this.props.literal.isDate && (value instanceof String)) {
+            value = new Date(value);
+        }
         this.props.literal.value = value;
         this.setState((prevState, props) => {
             return {
+                ...prevState,
                 value
             }
         });
@@ -81,20 +86,24 @@ export default class LiteralView extends Component {
 
     render() {
         let value = this.props.literal.value;
-        if (this.props.literal.isDate) {
-            value = new Date(value);
-        }
         if (this.props.isEditable) {
-            const valueFloatingLabel = (this.props.literal.hasLanguage && this.props.isEditable) ? " " : "";
-            value = <TextField
-                floatingLabelText={valueFloatingLabel}
-                floatingLabelFixed={true}
-                defaultValue={this.state.value}
-                ref={(textField) => this._valueControl = textField}
-                onChange={this.valueChanged.bind(this)}
-                style={styles.valueField}
-                id={this.generateId('TextField')}
-            />
+            if (this.props.literal.isDate) {
+                value = <DatePicker
+                    value={this.state.value}
+                    onChange={this.valueChanged.bind(this)}
+                />
+            } else {
+                const valueFloatingLabel = (this.props.literal.hasLanguage && this.props.isEditable) ? " " : "";
+                value = <TextField
+                    floatingLabelText={valueFloatingLabel}
+                    floatingLabelFixed={true}
+                    defaultValue={this.state.value}
+                    ref={(textField) => this._valueControl = textField}
+                    onChange={this.valueChanged.bind(this)}
+                    style={styles.valueField}
+                    id={this.generateId('TextField')}
+                />
+            }
         }
         let langItems = [];
         for (let lang of langs) {
