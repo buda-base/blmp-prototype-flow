@@ -9,11 +9,11 @@ import Literal from '../lib/Literal';
 
 const styles = {
     inlineSelect: {
-        width: '80px',
+        width: '140px',
         float: 'left'
     },
     valueField: {
-        width: 'calc(100% - 80px)'
+        width: 'calc(100% - 140px)'
     }
 };
 
