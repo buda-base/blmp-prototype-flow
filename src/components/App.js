@@ -97,7 +97,7 @@ class App extends Component {
         const mimeType = 'application/rdf+xml';
         return new Promise((resolve, reject) => {
             try {
-                Ontology.create(data, 'http://purl.bdrc.io/ontology/root#', mimeType)
+                Ontology.create(data, 'http://purl.bdrc.io/ontology/core/', mimeType)
                     .then((ontology) => {
                         this.setState((prevState, props) => {
                             return {
@@ -119,7 +119,7 @@ class App extends Component {
         const mimeType = 'text/turtle';
         return new Promise((resolve, reject) => {
             try {
-                Graph.create(data, 'http://purl.bdrc.io/ontology/root/', mimeType, ontology)
+                Graph.create(data, 'http://purl.bdrc.io/ontology/core/', mimeType, ontology)
                     .then((graph) => {
                         this.setState((prevState, props) => {
                             return {
