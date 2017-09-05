@@ -67,7 +67,7 @@ class App extends Component {
     async init() {
         const [owlText, graphText] = await Promise.all([
             this._fetchText('/bdrc.owl'),
-            this._fetchText('/placeG844.json')
+            this._fetchText('/G844.ttl')
         ]);
         const ontology = await this._processOntology(owlText);
         const graph = await this._processGraph(graphText, ontology);
@@ -116,7 +116,7 @@ class App extends Component {
     }
 
     _processGraph(data, ontology) {
-        const mimeType = 'application/ld+json';
+        const mimeType = 'text/turtle';
         return new Promise((resolve, reject) => {
             try {
                 Graph.create(data, 'http://purl.bdrc.io/ontology/root/', mimeType, ontology)
