@@ -1,5 +1,10 @@
 // @flow
 
+export type RDFComment = {
+    lang?: string,
+    comment?: string
+}
+
 export default class RDFProperty {
     _IRI: string;
     _superProperties: RDFProperty[];
@@ -7,6 +12,7 @@ export default class RDFProperty {
     _domains: string[] = [];
     _propertyType: string;
     _children: RDFProperty[] = [];
+    _comments: RDFComment[] = [];
 
     constructor(IRI: string) {
         this._IRI = IRI;
@@ -85,5 +91,13 @@ export default class RDFProperty {
         if (this._children.indexOf(child) === -1) {
             this._children.push(child);
         }
+    }
+
+    get comments(): RDFComment[] {
+        return this._comments;
+    }
+
+    addComment(comment: RDFComment) {
+        this._comments.push(comment);
     }
 }

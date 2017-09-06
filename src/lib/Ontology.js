@@ -4,6 +4,7 @@ import { IndexedFormula, Namespace, Node, NamedNode, Statement } from 'rdflib';
 import {BlankNode} from 'rdflib';
 import RDFClass from './RDFClass';
 import RDFProperty from './RDFProperty';
+import type RDFComment from './RDFProperty';
 
 const RDF  = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 const RDFS = Namespace('http://www.w3.org/2000/01/rdf-schema#');
@@ -17,6 +18,7 @@ const SUBCLASS_OF = RDFS('subClassOf');
 const SUBPROPERTY_OF = RDFS('subPropertyOf');
 const RANGE = RDFS('range');
 const DOMAIN = RDFS('domain');
+const COMMENT = RDFS('comment');
 export const DATATYPE_PROPERTY = OWL('DatatypeProperty');
 export const OBJECT_PROPERTY = OWL('ObjectProperty');
 export const ANNOTATION_PROPERTY = OWL('AnnotationProperty');
@@ -138,6 +140,10 @@ export default class Ontology {
             if (!prop) {
                 prop = new RDFProperty(property.subject.value);
                 this._properties[prop.IRI] = prop;
+            }
+            const comments = this.getComments(property.subject);
+            for (let comment of comments) {
+                prop.addComment(comment);
             }
             this.getDomains(property.subject).map(domain => prop.addDomain(domain));
             let ranges = this.getRanges(property.subject);
@@ -298,6 +304,22 @@ export default class Ontology {
         }
 
         return values;
+    }
+
+    getComments(object: Node): RDFComment[] {
+        let comments: RDFComment[] = [];
+        let values = this.getStatements(object, COMMENT, undefined);
+        for (let commentData of values) {
+            let lang = commentData.object.lang;
+            let text = commentData.object.value;
+            let comment: RDFComment = {
+                lang: lang,
+                comment: text
+            };
+            comments.push(comment);
+        }
+
+        return comments;
     }
 
     addClass(classIRI: string): ?RDFClass {
