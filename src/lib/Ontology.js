@@ -4,7 +4,7 @@ import { IndexedFormula, Namespace, Node, NamedNode, Statement } from 'rdflib';
 import {BlankNode} from 'rdflib';
 import RDFClass from './RDFClass';
 import RDFProperty from './RDFProperty';
-import type RDFComment from './RDFProperty';
+import type { RDFComment } from './RDFProperty';
 
 const RDF  = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 const RDFS = Namespace('http://www.w3.org/2000/01/rdf-schema#');
