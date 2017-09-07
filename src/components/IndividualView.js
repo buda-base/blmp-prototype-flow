@@ -8,6 +8,7 @@ import formatIRI from '../lib/formatIRI';
 import classnames from 'classnames';
 import { DATATYPE_PROPERTY, OBJECT_PROPERTY, ANNOTATION_PROPERTY } from '../lib/Ontology';
 import RDFProperty from '../lib/RDFProperty';
+import type { RDFComment } from '../lib/RDFProperty';
 
 // Material-UI
 import {List, ListItem} from 'material-ui/List';
@@ -92,8 +93,11 @@ export default class IndividualView extends React.Component {
 
     propertyGroupRows(availableProps: RDFProperty[], setProps: {}, headerStyles: {}, itemStyles: {}, removeUnsetProps:boolean=false): Array<mixed> {
         let rows = [];
-
-        const availablePropsIRIs = availableProps.map(prop => prop.IRI);
+        let props = {};
+        const availablePropsIRIs = availableProps.map(prop => {
+            props[prop.IRI] = prop;
+            return prop.IRI;
+        });
         let existingProps = {};
         for (let propKey in setProps) {
             if (availablePropsIRIs.indexOf(propKey) === -1) {
@@ -112,23 +116,24 @@ export default class IndividualView extends React.Component {
 
         for (let propertyType in existingProps) {
             let propertyValues = existingProps[propertyType];
-            rows = rows.concat(this.rowsForProperty(propertyType, propertyValues, headerStyles, itemStyles));
+            rows = rows.concat(this.rowsForProperty(propertyType, propertyValues,props[propertyType].comments, headerStyles, itemStyles));
         }
 
         return rows;
     }
 
-    rowsForProperty(propertyType: string, propertyValues: Array<mixed>, headerStyles: {}, itemStyles: {}): Array<mixed> {
+    rowsForProperty(propertyType: string, propertyValues: Array<mixed>, comments: RDFComment[], headerStyles: {}, itemStyles: {}): Array<mixed> {
         let rows = [];
 
         const onTapAdd = (event) => {
             this.addProperty(propertyType);
         };
+        let title = comments.map(comment => comment.comment).join('\n\n');
         rows.push(
             <Subheader
                 style={headerStyles}
             >
-                {formatIRI(propertyType)}
+                <span title={title}>{formatIRI(propertyType)}</span>
                 {this.props.isEditable &&
                     <span>
                     <IconButton
