@@ -19,6 +19,7 @@ const SUBPROPERTY_OF = RDFS('subPropertyOf');
 const RANGE = RDFS('range');
 const DOMAIN = RDFS('domain');
 const COMMENT = RDFS('comment');
+const LABEL = RDFS('label');
 export const DATATYPE_PROPERTY = OWL('DatatypeProperty');
 export const OBJECT_PROPERTY = OWL('ObjectProperty');
 export const ANNOTATION_PROPERTY = OWL('AnnotationProperty');
@@ -145,6 +146,7 @@ export default class Ontology {
             for (let comment of comments) {
                 prop.addComment(comment);
             }
+            prop.label = this.getLabel(property.subject);
             this.getDomains(property.subject).map(domain => prop.addDomain(domain));
             let ranges = this.getRanges(property.subject);
             ranges.map(range => prop.addRange(range));
@@ -320,6 +322,11 @@ export default class Ontology {
         }
 
         return comments;
+    }
+
+    getLabel(object: Node): string {
+        let values = this.getStatements(object, LABEL, undefined);
+        return values.map(node => node.object.value).join('; ');
     }
 
     addClass(classIRI: string): ?RDFClass {

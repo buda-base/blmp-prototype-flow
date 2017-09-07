@@ -13,6 +13,7 @@ export default class RDFProperty {
     _propertyType: string;
     _children: RDFProperty[] = [];
     _comments: RDFComment[] = [];
+    _label: string;
 
     constructor(IRI: string) {
         this._IRI = IRI;
@@ -99,5 +100,13 @@ export default class RDFProperty {
 
     addComment(comment: RDFComment) {
         this._comments.push(comment);
+    }
+
+    get label(): string {
+        return this._label;
+    }
+
+    set label(newLabel: string) {
+        this._label = newLabel;
     }
 }
