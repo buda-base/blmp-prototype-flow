@@ -119,7 +119,7 @@ class App extends Component {
         const mimeType = 'text/turtle';
         return new Promise((resolve, reject) => {
             try {
-                Graph.create(data, 'http://purl.bdrc.io/ontology/core/', mimeType, ontology)
+                Graph.create(data, 'http://purl.bdrc.io/resource/G844', mimeType, ontology)
                     .then((graph) => {
                         this.setState((prevState, props) => {
                             return {
