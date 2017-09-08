@@ -14,17 +14,10 @@ export default class Serializer {
 
     }
 
-    serialize(individual: Individual, addTypes=false) {
+    serialize(individual: Individual, baseURI, namespaces={}, addTypes=false) {
         let store = new rdf.graph();
         this._addTypes = addTypes;
         this.addIndividualToStore(individual, store);
-
-        const prefixes = {
-            'adm': 'http://purl.bdrc.io/ontology/admin/',
-            'xsd': 'http://www.w3.org/2001/XMLSchema#',
-            'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
-            'bdr': 'http://purl.bdrc.io/resource/'
-        };
 
         return new Promise((resolve, reject) => {
             try {
@@ -32,6 +25,7 @@ export default class Serializer {
                 // We can't use that as we have to call suggestPrefix to set
                 // our preferred prefixes.
                 let serializer = rdf.Serializer(store);
+                serializer.defaultNamespace = baseURI;
 
                 // We need to wrap stringToN3 as there is no API
                 // to set what encoding flags it should use.
