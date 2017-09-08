@@ -141,4 +141,8 @@ export default class Graph {
     getAll() {
         return  this._store.statementsMatching(undefined, undefined, undefined);
     }
+
+    getNamespaces(): {} {
+        return this._store.namespaces;
+    }
 }
