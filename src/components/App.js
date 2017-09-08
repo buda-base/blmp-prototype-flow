@@ -138,7 +138,8 @@ class App extends Component {
 
     updateGraphText() {
         let serializer = new Serializer();
-        serializer.serialize(this.state.individual)
+        const baseURI = 'http://purl.bdrc.io/ontology/core/';
+        serializer.serialize(this.state.individual, baseURI, this.state.graph.getNamespaces())
             .then((str) => {
                 this.setState((prevState, props) => {
                     return {
