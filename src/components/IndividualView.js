@@ -9,6 +9,7 @@ import classnames from 'classnames';
 import { DATATYPE_PROPERTY, OBJECT_PROPERTY, ANNOTATION_PROPERTY } from '../lib/Ontology';
 import RDFProperty from '../lib/RDFProperty';
 import type { RDFComment } from '../lib/RDFProperty';
+import capitalize from '../lib/capitalize';
 
 // Material-UI
 import {List, ListItem} from 'material-ui/List';
@@ -116,24 +117,25 @@ export default class IndividualView extends React.Component {
 
         for (let propertyType in existingProps) {
             let propertyValues = existingProps[propertyType];
-            rows = rows.concat(this.rowsForProperty(propertyType, propertyValues,props[propertyType].comments, headerStyles, itemStyles));
+            rows = rows.concat(this.rowsForProperty(props[propertyType], propertyValues, headerStyles, itemStyles));
         }
 
         return rows;
     }
 
-    rowsForProperty(propertyType: string, propertyValues: Array<mixed>, comments: RDFComment[], headerStyles: {}, itemStyles: {}): Array<mixed> {
+    rowsForProperty(property: RDFProperty, propertyValues: Array<mixed>, headerStyles: {}, itemStyles: {}): Array<mixed> {
         let rows = [];
 
         const onTapAdd = (event) => {
-            this.addProperty(propertyType);
+            this.addProperty(property.IRI);
         };
-        let title = comments.map(comment => comment.comment).join('\n\n');
+        let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
+        let title = (property.label) ? capitalize(property.label) : formatIRI(property.IRI);
         rows.push(
             <Subheader
                 style={headerStyles}
             >
-                <span title={title}>{formatIRI(propertyType)}</span>
+                <span title={tooltip}>{title}</span>
                 {this.props.isEditable &&
                     <span>
                     <IconButton
@@ -151,7 +153,7 @@ export default class IndividualView extends React.Component {
         for (let propertyValue of propertyValues) {
             let view;
             let isEditable = this.props.isEditable;
-            let key = propertyType + '_';
+            let key = property.IRI + '_';
             let classes = ['individualRow'];
             if (propertyValue instanceof Literal) {
                 view = <LiteralView literal={propertyValue}
@@ -177,7 +179,7 @@ export default class IndividualView extends React.Component {
 
             }
             const onTapRemove = (event) => {
-                this.removeProperty(propertyType, propertyValue);
+                this.removeProperty(property.IRI, propertyValue);
             };
             let removeButton = "";
             if (isEditable || this.props.isEditable) {
