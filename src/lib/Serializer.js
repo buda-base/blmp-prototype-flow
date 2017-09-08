@@ -36,9 +36,8 @@ export default class Serializer {
                     return stringToN3(str, 'a');
                 };
                 let storeStatements = store.statementsMatching(undefined, undefined, undefined, undefined);
-                serializer.suggestNamespaces(store.namespaces);
-                for (let prefix in prefixes) {
-                  serializer.suggestPrefix(prefix, prefixes[prefix]);
+                for (let prefix in namespaces) {
+                  serializer.suggestPrefix(prefix, namespaces[prefix]);
                 }
                 serializer.setFlags('si'); // Suppress = for sameAs and => for implies
                 let documentString = serializer.statementsToN3(storeStatements);
