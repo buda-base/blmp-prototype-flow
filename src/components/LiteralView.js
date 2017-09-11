@@ -9,7 +9,7 @@ import Literal from '../lib/Literal';
 
 const styles = {
     inlineSelect: {
-        width: '140px',
+        width: '120px',
         float: 'left'
     },
     valueField: {
