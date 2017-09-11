@@ -17,7 +17,12 @@ const styles = {
     }
 };
 
-const langs = ['bo', 'bo-x-ewts', 'en', 'fr'];
+const langs = {
+    'bo': 'Tibetan',
+    'bo-x-ewts': 'Wylie',
+    'en': 'English',
+    'fr': 'French'
+};
 
 interface Props {
     literal: Literal,
@@ -106,14 +111,18 @@ export default class LiteralView extends Component {
             }
         }
         let langItems = [];
-        for (let lang of langs) {
-            langItems.push(<MenuItem key={lang} value={lang} primaryText={lang}/>);
+        for (let lang in langs) {
+            langItems.push(<MenuItem
+                key={lang}
+                value={lang}
+                primaryText={langs[lang]}
+            />);
         }
 
         return (
             <div className="literalView">
                 {this.props.literal.language && !this.props.isEditable &&
-                <strong>{this.props.literal.language}: </strong>
+                <strong>{langs[this.props.literal.language]}: </strong>
                 }
                 {this.props.literal.hasLanguage && this.props.isEditable &&
                 <SelectField
