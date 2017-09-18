@@ -18,6 +18,7 @@ export default class IndividualEditor extends Component {
                 ontology={this.props.ontology}
                 nested={false}
                 onIndividualUpdated={this.props.onIndividualUpdated}
+                level={0}
             />
         } else {
             editor = <div>Nothing selected</div>

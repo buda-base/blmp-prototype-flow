@@ -2,9 +2,11 @@
 import React, {Component} from 'react';
 import './LiteralView.css';
 import TextField from 'material-ui/TextField';
-import SelectField from 'material-ui/SelectField';
-import DatePicker from 'material-ui/DatePicker';
-import MenuItem from 'material-ui/MenuItem';
+import Select from 'material-ui/Select';
+import Input, { InputLabel } from 'material-ui/Input';
+// import DatePicker from 'material-ui/DatePicker';
+import { MenuItem } from 'material-ui/Menu';
+import { FormControl, FormHelperText } from 'material-ui/Form';
 import Literal from '../lib/Literal';
 
 const styles = {
@@ -93,19 +95,20 @@ export default class LiteralView extends Component {
         let value = this.props.literal.value;
         if (this.props.isEditable) {
             if (this.props.literal.isDate) {
-                value = <DatePicker
+                value = <TextField
+                    type="date"
                     value={this.state.value}
                     onChange={this.valueChanged.bind(this)}
                 />
             } else {
                 const valueFloatingLabel = (this.props.literal.hasLanguage && this.props.isEditable) ? " " : "";
                 value = <TextField
-                    floatingLabelText={valueFloatingLabel}
-                    floatingLabelFixed={true}
-                    defaultValue={this.state.value}
+                    // floatingLabelText={valueFloatingLabel}
+                    // floatingLabelFixed={true}
+                    value={this.state.value}
                     ref={(textField) => this._valueControl = textField}
                     onChange={this.valueChanged.bind(this)}
-                    style={styles.valueField}
+                    // style={styles.valueField}
                     id={this.generateId('TextField')}
                 />
             }
@@ -115,9 +118,12 @@ export default class LiteralView extends Component {
             langItems.push(<MenuItem
                 key={lang}
                 value={lang}
-                primaryText={langs[lang]}
-            />);
+            >
+                {langs[lang]}
+            </MenuItem>);
         }
+
+        const selectId = this.generateId(this.props.literal.uniqueId);
 
         return (
             <div className="literalView">
@@ -125,18 +131,22 @@ export default class LiteralView extends Component {
                 <strong>{langs[this.props.literal.language]}: </strong>
                 }
                 {this.props.literal.hasLanguage && this.props.isEditable &&
-                <SelectField
-                    floatingLabelText="lang"
-                    floatingLabelFixed={true}
-                    fullWidth={false}
-                    style={styles.inlineSelect}
-                    value={this.state.language}
-                    ref={(select) => this._languageControl = select}
-                    onChange={this.languageChanged.bind(this)}
-                    id={this.generateId('SelectField')}
-                >
-                    {langItems}
-                </SelectField>
+                <FormControl>
+                    <InputLabel htmlFor={selectId}>lang</InputLabel>
+                    <Select
+                        // floatingLabelText="lang"
+                        // floatingLabelFixed={true}
+                        // fullWidth={false}
+                        style={styles.inlineSelect}
+                        value={this.state.language}
+                        ref={(select) => this._languageControl = select}
+                        onChange={this.languageChanged.bind(this)}
+                        // id={selectId}
+                        input={<Input id={selectId} />}
+                    >
+                        {langItems}
+                    </Select>
+                </FormControl>
                 }
                 {value}
             </div>

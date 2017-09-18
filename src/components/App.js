@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import RaisedButton from 'material-ui/RaisedButton';
+import Button from 'material-ui/Button';
 import Drawer from 'material-ui/Drawer';
-import { List, ListItem, makeSelectable } from 'material-ui/List';
+import { ListItem } from 'material-ui/List';
+
 import SplitPane from 'react-split-pane';
 import IndividualEditor from './IndividualEditor'
 import Preview from './Preview'
@@ -11,38 +12,6 @@ import IndividualHeading from './IndividualHeading';
 import Ontology from '../lib/Ontology';
 import Graph from '../lib/Graph'
 import Serializer from '../lib/Serializer'
-
-let SelectableList = makeSelectable(List);
-
-function wrapState(ComposedComponent) {
-    return class SelectableList extends Component {
-
-        componentWillMount() {
-            this.setState({
-                selectedIndex: this.props.defaultValue,
-            });
-        }
-
-        handleRequestChange = (event, index) => {
-            this.setState({
-                selectedIndex: index,
-            });
-        };
-
-        render() {
-            return (
-                <ComposedComponent
-                    value={this.state.selectedIndex}
-                    onChange={this.handleRequestChange}
-                >
-                    {this.props.children}
-                </ComposedComponent>
-            );
-        }
-    };
-}
-
-SelectableList = wrapState(SelectableList);
 
 class App extends Component {
     _rootIRI = 'http://purl.bdrc.io/ontology/';
@@ -151,22 +120,6 @@ class App extends Component {
     }
 
     render() {
-        let classes = [];
-        if (this.state.ontology) {
-            classes = this.state.ontology.getClasses();
-        }
-        let classItems = [];
-        for (let classIRI of classes) {
-            let text = classIRI.replace(this._rootIRI, 'bdrc:');
-            classItems.push(
-                <ListItem
-                    value={classIRI}
-                    primaryText={text}
-                />
-            );
-        }
-
-
         if (!this.state.graphText && this.state.individual) {
             this.updateGraphText();
         }
@@ -202,37 +155,35 @@ class App extends Component {
         };
 
         return (
-            <MuiThemeProvider>
-                <div className="App">
-                    <SplitPane
-                        split="vertical"
-                        minSize={350}
-                        size={this.state.splitWidth}
-                        allowResize={true}
-                        ref={(split) => this._mainSplitPane = split}
-                    >
-                        <SplitPane split="horizontal" size={90} allowResize={false}>
-                            <div>
-                                <IndividualHeading individual={this.state.individual} />
-                                <RaisedButton label={(this.state.hidePreview ? "Show" : "Hide") +  " Preview"} style={previewToggleStyle} onClick={toggleShowPreview} />
-                            </div>
-                            <IndividualEditor
-                                individual={this.state.individual}
-                                ontology={this.state.ontology}
-                                onIndividualUpdated={onIndividualUpdated}
-                            />
-                        </SplitPane>
-                        <SplitPane split="horizontal" size={90} allowResize={false}>
-                            <div className="preview">
-                                <h2>Turtle Preview</h2>
-                            </div>
-                            <Preview
-                                graphText={this.state.graphText}
-                            />
-                        </SplitPane>
+            <div className="App">
+                <SplitPane
+                    split="vertical"
+                    minSize={350}
+                    size={this.state.splitWidth}
+                    allowResize={true}
+                    ref={(split) => this._mainSplitPane = split}
+                >
+                    <SplitPane split="horizontal" size={90} allowResize={false}>
+                        <div>
+                            <IndividualHeading individual={this.state.individual} />
+                            <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.state.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
+                        </div>
+                        <IndividualEditor
+                            individual={this.state.individual}
+                            ontology={this.state.ontology}
+                            onIndividualUpdated={onIndividualUpdated}
+                        />
                     </SplitPane>
-                </div>
-            </MuiThemeProvider>
+                    <SplitPane split="horizontal" size={90} allowResize={false}>
+                        <div className="preview">
+                            <h2>Turtle Preview</h2>
+                        </div>
+                        <Preview
+                            graphText={this.state.graphText}
+                        />
+                    </SplitPane>
+                </SplitPane>
+            </div>
         );
     }
 }
