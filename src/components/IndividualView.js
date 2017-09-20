@@ -28,6 +28,119 @@ const iconSizes = {
     }
 };
 
+const listHeaderStyle = {
+    fontSize: '14px',
+    paddingLeft: '0px',
+    marginLeft: 0,
+    color: '#444',
+    fontWeight: 'bold'
+};
+
+const getListItemStyle = (level) => {
+    return {
+        border: 0,
+        padding: "0 0 5px 40px",
+        display: 'flex',
+        alignItems: 'flex-end',
+        marginLeft: ((level + 1) * 20) + 'px'
+    };
+};
+
+class IndividualProperty extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const greenColor = {
+            fill: green[800]
+        };
+        const redColor = {
+            fill: red[800]
+        };
+
+        let listItemStyle = getListItemStyle(this.props.level);
+
+        let onTapAdd = null;
+        if (this.props.onTapAdd) {
+            onTapAdd = this.props.onTapAdd.bind(this);
+        }
+
+        // Header
+        const propertySubheader = <ListItem>
+                {this.props.isEditable &&
+                    <ListItemIcon>
+                        <IconButton
+                            onTouchTap={onTapAdd}
+                        >
+                            <AddCircleIcon style={greenColor}/>
+                        </IconButton>
+                    </ListItemIcon>
+                }
+                <ListItemText title={this.props.tooltip} primary={this.props.title} disableTypography style={listHeaderStyle} />
+
+            </ListItem>;
+
+        // Values
+        let valueRows = [];
+        for (let propertyValue of this.props.propertyValues) {
+            let view;
+            let isEditable = this.props.isEditable(propertyValue);
+            let classes = ['individualRow'];
+            let key = this.props.property.IRI + '_';
+            if (propertyValue instanceof Literal) {
+                view = <LiteralView literal={propertyValue}
+                                    isEditable={isEditable}
+                                    onChange={this.props.onLiteralChanged}
+                />;
+                key += propertyValue.uniqueId;
+                if (isEditable) {
+                    classes.push('individualLiteralRowEditable');
+                } else {
+                    classes.push('individualLiteralRow');
+                }
+            } else if (propertyValue instanceof Individual) {
+                view = <IndividualView individual={propertyValue}
+                                       isExpanded={isEditable}
+                                       isEditable={isEditable}
+                                       ontology={this.props.ontology}
+                                       nested={true}
+                                       onIndividualUpdated={this.props.onIndividualUpdated}
+                                       level={this.props.level + 1}
+                />;
+                key += propertyValue.id + '_' + propertyValue.uniqueId;
+
+            }
+
+            const onTapRemove = (event) => {
+                console.log('clicked IndividualProperty onTapRemove propertyType: %o, propertyValue: %o', this.props.property.IRI, propertyValue);
+                this.props.removeProperty(this.props.property.IRI, propertyValue);
+            };
+            let removeButton = "";
+            if (isEditable) {
+                removeButton = <IconButton
+                    onTouchTap={onTapRemove}
+                    className="removeButton"
+                >
+                    <RemoveCircleIcon style={redColor}/>
+                </IconButton>;
+            }
+
+            valueRows.push(<ListItem
+                style={listItemStyle}
+            >
+                {view}
+                <ListItemSecondaryAction>{removeButton}</ListItemSecondaryAction>
+            </ListItem>);
+        }
+
+        return <List>
+            {propertySubheader}
+            {valueRows}
+        </List>;
+    }
+}
+
 export default class IndividualView extends React.Component {
     _editableIndividuals = [];
 
@@ -94,7 +207,7 @@ export default class IndividualView extends React.Component {
         return groupedProps;
     }
 
-    propertyGroupRows(availableProps: RDFProperty[], setProps: {}, headerStyles: {}, itemStyles: {}, removeUnsetProps:boolean=false): Array<mixed> {
+    propertyGroupRows(availableProps: RDFProperty[], setProps: {}, removeUnsetProps:boolean=false): Array<mixed> {
         let rows = [];
         let props = {};
         const availablePropsIRIs = availableProps.map(prop => {
@@ -117,190 +230,51 @@ export default class IndividualView extends React.Component {
             }
         }
 
+        let propertyLists = [];
         for (let propertyType in existingProps) {
             let propertyValues = existingProps[propertyType];
-            rows = rows.concat(this.rowsForProperty(props[propertyType], propertyValues, headerStyles, itemStyles));
+            propertyLists.push(this.listForProperty(props[propertyType], propertyValues));
         }
-
-        return rows;
+        return propertyLists;
     }
 
-    rowsForProperty(property: RDFProperty, propertyValues: Array<mixed>, headerStyles: {}, itemStyles: {}): {}[] {
-        let rows = [];
-
+    listForProperty(property: RDFProperty, propertyValues: Array<mixed>): {} {
         const onTapAdd = (event) => {
             this.addProperty(property.IRI);
+        };
+        const onLiteralChanged = (event) => {
+            this.props.onIndividualUpdated();
         };
         let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
         let title = (property.label) ? capitalize(property.label) : formatIRI(property.IRI);
 
-        const greenColor = {
-            fill: green[800]
-        };
-        const redColor = {
-            fill: red[800]
-        };
-
-        const propertySubheader = <ListItem>
-                {this.props.isEditable &&
-                    <ListItemIcon>
-                        <IconButton
-                            // iconStyle={iconSizes.small}
-                            onTouchTap={onTapAdd.bind(this)}
-                        >
-                            <AddCircleIcon style={greenColor}/>
-                        </IconButton>
-                    </ListItemIcon>
-                }
-                <ListItemText title={tooltip} primary={title} disableTypography style={headerStyles} />
-
-            </ListItem>;
-
-        rows.push(propertySubheader);
-
-        for (let propertyValue of propertyValues) {
-            let view;
+        const isEditable = (propertyValue) => {
             let isEditable = this.props.isEditable;
-            let key = property.IRI + '_';
-            let classes = ['individualRow'];
-            if (propertyValue instanceof Literal) {
-                view = <LiteralView literal={propertyValue}
-                                    isEditable={isEditable}
-                                    onChange={this.props.onIndividualUpdated}
-                />;
-                key += propertyValue.uniqueId;
-                if (isEditable) {
-                    classes.push('individualLiteralRowEditable');
-                } else {
-                    classes.push('individualLiteralRow');
-                }
-            } else if (propertyValue instanceof Individual) {
+            if (propertyValue instanceof Individual) {
                 isEditable = (this._editableIndividuals.indexOf(propertyValue) !== -1);
-                view = <IndividualView individual={propertyValue}
-                                       isExpanded={isEditable}
-                                       isEditable={isEditable}
-                                       ontology={this.props.ontology}
-                                       nested={true}
-                                       onIndividualUpdated={this.props.onIndividualUpdated}
-                                       level={this.props.level+1}
-                />;
-                key += propertyValue.id + '_' + propertyValue.uniqueId;
-
             }
-            const onTapRemove = (event) => {
-                this.removeProperty(property.IRI, propertyValue);
-            };
-            let removeButton = "";
-            if (isEditable || this.props.isEditable) {
-                removeButton = <IconButton
-                    // iconStyle={iconSizes.small}
-                    onTouchTap={onTapRemove.bind(this)}
-                    className="removeButton"
-                >
-                    <RemoveCircleIcon style={redColor}/>
-                </IconButton>;
-            }
-
-            rows.push(<ListItem
-                    className={classnames(...classes)}
-                    key={key}
-                    style={itemStyles}
-            >
-                {view}
-                <ListItemSecondaryAction>{removeButton}</ListItemSecondaryAction>
-            </ListItem>);
-        }
-        return rows;
-    }
-
-    idPropertyRows(headerStyles: {}, itemStyles: {}): React.Element<*> {
-        const onChange = (value) => {
-            this.props.individual.id = value;
-            this.forceUpdate();
-            this.props.onIndividualUpdated();
+            return isEditable;
         };
-        const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
-        const idView = <LiteralView
-            literal={idLiteral}
-            isEditable={this.props.isEditable}
-            onChange={onChange.bind(this)}
+
+        const propertyView = <IndividualProperty
+            onTapAdd={onTapAdd}
+            onIndividualUpdated={this.props.onIndividualUpdated}
+            onLiteralChanged={onLiteralChanged}
+            tooltip={tooltip}
+            title={title}
+            property={property}
+            propertyValues={propertyValues}
+            isEditable={isEditable}
+            ontology={this.props.ontology}
+            level={this.props.level}
         />;
 
-        const subheader = <ListSubheader style={headerStyles}>ID</ListSubheader>;
-        const list = <List subheader={subheader}>
-            <ListItem key={this.props.individual.id + '_id_row'}>{idView}</ListItem>
-        </List>;
-        return list;
+        return propertyView;
     }
 
-    render() {
-        let title;
-        let subtitle;
-        let rows = [];
-
-        let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
-        if (labels) {
-            title = labels[0].value;
-        } else if (this.props.individual.id) {
-            title = formatIRI(this.props.individual.id);
-        } else {
-            title = <i>&lt;no id&gt;</i>;
-        }
-
-        if (this.props.individual.types[0]) {
-            subtitle = formatIRI(this.props.individual.types[0]);
-        } else {
-            subtitle = '';
-        }
-
-        let listHeaderStyles = {
-            paddingLeft: '0px',
-            marginLeft: 0,
-            color: '#444',
-            fontWeight: 'bold'
-        };
-        if (!this.props.nested) {
-            listHeaderStyles = {
-                ...listHeaderStyles,
-                fontSize: '14px',
-                fontWeight: 'bold'
-            }
-        }
-        let listItemStyles = {
-            border: 0,
-            padding: "0 0 5px 40px",
-            display: 'flex',
-            alignItems: 'flex-end',
-            marginLeft: ((this.props.level + 1) * 20) + 'px'
-        };
-
-        if (labels) {
-            const subheader = <ListSubheader style={listHeaderStyles}>Labels</ListSubheader>;
-            let listItems = labels.map((label, index) => {
-                const labelLiteral = new Literal(STRING_TYPE, label.value);
-                const labelView = <LiteralView
-                    literal={labelLiteral}
-                    isEditable={this.props.isEditable}
-                />;
-                return <ListItem
-                    // innerDivStyle={listItemStyles}
-                    key={this.props.individual.id + '_label_row_'+index}
-                >
-                    {labelView}
-                </ListItem>
-            });
-
-            rows.push(
-                <List subheader={subheader}>
-                    {listItems}
-                </List>
-            );
-        }
-
+    getPropertyLists(): React.Element<*>[] {
         let removeUnsetProperties = true;
         if (this.props.isEditable) {
-            let idRows = this.idPropertyRows(listHeaderStyles, listItemStyles);
-            rows = rows.concat(idRows);
             removeUnsetProperties = false;
         }
 
@@ -311,13 +285,13 @@ export default class IndividualView extends React.Component {
         let properties = this.props.individual.getProperties();
 
         const datatypeHeading = (!this.props.nested) ? 'Datatype Properties' : null;
-        const datatypeRows = this.propertyGroupRows(dataTypeProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties);
+        const datatypeRows = this.propertyGroupRows(dataTypeProps, properties, removeUnsetProperties);
 
         const objectHeading = (!this.props.nested) ? 'Object Properties' : null;
-        const objectRows = this.propertyGroupRows(objectProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties);
+        const objectRows = this.propertyGroupRows(objectProps, properties, removeUnsetProperties);
 
         const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : null;
-        const annotationRows = this.propertyGroupRows(annotationProps, properties, listHeaderStyles, listItemStyles, removeUnsetProperties);
+        const annotationRows = this.propertyGroupRows(annotationProps, properties,  removeUnsetProperties);
 
         const propertyTypes = [
             {
@@ -340,15 +314,15 @@ export default class IndividualView extends React.Component {
             padding: '20px 0 20px 0',
             margin: '0'
         };
-        
+
         const dataRowStyle = {
             marginLeft: ((this.props.level + 1) * 20) + 'px'
         };
 
+        let lists = [];
         for (let propertyData of propertyTypes) {
             if (this.props.nested) {
-                // rows.push(propertyData.rows);
-                rows.push(
+                lists.push(
                     <List>
                         <Collapse in={true} style={dataRowStyle}>
                             {propertyData.rows}
@@ -356,7 +330,7 @@ export default class IndividualView extends React.Component {
                     </List>
                 )
             } else {
-                rows.push(
+                lists.push(
                     <List>
                         <ListItem>
                             <ListItemText
@@ -373,6 +347,95 @@ export default class IndividualView extends React.Component {
             }
         }
 
+        return lists;
+    }
+
+    getIdList(): React.Element<*> {
+        const idProperty = new RDFProperty('ID');
+        const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
+        const propertyValues = [idLiteral];
+
+        const onChange = (value) => {
+            this.props.individual.id = value;
+            this.forceUpdate();
+            this.props.onIndividualUpdated();
+        };
+
+        return <IndividualProperty
+            onIndividualUpdated={this.props.onIndividualUpdated}
+            onLiteralChanged={onChange}
+            title={'ID'}
+            property={idProperty}
+            propertyValues={propertyValues}
+            isEditable={() => true}
+            ontology={this.props.ontology}
+            level={this.props.level}
+        />;
+    }
+
+    getLabelsList(): React.Element<*> | null {
+        let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
+
+        if (!labels) return null;
+
+        const labelProperty = new RDFProperty('http://www.w3.org/2000/01/rdf-schema#label');
+        const onLiteralChanged = (event) => {
+            this.props.onIndividualUpdated();
+        };
+
+        return (
+            <List>
+                <IndividualProperty
+                    onIndividualUpdated={this.props.onIndividualUpdated}
+                    onLiteralChanged={onLiteralChanged}
+                    title={'Label'}
+                    property={labelProperty}
+                    propertyValues={labels}
+                    isEditable={this.props.isEditable}
+                    ontology={this.props.ontology}
+                    level={this.props.level}
+                />;
+            </List>
+        )
+    }
+
+    getNestedTitleList(): React.Element<*> | null {
+        if (!this.props.nested) return null;
+
+        let title = '';
+        let subtitle = '';
+        let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
+        if (labels) {
+            title = labels[0].value;
+        } else if (this.props.individual.id) {
+            title = formatIRI(this.props.individual.id);
+        } else {
+            title = <i>&lt;no id&gt;</i>;
+        }
+
+        if (this.props.individual.types[0]) {
+            subtitle = formatIRI(this.props.individual.types[0]);
+        }
+
+        return(
+            <List>
+                <ListItem>
+                    <ListItemText
+                        primary={title}
+                        secondary={subtitle}
+                    />
+                </ListItem>
+            </List>
+        )
+    }
+
+    render() {
+        // ID
+        let idList = null;
+        if (!this.props.nested) {
+            idList = this.getIdList();
+        }
+
         let classes = ["individualView"];
         if (this.props.isEditable) {
             classes.push("isEditable");
@@ -380,28 +443,13 @@ export default class IndividualView extends React.Component {
         if (this.props.isExpanded) {
             classes.push("isExpanded");
         }
-        let titleStyles = {};
-        if (this.props.nested) {
-
-        } else {
-            titleStyles = {
-                fontSize: '30px'
-            };
-        }
 
         return (
             <div className={classnames(...classes)}>
-                <List>
-                    <ListItem
-                        style={titleStyles}
-                    >
-                        <ListItemText
-                            primary={this.props.nested ? title : null}
-                            secondary={this.props.nested ? subtitle : null}
-                        />
-                    </ListItem>
-                </List>
-                {rows}
+                {this.getNestedTitleList()}
+                {idList}
+                {this.getLabelsList()}
+                {this.getPropertyLists()}
             </div>
         );
     }
