@@ -355,9 +355,7 @@ export default class IndividualView extends React.Component {
             if (this.props.nested) {
                 lists.push(
                     <List>
-                        <Collapse in={true} style={dataRowStyle} >
-                            {propertyData.rows}
-                        </Collapse>
+                        {propertyData.rows}
                     </List>
                 )
             } else {
