@@ -345,8 +345,9 @@ export default class IndividualView extends React.Component {
         };
 
         let lists = [];
-        for (let propertyData of propertyTypes) {
-            let collapseId = propertyData.heading + '_collapsed';
+        for (let [index, propertyData] of propertyTypes.entries()) {
+            let collapseId = [this.props.individual.id, 'level', this.props.level, index, 'collapsed'].join('_');
+
             let handleCollapse = () => {
                 this.toggleCollapseState(collapseId);
             };
