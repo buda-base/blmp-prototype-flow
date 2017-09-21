@@ -11,6 +11,7 @@ const dateTypes = [
 ];
 
 let UNIQUE_ID = 0;
+const defaultLang = 'en';
 
 export default class Literal {
     _type: string;
@@ -21,8 +22,12 @@ export default class Literal {
     constructor(type: string, value: string, language: ?string) {
         this._type = type;
         this._value = value;
-        this._language = language;
         this._uniqueId = 'LITERAL_' + UNIQUE_ID++;
+
+        if (!language && this.hasLanguage) {
+            language = defaultLang;
+        }
+        this._language = language;
     }
 
     get uniqueId(): string {

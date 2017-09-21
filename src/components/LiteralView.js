@@ -46,14 +46,15 @@ export default class LiteralView extends Component {
 
     constructor(props: Props) {
         super(props);
-
+        const language = (props.literal.language !== undefined) ? props.literal.language : 'en';
         this.state = {
-            language: props.literal.language,
+            language: language,
             value: props.literal.value
         }
     }
 
-    valueChanged(event: {}, value: string | Date) {
+    valueChanged(event: {}) {
+        let value = event.target.value;
         if (this.props.literal.isDate && (value instanceof String)) {
             value = new Date(value);
         }
@@ -67,7 +68,8 @@ export default class LiteralView extends Component {
         this.literalChanged();
     }
 
-    languageChanged(event: {}, index: number, value: string) {
+    languageChanged(event: {}) {
+        let value = event.target.value;
         this.props.literal.language = value;
         this.setState((prevState, props) => {
             return {
