@@ -309,13 +309,13 @@ export default class IndividualView extends React.Component {
         let annotationProps = availableProperties[ANNOTATION_PROPERTY.value];
         let properties = this.props.individual.getProperties();
 
-        const datatypeHeading = (!this.props.nested) ? 'Datatype Properties' : null;
+        const datatypeHeading = (!this.props.nested) ? 'Datatype Properties' : '';
         const datatypeRows = this.propertyGroupRows(dataTypeProps, properties, removeUnsetProperties);
 
-        const objectHeading = (!this.props.nested) ? 'Object Properties' : null;
+        const objectHeading = (!this.props.nested) ? 'Object Properties' : '';
         const objectRows = this.propertyGroupRows(objectProps, properties, removeUnsetProperties);
 
-        const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : null;
+        const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : '';
         const annotationRows = this.propertyGroupRows(annotationProps, properties,  removeUnsetProperties);
 
         const propertyTypes = [
