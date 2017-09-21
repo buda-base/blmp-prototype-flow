@@ -5,7 +5,6 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "highlight.js": "^9.12.0",
-    "rdflib": "^0.15.0",
     "material-ui": "^1.0.0-beta.11",
     "material-ui-icons": "^1.0.0-beta.10",
     "rdflib": "^0.16.0",
