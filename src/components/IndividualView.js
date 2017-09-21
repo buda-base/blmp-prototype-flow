@@ -149,8 +149,33 @@ export default class IndividualView extends React.Component {
 
         this.state = {
             popoversOpen: {},
-            popoversEl: {}
+            popoversEl: {},
+            collapseState: {}
         }
+    }
+
+    setCollapseState(id: string, open: boolean) {
+        const collapseState = {
+            ...this.state.collapseState,
+            [id]: open
+        };
+        this.setState((prevState, props) => {
+            return {
+                ...prevState,
+                collapseState
+            }
+        })
+    }
+
+    toggleCollapseState(id: string) {
+        let open;
+        if (this.state.collapseState[id] === undefined) {
+            open = true;
+        } else {
+            open = !this.state.collapseState[id];
+        }
+
+        this.setCollapseState(id, open);
     }
 
     addProperty(propertyType: string) {
@@ -321,10 +346,15 @@ export default class IndividualView extends React.Component {
 
         let lists = [];
         for (let propertyData of propertyTypes) {
+            let collapseId = propertyData.heading + '_collapsed';
+            let handleCollapse = () => {
+                this.toggleCollapseState(collapseId);
+            };
+
             if (this.props.nested) {
                 lists.push(
                     <List>
-                        <Collapse in={true} style={dataRowStyle}>
+                        <Collapse in={true} style={dataRowStyle} >
                             {propertyData.rows}
                         </Collapse>
                     </List>
@@ -332,14 +362,15 @@ export default class IndividualView extends React.Component {
             } else {
                 lists.push(
                     <List>
-                        <ListItem>
+                        <ListItem button onClick={handleCollapse}>
                             <ListItemText
                                 disableTypography
                                 primary={propertyData.heading}
                                 style={headingStyles}
                             />
+                            {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
-                        <Collapse in={true} style={dataRowStyle}>
+                        <Collapse in={this.state.collapseState[collapseId]} style={dataRowStyle} >
                             {propertyData.rows}
                         </Collapse>
                     </List>
