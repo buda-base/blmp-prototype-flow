@@ -346,7 +346,7 @@ export default class IndividualView extends React.Component {
         const headingStyles = {
             fontSize: '21px',
             fontWeight: 'bold',
-            padding: '20px 0 20px 0',
+            padding: '10px 0 10px 0',
             margin: '0'
         };
 
