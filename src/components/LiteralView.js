@@ -110,7 +110,7 @@ export default class LiteralView extends Component {
                     value={this.state.value}
                     ref={(textField) => this._valueControl = textField}
                     onChange={this.valueChanged.bind(this)}
-                    // style={styles.valueField}
+                    style={styles.valueField}
                     id={this.generateId('TextField')}
                 />
             }
