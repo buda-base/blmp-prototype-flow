@@ -68,7 +68,7 @@ class IndividualProperty extends React.Component {
 
         // Header
         const propertySubheader = <ListItem>
-                {this.props.isEditable &&
+                {this.props.isEditable() &&
                     <ListItemIcon>
                         <IconButton
                             onTouchTap={onTapAdd}
@@ -275,8 +275,8 @@ export default class IndividualView extends React.Component {
 
         const isEditable = (propertyValue) => {
             let isEditable = this.props.isEditable;
-            if (propertyValue instanceof Individual) {
-                isEditable = (this._editableIndividuals.indexOf(propertyValue) !== -1);
+            if (propertyValue && propertyValue instanceof Individual) {
+                isEditable = (this._editableIndividuals.indexOf(propertyValue) !== -1) ? true : false;
             }
             return isEditable;
         };
