@@ -39,10 +39,10 @@ const listHeaderStyle = {
 const getListItemStyle = (level) => {
     return {
         border: 0,
-        padding: "0 0 5px 40px",
+        padding: "0 0 5px 0px",
         display: 'flex',
         alignItems: 'flex-end',
-        marginLeft: ((level + 1) * 20) + 'px'
+        marginLeft: 30 + 'px'
     };
 };
 
