@@ -73,7 +73,7 @@ class IndividualProperty extends React.Component {
                         <IconButton
                             onTouchTap={onTapAdd}
                         >
-                            <AddCircleIcon style={greenColor}/>
+                            <AddCircleIcon style={{...greenColor, ...iconSizes.small}}/>
                         </IconButton>
                     </ListItemIcon>
                 }
@@ -122,7 +122,7 @@ class IndividualProperty extends React.Component {
                     onTouchTap={onTapRemove}
                     className="removeButton"
                 >
-                    <RemoveCircleIcon style={redColor}/>
+                    <RemoveCircleIcon style={{...redColor, ...iconSizes.small}}/>
                 </IconButton>;
             }
 
