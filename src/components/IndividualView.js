@@ -101,8 +101,8 @@ class IndividualProperty extends React.Component {
                 }
             } else if (propertyValue instanceof Individual) {
                 view = <IndividualView individual={propertyValue}
-                                       isExpanded={isEditable}
-                                       isEditable={isEditable}
+                                       isExpanded={false}
+                                       isEditable={false}
                                        ontology={this.props.ontology}
                                        nested={true}
                                        onIndividualUpdated={this.props.onIndividualUpdated}
@@ -150,7 +150,8 @@ export default class IndividualView extends React.Component {
         this.state = {
             popoversOpen: {},
             popoversEl: {},
-            collapseState: {}
+            collapseState: {},
+            isExpanded: props.isExpanded
         }
     }
 
@@ -176,6 +177,15 @@ export default class IndividualView extends React.Component {
         }
 
         this.setCollapseState(id, open);
+    }
+
+    toggleExpandedState() {
+        this.setState((prevState, props) => {
+            return {
+                ...prevState,
+                isExpanded: !prevState.isExpanded
+            }
+        })
     }
 
     addProperty(propertyType: string) {
@@ -449,11 +459,12 @@ export default class IndividualView extends React.Component {
 
         return(
             <List>
-                <ListItem>
+                <ListItem button onClick={() => this.toggleExpandedState()}>
                     <ListItemText
                         primary={title}
                         secondary={subtitle}
                     />
+                    {this.state.isExpanded ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
             </List>
         )
@@ -477,9 +488,11 @@ export default class IndividualView extends React.Component {
         return (
             <div className={classnames(...classes)}>
                 {this.getNestedTitleList()}
-                {idList}
-                {this.getLabelsList()}
-                {this.getPropertyLists()}
+                <Collapse in={this.state.isExpanded}>
+                    {idList}
+                    {this.getLabelsList()}
+                    {this.getPropertyLists()}
+                </Collapse>
             </div>
         );
     }
