@@ -72,6 +72,7 @@ class IndividualProperty extends React.Component {
                     <ListItemIcon>
                         <IconButton
                             onTouchTap={onTapAdd}
+                            style={{marginRight: 0}}
                         >
                             <AddCircleIcon style={{...greenColor, ...iconSizes.small}}/>
                         </IconButton>
