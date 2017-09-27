@@ -11,6 +11,9 @@ import RDFProperty from '../lib/RDFProperty';
 import type { RDFComment } from '../lib/RDFProperty';
 import capitalize from '../lib/capitalize';
 
+// rdf components
+import RDFComponents from './RDF/rdf_components';
+
 // Material-UI
 import List, {ListItem, ListItemText, ListSubheader, ListItemSecondaryAction, ListItemIcon} from 'material-ui/List';
 import Collapse from 'material-ui/transitions/Collapse';
@@ -85,7 +88,7 @@ class IndividualProperty extends React.Component {
         // Values
         let valueRows = [];
         for (let propertyValue of this.props.propertyValues) {
-            let view;
+            let view = null;
             let isEditable = this.props.isEditable(propertyValue);
             let classes = ['individualRow'];
             let key = this.props.property.IRI + '_';
@@ -101,16 +104,33 @@ class IndividualProperty extends React.Component {
                     classes.push('individualLiteralRow');
                 }
             } else if (propertyValue instanceof Individual) {
-                view = <IndividualView individual={propertyValue}
-                                       isExpanded={false}
-                                       isEditable={false}
-                                       ontology={this.props.ontology}
-                                       nested={true}
-                                       onIndividualUpdated={this.props.onIndividualUpdated}
-                                       level={this.props.level + 1}
-                />;
+                for (let range of this.props.property.ranges) {
+                    if (range in RDFComponents) {
+                        const rdfComponent = RDFComponents[range];
+                        view = React.createElement(rdfComponent, {
+                            individual: propertyValue,
+                            isExpanded: false,
+                            isEditable: false,
+                            ontology: this.props.ontology,
+                            nested: true,
+                            onIndividualUpdated: this.props.onIndividualUpdated,
+                            level: this.props.level + 1
+                        }, null);
+                        break;
+                    }
+                }
+                if (view === null) {
+                    view = <IndividualView individual={propertyValue}
+                                isExpanded={false}
+                                isEditable={false}
+                                ontology={this.props.ontology}
+                                nested={true}
+                                onIndividualUpdated={this.props.onIndividualUpdated}
+                                level={this.props.level + 1}
+                    />;
+                }
+                
                 key += propertyValue.id + '_' + propertyValue.uniqueId;
-
             }
 
             const onTapRemove = (event) => {
