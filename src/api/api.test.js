@@ -1,3 +1,4 @@
+// @flow
 import api from './api';
 
 const object = 'G843';
@@ -33,9 +34,11 @@ describe('API', () => {
             fetch: fetchMock
         });
 
-        bdrcAPI.getObjectData(object).then((text) => {
-            expect(text).toEqual(SUCCESS);
-            done();
-        });
+        bdrcAPI.getObjectData(object)
+            .then((text) => {
+                expect(text).toEqual(SUCCESS);
+                done();
+            })
+            .catch();
     });
 });
