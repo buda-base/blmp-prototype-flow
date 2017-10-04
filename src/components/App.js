@@ -9,98 +9,43 @@ import SplitPane from 'react-split-pane';
 import IndividualEditor from './IndividualEditor'
 import Preview from './Preview'
 import IndividualHeading from './IndividualHeading';
-import Ontology from '../lib/Ontology';
-import Graph from '../lib/Graph'
 import Serializer from '../lib/Serializer'
+import API from '../api/api';
+
+const DEFAULT_OBJECT_ID = 'G844';
 
 class App extends Component {
     _rootIRI = 'http://purl.bdrc.io/ontology/';
     _mainSplitPane = null;
     _mainSplitPaneWidth = 600;
+    _api: API;
 
     constructor(props) {
         super(props);
 
         this.state = {
             ontology: null,
-            graph: null,
             individual: null,
             graphText: null,
             hidePreview: false,
             splitWidth: this._mainSplitPaneWidth
         };
 
+        this._api = new API();
+
         this.init();
     }
 
     async init() {
-        const [owlText, graphText] = await Promise.all([
-            this._fetchText('/bdrc.owl'),
-            this._fetchText('/G844.ttl')
-        ]);
-        const ontology = await this._processOntology(owlText);
-        const graph = await this._processGraph(graphText, ontology);
-        let place = graph.getIndividualWithId('http://purl.bdrc.io/resource/G844');
+        const ontology = await this._api.getOntology();
+        console.log('ontology: %o', ontology);
+        let place = await this._api.getObject(DEFAULT_OBJECT_ID);
+        console.log('place: %o', place);
         this.setState((prevState, props) => {
             return {
                 ...prevState,
+                ontology,
                 individual: place
-            }
-        });
-    }
-
-    _fetchText(url) {
-        const req = new Request(url);
-        let text;
-        return new Promise((resolve, reject) => {
-            fetch(req).then((response) => {
-                response.text().then((reqText) => {
-                    text = reqText;
-                    resolve(text);
-                });
-            });
-        });
-    }
-
-    _processOntology(data) {
-        const mimeType = 'application/rdf+xml';
-        return new Promise((resolve, reject) => {
-            try {
-                Ontology.create(data, 'http://purl.bdrc.io/ontology/core/', mimeType)
-                    .then((ontology) => {
-                        this.setState((prevState, props) => {
-                            return {
-                                ...prevState,
-                                ontology: ontology
-                            }
-                        });
-                        resolve(ontology);
-                    });
-
-            } catch (e) {
-                console.warn('Error processing ontology: %o', e);
-                reject(e);
-            }
-        });
-    }
-
-    _processGraph(data, ontology) {
-        const mimeType = 'text/turtle';
-        return new Promise((resolve, reject) => {
-            try {
-                Graph.create(data, 'http://purl.bdrc.io/resource/G844', mimeType, ontology)
-                    .then((graph) => {
-                        this.setState((prevState, props) => {
-                            return {
-                                ...prevState,
-                                graph: graph
-                            }
-                        });
-                        resolve(graph);
-                    });
-            } catch (e) {
-                console.warn('Error processing graph: %o', e);
-                reject(e);
             }
         });
     }
@@ -108,7 +53,7 @@ class App extends Component {
     updateGraphText() {
         let serializer = new Serializer();
         const baseURI = 'http://purl.bdrc.io/ontology/core/';
-        serializer.serialize(this.state.individual, baseURI, this.state.graph.getNamespaces())
+        serializer.serialize(this.state.individual, baseURI, this.state.individual.namespaces)
             .then((str) => {
                 this.setState((prevState, props) => {
                     return {
