@@ -139,7 +139,6 @@ export default class API {
             return null;
         }
     }
-
     
     async getObject(id: string): Promise<Individual | null> {
         let data: string;
