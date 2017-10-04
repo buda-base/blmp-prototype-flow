@@ -9,6 +9,7 @@ export default class Individual {
     _types: string[];
     _properties: {};
     _uniqueId: string;
+    _namespaces: {};
 
     constructor(id: ?string) {
         this._id = id;
@@ -47,6 +48,14 @@ export default class Individual {
 
     get types(): string[] {
         return this._types;
+    }
+
+    set namespaces(namespaces: {}) {
+        this._namespaces = namespaces;
+    }
+
+    get namespaces(): {} {
+        return this._namespaces;
     }
 
     addType(type: string) {
