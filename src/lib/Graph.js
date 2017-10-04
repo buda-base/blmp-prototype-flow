@@ -142,7 +142,7 @@ export default class Graph {
         return  this._store.statementsMatching(undefined, undefined, undefined);
     }
 
-    getNamespaces(): {} {
+    get namespaces(): {} {
         return this._store.namespaces;
     }
 }
