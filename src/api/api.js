@@ -162,6 +162,7 @@ export default class API {
         }
     
         const ind = graph.getIndividualWithId(this._getResourceIRI(id));
+        ind.namespaces = graph.namespaces;
         return ind;
     }
 }
