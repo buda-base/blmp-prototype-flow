@@ -40,7 +40,9 @@ export default class API {
     constructor(options: ?APIOptions) {
         if (options) {
             if (options.server) this._server = options.server;
-            this._fetch = (options.fetch) ? options.fetch : fetch;
+            this._fetch = (options.fetch) ? options.fetch : window.fetch.bind(window);
+        } else {
+            this._fetch = window.fetch.bind(window);
         }
     }
 
