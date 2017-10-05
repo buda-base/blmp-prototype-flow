@@ -74,18 +74,17 @@ describe('Ontology', () => {
 
     test('Getting ontology properties', () => {
         const place = 'http://purl.bdrc.io/ontology/place#Place';
-        const expectedProperties = [
-            {
-                name: 'http://purl.bdrc.io/ontology/place#hasAddress',
-                ranges: [
-                    'http://purl.bdrc.io/ontology/place#Address'
-                ]
-            }
-        ];
+        const expectedIRIs = ['http://purl.bdrc.io/ontology/place#hasAddress']
+
+        const placeProperties = ontology.getClassProperties(place);
 
         expect(
-            ontology.getClassProperties(place)
-        ).toEqual(expectedProperties);
+            placeProperties.length
+        ).toEqual(1);
+
+        expect(
+            placeProperties.map(value => value.IRI)
+        ).toEqual(expectedIRIs);
     });
 
 });
