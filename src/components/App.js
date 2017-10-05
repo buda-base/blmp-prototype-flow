@@ -39,7 +39,7 @@ class App extends Component {
     async init() {
         const ontology = await this._api.getOntology();
         console.log('ontology: %o', ontology);
-        let place = await this._api.getObject(DEFAULT_OBJECT_ID);
+        let place = await this._api.getResource(DEFAULT_OBJECT_ID);
         console.log('place: %o', place);
         this.setState((prevState, props) => {
             return {

@@ -107,7 +107,7 @@ export default class API {
         return id.substr(id.lastIndexOf('/') + 1);
     }
     
-    _getObjectURL(objectId: string): string | null {
+    _getResourceURL(objectId: string): string | null {
         const id = this._getResourceId(objectId);
         let firstChars = null;
         try {
@@ -131,8 +131,8 @@ export default class API {
         return url;
     }
     
-    async _getObjectData(id: string): Promise<string | null> {
-        const url = this._getObjectURL(id);
+    async _getResourceData(id: string): Promise<string | null> {
+        const url = this._getResourceURL(id);
         if (url) {
             return this.getURLContents(url);
         } else {
@@ -140,10 +140,10 @@ export default class API {
         }
     }
     
-    async getObject(id: string): Promise<Individual | null> {
+    async getResource(id: string): Promise<Individual | null> {
         let data: string;
         try {
-            data = String(await this._getObjectData(id));
+            data = String(await this._getResourceData(id));
         } catch(e) {
             return null;
         }
