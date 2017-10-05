@@ -95,7 +95,7 @@ describe('Objects', () => {
         const bdrcAPI = new api();
         const expectedUrl = OBJECT_PATH;
         expect(
-            bdrcAPI._getObjectURL(OBJECT)
+            bdrcAPI._getResourceURL(OBJECT)
         ).toEqual(expectedUrl);
     });
 
@@ -104,7 +104,7 @@ describe('Objects', () => {
             fetch: fetchMock
         });
 
-        const data = await bdrcAPI._getObjectData(OBJECT);
+        const data = await bdrcAPI._getResourceData(OBJECT);
         expect(data).toEqual(OBJECT_SUCCESS);
     });
 
@@ -113,7 +113,7 @@ describe('Objects', () => {
             fetch: fetchMock
         });
 
-        const ind = await bdrcAPI.getObject(OBJECT);
+        const ind = await bdrcAPI.getResource(OBJECT);
         expect(ind instanceof Individual).toBeTruthy();
     });
 });
