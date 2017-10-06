@@ -29,12 +29,12 @@ export interface APIResponse {
 
 type APIOptions = {
     server?: string,
-    fetch?: (req: Request) => Promise<*>
+    fetch?: (req: string) => Promise<*>
 }
 
 export default class API {
     _server: string;
-    _fetch: (req: Request) => Promise<APIResponse>
+    _fetch: (req: string) => Promise<APIResponse>
     _ontology: Ontology;
 
     constructor(options: ?APIOptions) {
@@ -47,10 +47,9 @@ export default class API {
     }
 
     getURLContents(url: string): Promise<string> {
-        const req = new Request(url);
         let text;
         return new Promise((resolve, reject) => {
-            this._fetch(req).then((response) => {
+            this._fetch(url).then((response) => {
                 response.text().then((reqText) => {
                     text = reqText;
                     resolve(text);
@@ -61,11 +60,20 @@ export default class API {
 
     async getOntology(): Promise<Ontology> {
         if (!this._ontology) {
-            let ontologyData = await this.getURLContents(ONTOLOGY_PATH);
+            let ontologyData = await this.getURLContents(this._ontologyPath);
             this._ontology = await this._processOntologyData(ontologyData);
         }
         
         return this._ontology;
+    }
+
+    get _ontologyPath(): string {
+        let path = ONTOLOGY_PATH;
+        if (this._server) {
+            path = this._server + '/' + ONTOLOGY_PATH;
+        }
+
+        return path;
     }
 
     async _processOntologyData(ontologyData: string): Promise<Ontology> {

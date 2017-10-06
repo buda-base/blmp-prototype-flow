@@ -64,10 +64,10 @@ class ResponseMock implements APIResponse {
     }
 }
 
-function fetchMock(req: Request): Promise<APIResponse> {
+function fetchMock(req: string): Promise<APIResponse> {
     return new Promise((resolve, reject) => {
         let res;
-        if (req.url === OBJECT_PATH) {
+        if (req === OBJECT_PATH) {
             res = new ResponseMock(responseTypes.OBJECT)
         } else {
             res = new ResponseMock(responseTypes.ONTOLOGY)
