@@ -13,6 +13,8 @@
     "react-dom": "^15.5.4",
     "react-split-pane": "^0.1.66",
     "react-tap-event-plugin": "^2.0.1",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.15.6",
     "url-parse": "^1.1.9"
   },
   "devDependencies": {
