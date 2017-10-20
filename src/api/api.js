@@ -153,21 +153,21 @@ export default class API {
         try {
             data = String(await this._getResourceData(id));
         } catch(e) {
-            return null;
+            throw e;
         }
 
         let ontology;
         try {
             ontology = await this.getOntology();
         } catch(e) {
-            return null;
+            throw e;
         }
         
         let graph;
         try {
             graph = await Graph.create(data, BASE_IRI, TURTLE_MIME_TYPE, ontology);
         } catch(e) {
-            return null;
+            throw e;
         }
     
         const ind = graph.getIndividualWithId(this._getResourceIRI(id));
