@@ -28,6 +28,7 @@ export const loading = (state: DataState, action: actions.LoadingAction) => {
 reducers[actions.TYPES.loading] = loading;
 
 export const loadedResource = (state: DataState, action: actions.LoadedResourceAction) => {
+    state = loading(state, actions.loading(action.payload.IRI, false));
     return {
         ...state,
         resources: {

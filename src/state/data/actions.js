@@ -40,12 +40,12 @@ export type LoadedResourceAction = {
     }
 }
 TYPES.loadedResource = 'LOADED_RESOURCE';
-export const loadedResource = (IRI: string, data: string): Action => {
+export const loadedResource = (IRI: string, individual: Individual): LoadedResourceAction => {
     return {
         type: TYPES.loadedResource,
         payload: {
             IRI,
-            data
+            individual
         }
     }
 }
