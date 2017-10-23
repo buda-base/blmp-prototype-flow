@@ -16,21 +16,13 @@ export default class Address extends RDFComponent {
             'http://www.w3.org/2006/vcard/ns#country-name',
         ];
 
-        const addressComponents = IRIs.map((propIRI) => {
-            const values = this.props.individual.getProperty(propIRI);
-            if (values) {
-                return values.map(value => value.value).join(', ');
-            }
-            return null;
-        });
-
-        return addressComponents.join(', ');
+        return this.joinProps(IRIs);
     }
 
     render() {
         const address = this.getAddressString();
         return (
-            <p>{address}</p>
+            <p onClick={this.props.onClick}>{address}</p>
         )
     }
 }
