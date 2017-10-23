@@ -9,6 +9,7 @@ import SplitPane from 'react-split-pane';
 import IndividualEditor from './IndividualEditor'
 import Preview from './Preview'
 import IndividualHeading from './IndividualHeading';
+import ResourceViewContainer from 'containers/ResourceViewContainer';
 import Serializer from '../lib/Serializer'
 import API from '../api/api';
 
@@ -18,6 +19,8 @@ class App extends Component {
     _rootIRI = 'http://purl.bdrc.io/ontology/';
     _mainSplitPane = null;
     _mainSplitPaneWidth = 600;
+    _secondarySplitPane = null;
+    _secondarySplitPaneWidth = 350;
     _api: API;
 
     constructor(props) {
@@ -28,7 +31,8 @@ class App extends Component {
             individual: null,
             graphText: null,
             hidePreview: false,
-            splitWidth: this._mainSplitPaneWidth
+            splitWidth: this._mainSplitPaneWidth,
+            subSplitWidth: this._secondarySplitPaneWidth,
         };
 
         this._api = new API();
@@ -81,19 +85,19 @@ class App extends Component {
 
         const toggleShowPreview = () => {
             this.setState((prevState, props) => {
-                let visibleWidth = this._mainSplitPaneWidth;
-                if (this._mainSplitPane) {
+                let visibleWidth = this._secondarySplitPaneWidth;
+                if (this._secondarySplitPane) {
                     if (!prevState.hidePreview) {
-                        this._mainSplitPaneWidth = this._mainSplitPane.state.draggedSize;
+                        this._secondarySplitPaneWidth = this._secondarySplitPane.state.draggedSize;
                     } else {
-                        visibleWidth = this._mainSplitPaneWidth;
+                        visibleWidth = this._secondarySplitPaneWidth;
                     }
                 }
                 const width = (prevState.hidePreview) ? visibleWidth : '100%';
                 return {
                     ...prevState,
                     hidePreview: !(prevState.hidePreview),
-                    splitWidth: width
+                    subSplitWidth: width
                 }
             });
 
@@ -111,7 +115,6 @@ class App extends Component {
                     <SplitPane split="horizontal" size={90} allowResize={false}>
                         <div>
                             <IndividualHeading individual={this.state.individual} />
-                            <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.state.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
                         </div>
                         <IndividualEditor
                             individual={this.state.individual}
@@ -119,13 +122,28 @@ class App extends Component {
                             onIndividualUpdated={onIndividualUpdated}
                         />
                     </SplitPane>
-                    <SplitPane split="horizontal" size={90} allowResize={false}>
-                        <div className="preview">
-                            <h2>Turtle Preview</h2>
-                        </div>
-                        <Preview
-                            graphText={this.state.graphText}
-                        />
+                    <SplitPane
+                        minSize={350}
+                        size={this.state.subSplitWidth}
+                        allowResize={true}
+                        ref={(split) => this._secondarySplitPane = split}
+                    >
+                        <SplitPane split="horizontal" size={90} allowResize={false}>
+                            <div>
+                                <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.state.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
+                            </div>
+                            <ResourceViewContainer 
+                                ontology={this.state.ontology}
+                            />
+                        </SplitPane>
+                        <SplitPane split="horizontal" size={90} allowResize={false}>
+                            <div className="preview">
+                                <h2>Turtle Preview</h2>
+                            </div>
+                            <Preview
+                                graphText={this.state.graphText}
+                            />
+                        </SplitPane>
                     </SplitPane>
                 </SplitPane>
             </div>

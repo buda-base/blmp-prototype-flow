@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './IndividualEditor.css';
-import IndividualView from './IndividualView';
+import IndividualViewContainer from 'containers/IndividualViewContainer';
 
 export default class IndividualEditor extends Component {
     constructor(props) {
@@ -11,7 +11,7 @@ export default class IndividualEditor extends Component {
         let editor;
         let individual = this.props.individual;
         if (individual) {
-            editor = <IndividualView
+            editor = <IndividualViewContainer
                 individual={individual}
                 isEditable={true}
                 isExpanded={true}

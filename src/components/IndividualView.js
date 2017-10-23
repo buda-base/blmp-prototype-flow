@@ -11,6 +11,9 @@ import RDFProperty from '../lib/RDFProperty';
 import type { RDFComment } from '../lib/RDFProperty';
 import capitalize from '../lib/capitalize';
 
+// redux
+import * as uiActions from 'state/ui/actions';
+
 // rdf components
 import RDFComponents from './RDF/rdf_components';
 
@@ -104,6 +107,12 @@ class IndividualProperty extends React.Component {
                     classes.push('individualLiteralRow');
                 }
             } else if (propertyValue instanceof Individual) {
+                const onClick = () => {
+                    if (!propertyValue.hasGeneratedId) {
+                        this.props.onSelectedResource(propertyValue.id);
+                    }
+                }
+
                 for (let range of this.props.property.ranges) {
                     if (range in RDFComponents) {
                         const rdfComponent = RDFComponents[range];
@@ -114,7 +123,9 @@ class IndividualProperty extends React.Component {
                             ontology: this.props.ontology,
                             nested: true,
                             onIndividualUpdated: this.props.onIndividualUpdated,
-                            level: this.props.level + 1
+                            level: this.props.level + 1,
+                            onClick: onClick,
+                            onSelectedResource: this.props.onSelectedResource,
                         }, null);
                         break;
                     }
@@ -127,6 +138,8 @@ class IndividualProperty extends React.Component {
                                 nested={true}
                                 onIndividualUpdated={this.props.onIndividualUpdated}
                                 level={this.props.level + 1}
+                                onClick={onClick}
+                                onSelectedResource={this.props.onSelectedResource}
                     />;
                 }
                 
@@ -162,10 +175,14 @@ class IndividualProperty extends React.Component {
     }
 }
 
-export default class IndividualView extends React.Component {
+type IndividualViewProps = {
+
+}
+
+export default class IndividualView extends React.Component<IndividualViewProps> {
     _editableIndividuals = [];
 
-    constructor(props) {
+    constructor(props: IndividualViewProps) {
         super(props);
 
         this.state = {
@@ -303,7 +320,6 @@ export default class IndividualView extends React.Component {
         };
         let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
         let title = (property.label) ? capitalize(property.label) : formatIRI(property.IRI);
-
         const isEditable = (propertyValue) => {
             let isEditable = this.props.isEditable;
             if (propertyValue && propertyValue instanceof Individual) {
@@ -323,6 +339,7 @@ export default class IndividualView extends React.Component {
             isEditable={isEditable}
             ontology={this.props.ontology}
             level={this.props.level}
+            onSelectedResource={this.props.onSelectedResource}
         />;
 
         return propertyView;
@@ -505,9 +522,9 @@ export default class IndividualView extends React.Component {
         if (this.props.isExpanded) {
             classes.push("isExpanded");
         }
-
+        
         return (
-            <div className={classnames(...classes)}>
+            <div className={classnames(...classes)} onClick={this.props.onClick}>
                 {this.getNestedTitleList()}
                 <Collapse in={this.state.isExpanded}>
                     {idList}
