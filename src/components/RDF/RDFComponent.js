@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import Individual from '../../lib/Individual';
+import Individual from 'lib/Individual';
+import Literal from 'lib/Literal';
 import dateFormat from 'dateformat';
 
 // Every RDFComponent should export it's IRI.
@@ -30,8 +31,8 @@ export default class RDFComponent extends React.Component<Props> {
             const values = this.props.individual.getProperty(propIRI);
             if (values) {
                 return values.map(value => {
-                    if (value.value instanceof Date) {
-                        return dateFormat(value.value);
+                    if (value instanceof Literal && value.isDate) {
+                        return dateFormat(value.value, 'mmmm d, yyyy');
                     } else {
                         return value.value;
                     }
