@@ -1,0 +1,16 @@
+.statusMessage {
+    text-align: center;
+    margin: 20px auto;
+    position: relative;
+}
+
+.loader {
+    position: relative;
+    top: 20px;
+}
+
+.statusMessage > p {
+    position: relative;
+    top: 60px;
+    font-size: 24px;
+}
