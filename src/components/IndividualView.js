@@ -1,9 +1,11 @@
 // @flow
 import React from 'react';
+import ReactElement from 'react/lib/ReactElement';
 import './IndividualView.css';
 import Literal, { STRING_TYPE } from '../lib/Literal';
 import Individual from '../lib/Individual';
 import LiteralView from './LiteralView';
+import Ontology from 'lib/Ontology';
 import formatIRI from '../lib/formatIRI';
 import classnames from 'classnames';
 import { DATATYPE_PROPERTY, OBJECT_PROPERTY, ANNOTATION_PROPERTY } from '../lib/Ontology';
@@ -175,19 +177,29 @@ class IndividualProperty extends React.Component {
     }
 }
 
-type IndividualViewProps = {
-
+type Props = {
+    isExpanded: boolean,
+    isEditable: boolean,
+    level: number,
+    ontology: Ontology,
+    individual: Individual,
+    onIndividualUpdated: () => void,
+    onSelectedResource?: () => void,
+    onClick?: () => void,
 }
 
-export default class IndividualView extends React.Component<IndividualViewProps> {
+type State = {
+    collapseState: {},
+    isExpanded: boolean
+}
+
+export default class IndividualView extends React.Component<Props, State> {
     _editableIndividuals = [];
 
-    constructor(props: IndividualViewProps) {
+    constructor(props: Props) {
         super(props);
 
         this.state = {
-            popoversOpen: {},
-            popoversEl: {},
             collapseState: {},
             isExpanded: props.isExpanded
         }
@@ -345,7 +357,7 @@ export default class IndividualView extends React.Component<IndividualViewProps>
         return propertyView;
     }
 
-    getPropertyLists(): React.Element<*>[] {
+    getPropertyLists(): (?ReactElement)[] {
         let removeUnsetProperties = true;
         if (this.props.isEditable) {
             removeUnsetProperties = false;
@@ -392,7 +404,7 @@ export default class IndividualView extends React.Component<IndividualViewProps>
             marginLeft: ((this.props.level + 1) * 20) + 'px'
         };
 
-        let lists = [];
+        let lists: (?ReactElement)[] = [];
         for (let [index, propertyData] of propertyTypes.entries()) {
             let collapseId = [this.props.individual.id, 'level', this.props.level, index, 'collapsed'].join('_');
 
@@ -428,7 +440,7 @@ export default class IndividualView extends React.Component<IndividualViewProps>
         return lists;
     }
 
-    getIdList(): React.Element<*> {
+    getIdList(): ReactElement {
         const idProperty = new RDFProperty('ID');
         const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
         const propertyValues = [idLiteral];
@@ -451,7 +463,7 @@ export default class IndividualView extends React.Component<IndividualViewProps>
         />;
     }
 
-    getLabelsList(): React.Element<*> | null {
+    getLabelsList(): ReactElement | null {
         let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
 
         if (!labels) return null;
@@ -477,7 +489,7 @@ export default class IndividualView extends React.Component<IndividualViewProps>
         )
     }
 
-    getNestedTitleList(): React.Element<*> | null {
+    getNestedTitleList(): ReactElement | null {
         if (!this.props.nested) return null;
 
         let title = '';
