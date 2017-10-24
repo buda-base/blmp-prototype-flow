@@ -108,7 +108,7 @@ class IndividualProperty extends React.Component {
                 }
             } else if (propertyValue instanceof Individual) {
                 const onClick = () => {
-                    if (!propertyValue.hasGeneratedId) {
+                    if (!propertyValue.hasGeneratedId && this.props.onSelectedResource) {
                         this.props.onSelectedResource(propertyValue.id);
                     }
                 }
