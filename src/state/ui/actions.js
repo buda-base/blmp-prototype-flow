@@ -8,12 +8,14 @@ export const TYPES = {};
 TYPES.selectedResourceIRI = 'SELECT_RESOURCE_IRI';
 export const selectedResourceIRI = createAction(TYPES.selectedResourceIRI, IRI => IRI);
 
+
+export type AddingResource = {
+    individual: Individual,
+    property: RDFProperty
+}
 export type AddingResourceAction = {
     type: string,
-    payload: {
-        individual: Individual,
-        property: RDFProperty
-    }
+    payload: AddingResource
 }
 TYPES.addingResource = 'ADDING_RESOURCE';
 export const addingResource = (individual: Individual, property: RDFProperty): AddingResourceAction => {
