@@ -36,6 +36,14 @@ export const addingResource = (state: UIState, action: actions.AddingResourceAct
 }
 reducers[actions.TYPES.addingResource] = addingResource;
 
+export const cancelAddingResource = (state: UIState, action: Action) => {
+    return {
+        ...state,
+        addingResource: null
+    }
+}
+reducers[actions.TYPES.cancelAddingResource] = cancelAddingResource;
+
 // UI Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);
 export default reducer;

@@ -27,3 +27,6 @@ export const addingResource = (individual: Individual, property: RDFProperty): A
         }
     }
 }
+
+TYPES.cancelAddingResource = 'CANCEL_ADDING_RESOURCE';
+export const cancelAddingResource = createAction(TYPES.cancelAddingResource);
