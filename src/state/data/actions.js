@@ -49,3 +49,21 @@ export const loadedResource = (IRI: string, individual: Individual): LoadedResou
         }
     }
 }
+
+export type ResourceFailedAction = {
+    type: string,
+    payload: {
+        IRI: string,
+        individual: Individual
+    }
+}
+TYPES.resourceFailed = 'RESOURCE_FAILED';
+export const loadedResource = (IRI: string, individual: Individual): LoadedResourceAction => {
+    return {
+        type: TYPES.loadedResource,
+        payload: {
+            IRI,
+            individual
+        }
+    }
+}

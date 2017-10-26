@@ -6,11 +6,13 @@ import Individual from 'lib/Individual';
 
 export type DataState = {
     loading: {[string]: boolean},
+    failures: {[string]: string},
     resources: {[IRI:string]: Individual},
 }
 
 const DEFAULT_STATE: DataState = {
     loading: {},
+    failures: {},
     resources: {}
 }
 
@@ -38,6 +40,18 @@ export const loadedResource = (state: DataState, action: actions.LoadedResourceA
     }
 }
 reducers[actions.TYPES.loadedResource] = loadedResource;
+
+export const resourceFailed = (state: DataState, action: actions.ResourceFailedAction) => {
+    state = loading(state, actions.loading(action.payload.IRI, false));
+    return {
+        ...state,
+        failures: {
+            ...state.failures,
+            [action.payload.IRI]: action.payload.error
+        }
+    }
+}
+reducers[actions.TYPES.resourceFailed] = resourceFailed;
 
 // Data Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);
