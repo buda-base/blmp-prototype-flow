@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App';
+import AppContainer from './containers/AppContainer';
 import './index.css';
 
 // Redux
@@ -45,7 +45,7 @@ injectTapEventPlugin();
 ReactDOM.render(
     // setup redux store
     <Provider store={store}>
-        <App />
+        <AppContainer />
     </Provider>,
     document.getElementById('root')
 );

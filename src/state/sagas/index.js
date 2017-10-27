@@ -37,11 +37,19 @@ export function* watchSelectedResource() {
     yield takeLatest(uiActions.TYPES.selectedResourceIRI, selectedResource);
 }
 
+export function* watchFindResource() {
+    yield takeLatest(
+        uiActions.TYPES.findResource,
+        (action) => loadResource(action.payload)
+    );
+}
+
 /** Root **/
 
 export default function* rootSaga() {
     yield all([
         watchLoadResource(),
         watchSelectedResource(),
+        watchFindResource()
     ])
 }

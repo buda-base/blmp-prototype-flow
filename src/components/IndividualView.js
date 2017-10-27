@@ -54,7 +54,7 @@ const getListItemStyle = (level) => {
     };
 };
 
-class IndividualProperty extends React.Component {
+class IndividualProperty extends React.Component<*> {
     constructor(props) {
         super(props);
     }
@@ -71,7 +71,11 @@ class IndividualProperty extends React.Component {
 
         let onTapAdd = null;
         if (this.props.onTapAdd) {
-            onTapAdd = this.props.onTapAdd.bind(this);
+            // onTapAdd = this.props.onTapAdd.bind(this);
+            onTapAdd = () => {
+                console.log('tapped add');
+                this.props.onTapAdd(this.props.individual, this.props.property);
+            }
         }
 
         // Header
@@ -94,6 +98,7 @@ class IndividualProperty extends React.Component {
         let valueRows = [];
         for (let propertyValue of this.props.propertyValues) {
             let view = null;
+            let titleView = null;
             let isEditable = this.props.isEditable(propertyValue);
             let classes = ['individualRow'];
             let key = this.props.property.IRI + '_';
@@ -118,10 +123,11 @@ class IndividualProperty extends React.Component {
                 for (let range of this.props.property.ranges) {
                     if (range in RDFComponents) {
                         const rdfComponent = RDFComponents[range];
-                        view = React.createElement(rdfComponent, {
+                        titleView = React.createElement(rdfComponent, {
                             individual: propertyValue,
                             isExpanded: false,
                             isEditable: false,
+                            isExpandable: true,
                             ontology: this.props.ontology,
                             nested: true,
                             onIndividualUpdated: this.props.onIndividualUpdated,
@@ -132,18 +138,19 @@ class IndividualProperty extends React.Component {
                         break;
                     }
                 }
-                if (view === null) {
-                    view = <IndividualView individual={propertyValue}
-                                isExpanded={false}
-                                isEditable={false}
-                                ontology={this.props.ontology}
-                                nested={true}
-                                onIndividualUpdated={this.props.onIndividualUpdated}
-                                level={this.props.level + 1}
-                                onClick={onClick}
-                                onSelectedResource={this.props.onSelectedResource}
-                    />;
-                }
+                view = <IndividualView individual={propertyValue}
+                            isExpanded={false}
+                            isEditable={false}
+                            isExpandable={true}
+                            ontology={this.props.ontology}
+                            nested={true}
+                            onIndividualUpdated={this.props.onIndividualUpdated}
+                            level={this.props.level + 1}
+                            onClick={onClick}
+                            onSelectedResource={this.props.onSelectedResource}
+                            titleView={titleView}
+                            onAddResource={this.props.onTapAdd}
+                />;
                 
                 key += propertyValue.id + '_' + propertyValue.uniqueId;
             }
@@ -180,12 +187,15 @@ class IndividualProperty extends React.Component {
 type Props = {
     isExpanded: boolean,
     isEditable: boolean,
+    isExpandable?: boolean,
     level: number,
     ontology: Ontology,
     individual: Individual,
     onIndividualUpdated: () => void,
     onSelectedResource?: () => void,
     onClick?: () => void,
+    titleView?: ReactElement,
+    onAddResource: (individual: Individual, property: RDFProperty) => void
 }
 
 type State = {
@@ -324,9 +334,9 @@ export default class IndividualView extends React.Component<Props, State> {
     }
 
     listForProperty(property: RDFProperty, propertyValues: Array<mixed>): {} {
-        const onTapAdd = (event) => {
-            this.addProperty(property.IRI);
-        };
+        // const onTapAdd = (event) => {
+        //     this.addProperty(property.IRI);
+        // };
         const onLiteralChanged = (event) => {
             this.props.onIndividualUpdated();
         };
@@ -341,11 +351,12 @@ export default class IndividualView extends React.Component<Props, State> {
         };
 
         const propertyView = <IndividualProperty
-            onTapAdd={onTapAdd}
+            onTapAdd={this.props.onAddResource}
             onIndividualUpdated={this.props.onIndividualUpdated}
             onLiteralChanged={onLiteralChanged}
             tooltip={tooltip}
             title={title}
+            individual={this.props.individual}
             property={property}
             propertyValues={propertyValues}
             isEditable={isEditable}
@@ -455,11 +466,13 @@ export default class IndividualView extends React.Component<Props, State> {
             onIndividualUpdated={this.props.onIndividualUpdated}
             onLiteralChanged={onChange}
             title={'ID'}
+            individual={this.props.individual}
             property={idProperty}
             propertyValues={propertyValues}
             isEditable={() => true}
             ontology={this.props.ontology}
             level={this.props.level}
+            onTapAdd={this.props.onAddResource}
         />;
     }
 
@@ -484,38 +497,55 @@ export default class IndividualView extends React.Component<Props, State> {
                     isEditable={this.props.isEditable}
                     ontology={this.props.ontology}
                     level={this.props.level}
+                    onTapAdd={this.props.onAddResource}
                 />;
             </List>
         )
     }
 
     getNestedTitleList(): ReactElement | null {
-        if (!this.props.nested) return null;
+        if (!this.props.nested && !this.props.titleView) return null;
 
-        let title = '';
-        let subtitle = '';
-        let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
-        if (labels) {
-            title = labels[0].value;
-        } else if (this.props.individual.id) {
-            title = formatIRI(this.props.individual.id);
+        let titleView = this.props.titleView;
+        if (!titleView) {
+            let title = '';
+            let subtitle = '';
+            let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
+            if (labels) {
+                title = labels[0].value;
+            } else if (this.props.individual.id) {
+                title = formatIRI(this.props.individual.id);
+            } else {
+                title = <i>&lt;no id&gt;</i>;
+            }
+
+            if (this.props.individual.types[0]) {
+                subtitle = formatIRI(this.props.individual.types[0]);
+            }
+
+            titleView = <ListItemText
+                primary={title}
+                secondary={subtitle}
+            />
+        }
+    
+        const allowExpansion = this.props.isExpandable && Object.keys(
+            this.props.individual.getProperties()
+        ).length > 0;
+        let listItem: ReactElement;
+        if (allowExpansion) {
+            listItem = <ListItem button onClick={() => this.toggleExpandedState()}>
+                            {titleView}
+                            {this.state.isExpanded ? <ExpandLess /> : <ExpandMore />}
+                       </ListItem>
         } else {
-            title = <i>&lt;no id&gt;</i>;
+            listItem = <ListItem button>
+                            {titleView}
+                       </ListItem>
         }
-
-        if (this.props.individual.types[0]) {
-            subtitle = formatIRI(this.props.individual.types[0]);
-        }
-
         return(
             <List>
-                <ListItem button onClick={() => this.toggleExpandedState()}>
-                    <ListItemText
-                        primary={title}
-                        secondary={subtitle}
-                    />
-                    {this.state.isExpanded ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
+                {listItem}
             </List>
         )
     }

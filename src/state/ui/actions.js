@@ -30,3 +30,9 @@ export const addingResource = (individual: Individual, property: RDFProperty): A
 
 TYPES.cancelAddingResource = 'CANCEL_ADDING_RESOURCE';
 export const cancelAddingResource = createAction(TYPES.cancelAddingResource);
+
+TYPES.findResource = 'FIND_RESOURCE';
+export const findResource = createAction(TYPES.findResource, id => id);
+
+TYPES.addedFoundResource = 'ADDED_FOUND_RESOURCE';
+export const addedFoundResource = createAction(TYPES.addedFoundResource);

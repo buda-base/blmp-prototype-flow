@@ -7,12 +7,14 @@ import RDFProperty from 'lib/RDFProperty';
 
 export type UIState = {
     selectedResourceIRI: string | null,
-    addingResource: null | {individual: Individual, property: RDFProperty}
+    addingResource: {individual: Individual, property: RDFProperty} | null,
+    findResource: string | null
 }
 
 const DEFAULT_STATE: UIState = {
     selectedResourceIRI: null,
-    addingResource: null
+    addingResource: null,
+    findResource: null
 }
 
 let reducers = {};
@@ -43,6 +45,23 @@ export const cancelAddingResource = (state: UIState, action: Action) => {
     }
 }
 reducers[actions.TYPES.cancelAddingResource] = cancelAddingResource;
+
+export const findResource = (state: UIState, action: Action) => {
+    return {
+        ...state,
+        findResource: action.payload
+    }
+}
+reducers[actions.TYPES.findResource] = findResource;
+
+export const addedFoundResource = (state: UIState, action: Action) => {
+    return {
+        ...state,
+        addingResource: null,
+        findResource: null
+    }
+}
+reducers[actions.TYPES.addedFoundResource] = addedFoundResource;
 
 // UI Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);

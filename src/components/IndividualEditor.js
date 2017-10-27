@@ -15,10 +15,12 @@ export default class IndividualEditor extends Component {
                 individual={individual}
                 isEditable={true}
                 isExpanded={true}
+                isExpandable={true}
                 ontology={this.props.ontology}
                 nested={false}
                 onIndividualUpdated={this.props.onIndividualUpdated}
                 level={0}
+                onAddResource={this.props.onAddResource}
             />
         } else {
             editor = <div>Nothing selected</div>

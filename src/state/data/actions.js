@@ -54,16 +54,16 @@ export type ResourceFailedAction = {
     type: string,
     payload: {
         IRI: string,
-        individual: Individual
+        error: string
     }
 }
 TYPES.resourceFailed = 'RESOURCE_FAILED';
-export const loadedResource = (IRI: string, individual: Individual): LoadedResourceAction => {
+export const resourceFailed = (IRI: string, error: string): ResourceFailedAction => {
     return {
-        type: TYPES.loadedResource,
+        type: TYPES.resourceFailed,
         payload: {
             IRI,
-            individual
+            error
         }
     }
 }

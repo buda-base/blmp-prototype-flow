@@ -29,6 +29,7 @@ export default class ResourceView extends React.Component<Props> {
                 individual={this.props.resource}
                 isExpanded={true}
                 isEditable={false}
+                isExpandable={true}
                 nested={true}
                 level={0}
                 ontology={this.props.ontology}

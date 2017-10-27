@@ -10,6 +10,7 @@ import IndividualEditor from './IndividualEditor'
 import Preview from './Preview'
 import IndividualHeading from './IndividualHeading';
 import ResourceViewContainer from 'containers/ResourceViewContainer';
+import ResourceSelector from 'components/ResourceSelector';
 import Serializer from '../lib/Serializer'
 import API from '../api/api';
 
@@ -116,11 +117,31 @@ class App extends Component {
                         <div>
                             <IndividualHeading individual={this.state.individual} />
                         </div>
-                        <IndividualEditor
-                            individual={this.state.individual}
-                            ontology={this.state.ontology}
-                            onIndividualUpdated={onIndividualUpdated}
-                        />
+                        <div>
+                            <IndividualEditor
+                                individual={this.state.individual}
+                                ontology={this.state.ontology}
+                                onIndividualUpdated={onIndividualUpdated}
+                                onAddResource={this.props.onAddResource}
+                            />
+                            {this.props.addingResource &&
+                                <ResourceSelector 
+                                    isOpen={true}
+                                    individual={this.props.addingResource.individual}
+                                    property={this.props.addingResource.property}
+                                    findResource={this.props.onFindResource}
+                                    cancel={this.props.onCancelAddingResource}
+                                    findingResourceId={this.props.findingResourceId}
+                                    findingResource={this.props.findingResource}
+                                    findingResourceError={this.props.findingResourceError}
+                                    ontology={this.state.ontology}
+                                    addedProperty={() => {
+                                        this.props.onAddedProperty();
+                                        this.updateGraphText();
+                                    }}
+                                />
+                            }
+                        </div>
                     </SplitPane>
                     <SplitPane
                         minSize={350}
