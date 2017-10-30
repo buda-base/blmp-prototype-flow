@@ -12,7 +12,7 @@ export function* loadResource(IRI) {
         const individual = yield call([api, api.getResource], IRI);
         yield put(dataActions.loadedResource(IRI, individual));
     } catch(e) {
-        console.log('error in loadResource: %o', e);
+        yield put(dataActions.resourceFailed(IRI, e.message));
         yield put(dataActions.loading(IRI, false));
     }
 }
