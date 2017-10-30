@@ -32,6 +32,10 @@ type APIOptions = {
     fetch?: (req: string) => Promise<*>
 }
 
+export class ResourceNotFound extends Error {};
+
+export class InvalidResource extends Error {};
+
 export default class API {
     _server: string;
     _fetch: (req: string) => Promise<APIResponse>
@@ -50,10 +54,17 @@ export default class API {
         let text;
         return new Promise((resolve, reject) => {
             this._fetch(url).then((response) => {
+                if (!response.ok) {
+                    if (response.status == '404') {
+                        throw new ResourceNotFound('The resource does not exist.');
+                    }
+                }
                 response.text().then((reqText) => {
                     text = reqText;
                     resolve(text);
                 });
+            }).catch((e) => {
+                reject(e);
             });
         });
     }
@@ -115,18 +126,18 @@ export default class API {
         return id.substr(id.lastIndexOf('/') + 1);
     }
     
-    _getResourceURL(objectId: string): string | null {
+    _getResourceURL(objectId: string): string {
         const id = this._getResourceId(objectId);
         let firstChars = null;
         try {
             firstChars = id.match(/^([A-Z]{0,2})/)[0];
         } catch(e) {
-            return null;
+            throw new InvalidResource('The resource does not start with a valid character.');
         }
     
         let dir = directoryPrefixes[firstChars];
         if (!dir) {
-            return null;
+            throw new InvalidResource('The resource does not start with a valid character.');
         }
     
         const checksum = md5(id);
@@ -140,11 +151,12 @@ export default class API {
     }
     
     async _getResourceData(id: string): Promise<string | null> {
-        const url = this._getResourceURL(id);
-        if (url) {
-            return this.getURLContents(url);
-        } else {
-            return null;
+        try {
+            let url = this._getResourceURL(id);
+            let resourceData = this.getURLContents(url);
+            return resourceData;
+        } catch(e) {
+            throw e;
         }
     }
     

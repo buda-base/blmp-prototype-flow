@@ -1,9 +1,11 @@
 // @flow
-import api, { APIResponse } from './api';
+import api, { APIResponse, InvalidResource } from './api';
 import Ontology from '../lib/Ontology';
 import Individual from '../lib/Individual';
 
 const OBJECT = 'G844';
+const BAD_OBJECT_LETTER = 'X1234';
+const BAD_OBJECT_NUMBER = '1234';
 const OBJECT_PATH = '/objects/places/ea/G844.ttl';
 
 const ONTOLOGY_SUCCESS = `
@@ -97,6 +99,14 @@ describe('Objects', () => {
         expect(
             bdrcAPI._getResourceURL(OBJECT)
         ).toEqual(expectedUrl);
+
+        expect(() => {
+            bdrcAPI._getResourceURL(BAD_OBJECT_LETTER)
+        }).toThrowError(InvalidResource);
+
+        expect(() => {
+            bdrcAPI._getResourceURL(BAD_OBJECT_NUMBER)
+        }).toThrowError(InvalidResource);
     });
 
     test('Getting object data', async () => {
