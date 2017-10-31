@@ -23,6 +23,18 @@ const ONTOLOGY_BASE_IRI = 'http://purl.bdrc.io/ontology/core/';
 const BASE_IRI = 'http://purl.bdrc.io/resource/';
 const TURTLE_MIME_TYPE = 'text/turtle';
 
+export const REMOTE_ENTITIES = [
+    "http://purl.bdrc.io/ontology/core/Corporation",
+    "http://purl.bdrc.io/ontology/core/Item",
+    "http://purl.bdrc.io/ontology/core/Lineage",
+    "http://purl.bdrc.io/ontology/core/Person",
+    "http://purl.bdrc.io/ontology/core/Place",
+    "http://purl.bdrc.io/ontology/admin/Product",
+    "http://purl.bdrc.io/ontology/core/Work",
+    "http://purl.bdrc.io/ontology/core/Topic",
+    "http://purl.bdrc.io/ontology/core/Work"
+]
+
 export interface APIResponse {
     text(): Promise<string>
 }

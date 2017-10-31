@@ -12,6 +12,7 @@ import { DATATYPE_PROPERTY, OBJECT_PROPERTY, ANNOTATION_PROPERTY } from '../lib/
 import RDFProperty from '../lib/RDFProperty';
 import type { RDFComment } from '../lib/RDFProperty';
 import capitalize from '../lib/capitalize';
+import { REMOTE_ENTITIES } from '../api/api';
 
 // redux
 import * as uiActions from 'state/ui/actions';
@@ -350,8 +351,16 @@ export default class IndividualView extends React.Component<Props, State> {
             return isEditable;
         };
 
+        let onTapAdd = () => this.addProperty(property.IRI);
+        for (let range of property.ranges) {
+            if (REMOTE_ENTITIES.indexOf(range) !== -1) {
+                onTapAdd = this.props.onAddResource;
+                break;
+            }
+        }
+
         const propertyView = <IndividualProperty
-            onTapAdd={this.props.onAddResource}
+            onTapAdd={onTapAdd}
             onIndividualUpdated={this.props.onIndividualUpdated}
             onLiteralChanged={onLiteralChanged}
             tooltip={tooltip}
