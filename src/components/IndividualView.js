@@ -157,8 +157,10 @@ class IndividualProperty extends React.Component<*> {
             }
 
             const onTapRemove = (event) => {
-                console.log('clicked IndividualProperty onTapRemove propertyType: %o, propertyValue: %o', this.props.property.IRI, propertyValue);
-                this.props.removeProperty(this.props.property.IRI, propertyValue);
+                this.props.individual.removeProperty(this.props.property.IRI, propertyValue);
+                if (this.props.onIndividualUpdated) {
+                    this.props.onIndividualUpdated();
+                }
             };
             let removeButton = "";
             if (isEditable) {
