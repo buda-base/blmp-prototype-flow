@@ -28,7 +28,8 @@ const langs = {
 
 interface Props {
     literal: Literal,
-    onChange?: (value: string, language: string) => void
+    onChange?: (value: string, language: string) => void,
+    isEditable: boolean
 }
 
 interface State {
@@ -36,7 +37,7 @@ interface State {
     value: string
 }
 
-export default class LiteralView extends Component {
+export default class LiteralView extends Component<Props, State> {
     _languageControl: Component<any>;
     _valueControl: Component<any>;
     _id: {} = {};
@@ -76,7 +77,7 @@ export default class LiteralView extends Component {
                 language: value
             }
         });
-        this.literalChanged(value);
+        this.literalChanged();
     }
 
     literalChanged() {

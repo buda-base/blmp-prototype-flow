@@ -62,7 +62,7 @@ export default class Individual {
         this._types.push(type);
     }
 
-    getProperty(name: string): [] | null {
+    getProperty(name: string): ?any[] {
         return this._properties[name];
     }
 
@@ -79,7 +79,7 @@ export default class Individual {
         }
     }
 
-    getProperties(type: ?string) {
+    getProperties(type: ?string): {} {
         let props = {};
         if (type) {
             for (let prop in this._properties) {

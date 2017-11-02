@@ -55,11 +55,23 @@ const getListItemStyle = (level) => {
     };
 };
 
-class IndividualProperty extends React.Component<*> {
-    constructor(props) {
-        super(props);
-    }
+type IndividualPropertyProps = {
+    isEditable: (propertyValue: ?any) => boolean,
+    onIndividualUpdated?: () => void,
+    onLiteralChanged: (value: string, language: string) => void,
+    onSelectedResource: (IRI: string) => void,
+    onTapAdd?: (individual: Individual, property: RDFProperty) => void,
+    individual: Individual,
+    level: number,
+    ontology: Ontology,
+    property: RDFProperty,
+    propertyValues: any[],
+    title: string,
+    tooltip: string,
+}
 
+class IndividualProperty extends React.Component<IndividualPropertyProps> {
+    
     render() {
         const greenColor = {
             fill: green[800]
@@ -72,10 +84,9 @@ class IndividualProperty extends React.Component<*> {
 
         let onTapAdd = null;
         if (this.props.onTapAdd) {
-            // onTapAdd = this.props.onTapAdd.bind(this);
+            const propsOnTapAdd = this.props.onTapAdd;
             onTapAdd = () => {
-                console.log('tapped add');
-                this.props.onTapAdd(this.props.individual, this.props.property);
+                propsOnTapAdd(this.props.individual, this.props.property);
             }
         }
 
@@ -125,32 +136,30 @@ class IndividualProperty extends React.Component<*> {
                     if (range in RDFComponents) {
                         const rdfComponent = RDFComponents[range];
                         titleView = React.createElement(rdfComponent, {
+                            onSelectedResource: this.props.onSelectedResource,
+                            onClick: onClick,
                             individual: propertyValue,
-                            isExpanded: false,
                             isEditable: false,
                             isExpandable: true,
-                            ontology: this.props.ontology,
-                            nested: true,
-                            onIndividualUpdated: this.props.onIndividualUpdated,
+                            isExpanded: false,
                             level: this.props.level + 1,
-                            onClick: onClick,
-                            onSelectedResource: this.props.onSelectedResource,
+                            nested: true,
+                            ontology: this.props.ontology,
                         }, null);
                         break;
                     }
                 }
-                view = <IndividualView individual={propertyValue}
-                            isExpanded={false}
+                view = <IndividualView 
+                            onSelectedResource={this.props.onSelectedResource}
+                            onClick={onClick}
+                            individual={propertyValue}
                             isEditable={false}
                             isExpandable={true}
-                            ontology={this.props.ontology}
-                            nested={true}
-                            onIndividualUpdated={this.props.onIndividualUpdated}
+                            isExpanded={false}
                             level={this.props.level + 1}
-                            onClick={onClick}
-                            onSelectedResource={this.props.onSelectedResource}
+                            nested={true}
+                            ontology={this.props.ontology}
                             titleView={titleView}
-                            onAddResource={this.props.onTapAdd}
                 />;
                 
                 key += propertyValue.id + '_' + propertyValue.uniqueId;
@@ -188,17 +197,18 @@ class IndividualProperty extends React.Component<*> {
 }
 
 type Props = {
-    isExpanded: boolean,
+    onSelectedResource: (id: string) => void,
+    onIndividualUpdated?: () => void,
+    onAddResource?: (individual: Individual, property: RDFProperty) => void,
+    onClick?: () => void,
+    individual: Individual,
     isEditable: boolean,
     isExpandable?: boolean,
+    isExpanded: boolean,
     level: number,
+    nested: boolean,
     ontology: Ontology,
-    individual: Individual,
-    onIndividualUpdated: () => void,
-    onSelectedResource?: () => void,
-    onClick?: () => void,
     titleView?: ReactElement,
-    onAddResource: (individual: Individual, property: RDFProperty) => void
 }
 
 type State = {
@@ -256,7 +266,7 @@ export default class IndividualView extends React.Component<Props, State> {
         const individual = this.props.individual;
         const type = individual.types[0];
         const properties = ontology.getClassProperties(type);
-        const property = properties.find((prop) => prop.IRI === propertyType);
+        const property = properties.find((prop: RDFProperty) => prop.IRI === propertyType);
         if (!property || property.ranges.length === 0) {
             return;
         }
@@ -273,13 +283,17 @@ export default class IndividualView extends React.Component<Props, State> {
             individual.addProperty(propertyType, literal);
         }
         this.forceUpdate();
-        this.props.onIndividualUpdated();
+        if (this.props.onIndividualUpdated) {
+            this.props.onIndividualUpdated();
+        }
     }
 
     removeProperty(propertyType: string, value: any) {
         this.props.individual.removeProperty(propertyType, value);
         this.forceUpdate();
-        this.props.onIndividualUpdated();
+        if (this.props.onIndividualUpdated) {
+            this.props.onIndividualUpdated();
+        }
     }
 
     getAvailableProperties(): {} {
@@ -341,7 +355,9 @@ export default class IndividualView extends React.Component<Props, State> {
         //     this.addProperty(property.IRI);
         // };
         const onLiteralChanged = (event) => {
-            this.props.onIndividualUpdated();
+            if (this.props.onIndividualUpdated) {
+                this.props.onIndividualUpdated();
+            }
         };
         let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
         let title = (property.label) ? capitalize(property.label) : formatIRI(property.IRI);
@@ -362,18 +378,18 @@ export default class IndividualView extends React.Component<Props, State> {
         }
 
         const propertyView = <IndividualProperty
-            onTapAdd={onTapAdd}
+            isEditable={isEditable}
             onIndividualUpdated={this.props.onIndividualUpdated}
             onLiteralChanged={onLiteralChanged}
-            tooltip={tooltip}
-            title={title}
+            onSelectedResource={this.props.onSelectedResource}
+            onTapAdd={onTapAdd}
             individual={this.props.individual}
+            level={this.props.level}
+            ontology={this.props.ontology}
             property={property}
             propertyValues={propertyValues}
-            isEditable={isEditable}
-            ontology={this.props.ontology}
-            level={this.props.level}
-            onSelectedResource={this.props.onSelectedResource}
+            title={title}
+            tooltip={tooltip}
         />;
 
         return propertyView;
@@ -470,20 +486,24 @@ export default class IndividualView extends React.Component<Props, State> {
         const onChange = (value) => {
             this.props.individual.id = value;
             this.forceUpdate();
-            this.props.onIndividualUpdated();
+            if (this.props.onIndividualUpdated) {
+                this.props.onIndividualUpdated();
+            }
         };
 
         return <IndividualProperty
+            isEditable={() => true}
             onIndividualUpdated={this.props.onIndividualUpdated}
             onLiteralChanged={onChange}
-            title={'ID'}
+            onSelectedResource={this.props.onSelectedResource}
+            onTapAdd={this.props.onAddResource}
             individual={this.props.individual}
+            level={this.props.level}
+            ontology={this.props.ontology}
             property={idProperty}
             propertyValues={propertyValues}
-            isEditable={() => true}
-            ontology={this.props.ontology}
-            level={this.props.level}
-            onTapAdd={this.props.onAddResource}
+            title={"ID"}
+            tooltip={"ID"}
         />;
     }
 
@@ -494,21 +514,26 @@ export default class IndividualView extends React.Component<Props, State> {
 
         const labelProperty = new RDFProperty('http://www.w3.org/2000/01/rdf-schema#label');
         const onLiteralChanged = (event) => {
-            this.props.onIndividualUpdated();
+            if (this.props.onIndividualUpdated) {
+                this.props.onIndividualUpdated();
+            }
         };
 
         return (
             <List>
                 <IndividualProperty
+                    isEditable={(propertyValue: any) => this.props.isEditable}
                     onIndividualUpdated={this.props.onIndividualUpdated}
                     onLiteralChanged={onLiteralChanged}
-                    title={'Label'}
+                    onSelectedResource={this.props.onSelectedResource}
+                    onTapAdd={this.props.onAddResource}
+                    individual={this.props.individual}
+                    level={this.props.level}
+                    ontology={this.props.ontology}
                     property={labelProperty}
                     propertyValues={labels}
-                    isEditable={this.props.isEditable}
-                    ontology={this.props.ontology}
-                    level={this.props.level}
-                    onTapAdd={this.props.onAddResource}
+                    title={"Label"}
+                    tooltip={"Labels"}
                 />;
             </List>
         )

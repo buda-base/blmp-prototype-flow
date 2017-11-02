@@ -14,12 +14,12 @@ export default class IndividualEditor extends Component {
             editor = <IndividualViewContainer
                 individual={individual}
                 isEditable={true}
-                isExpanded={true}
                 isExpandable={true}
-                ontology={this.props.ontology}
-                nested={false}
-                onIndividualUpdated={this.props.onIndividualUpdated}
+                isExpanded={true}
                 level={0}
+                nested={false}
+                ontology={this.props.ontology}
+                onIndividualUpdated={this.props.onIndividualUpdated}
                 onAddResource={this.props.onAddResource}
             />
         } else {

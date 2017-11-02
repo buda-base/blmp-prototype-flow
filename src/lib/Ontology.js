@@ -113,7 +113,7 @@ export default class Ontology {
         return classes;
     }
 
-    getClassProperties(iri: string): {}[] {
+    getClassProperties(iri: string): RDFProperty[] {
         let properties = [];
         let rdfClass = this._classes[iri];
         if (!rdfClass) {
