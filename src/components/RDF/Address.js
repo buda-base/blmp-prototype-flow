@@ -20,7 +20,11 @@ export default class Address extends RDFComponent {
     }
 
     render() {
-        const address = this.getAddressString();
+        let properties = this.props.individual.getProperties();
+        let address = "<no properties>";
+        if (Object.keys(properties).length > 0) {
+            address = this.getAddressString();
+        }
         return (
             <p onClick={this.props.onClick}>{address}</p>
         )
