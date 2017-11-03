@@ -151,9 +151,10 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
                 }
                 view = <IndividualView 
                             onSelectedResource={this.props.onSelectedResource}
+                            onIndividualUpdated={this.props.onIndividualUpdated}
                             onClick={onClick}
                             individual={propertyValue}
-                            isEditable={false}
+                            isEditable={isEditable}
                             isExpandable={true}
                             isExpanded={false}
                             level={this.props.level + 1}
@@ -351,9 +352,6 @@ export default class IndividualView extends React.Component<Props, State> {
     }
 
     listForProperty(property: RDFProperty, propertyValues: Array<mixed>): {} {
-        // const onTapAdd = (event) => {
-        //     this.addProperty(property.IRI);
-        // };
         const onLiteralChanged = (event) => {
             if (this.props.onIndividualUpdated) {
                 this.props.onIndividualUpdated();
@@ -361,10 +359,15 @@ export default class IndividualView extends React.Component<Props, State> {
         };
         let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
         let title = (property.label) ? capitalize(property.label) : formatIRI(property.IRI);
+        const propIsEditable = this.props.isEditable;
         const isEditable = (propertyValue) => {
-            let isEditable = this.props.isEditable;
+            let isEditable = propIsEditable;
             if (propertyValue && propertyValue instanceof Individual) {
-                isEditable = (this._editableIndividuals.indexOf(propertyValue) !== -1) ? true : false;
+                if (this._editableIndividuals.indexOf(propertyValue) !== -1) {
+                    isEditable = true;
+                } else {
+                    isEditable = false;
+                }
             }
             return isEditable;
         };
@@ -565,9 +568,11 @@ export default class IndividualView extends React.Component<Props, State> {
             />
         }
     
-        const allowExpansion = this.props.isExpandable && Object.keys(
-            this.props.individual.getProperties()
-        ).length > 0;
+        const allowExpansion = this.props.isExpandable && (Object.keys(
+                this.props.individual.getProperties()
+            ).length > 0
+            || this.props.isEditable
+        );
         let listItem: ReactElement;
         if (allowExpansion) {
             listItem = <ListItem button onClick={() => this.toggleExpandedState()}>
