@@ -1,6 +1,5 @@
 // @flow
-import React from 'react';
-import ReactElement from 'react/lib/ReactElement';
+import * as React from 'react';
 import './IndividualView.css';
 import Literal, { STRING_TYPE } from '../lib/Literal';
 import Individual from '../lib/Individual';
@@ -95,7 +94,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
                 {this.props.isEditable() &&
                     <ListItemIcon>
                         <IconButton
-                            onTouchTap={onTapAdd}
+                            onClick={onTapAdd}
                             style={{marginRight: 0}}
                         >
                             <AddCircleIcon style={{...greenColor, ...iconSizes.small}}/>
@@ -110,7 +109,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
         let valueRows = [];
         for (let propertyValue of this.props.propertyValues) {
             let view = null;
-            let titleView = null;
+            let titleView = undefined;
             let isEditable = this.props.isEditable(propertyValue);
             let classes = ['individualRow'];
             let key = this.props.property.IRI + '_';
@@ -175,7 +174,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
             let removeButton = "";
             if (isEditable) {
                 removeButton = <IconButton
-                    onTouchTap={onTapRemove}
+                    onClick={onTapRemove}
                     className="removeButton"
                 >
                     <RemoveCircleIcon style={{...redColor, ...iconSizes.small}}/>
@@ -209,7 +208,7 @@ type Props = {
     level: number,
     nested: boolean,
     ontology: Ontology,
-    titleView?: ReactElement,
+    titleView?: React.Element<*>,
 }
 
 type State = {
@@ -398,7 +397,7 @@ export default class IndividualView extends React.Component<Props, State> {
         return propertyView;
     }
 
-    getPropertyLists(): (?ReactElement)[] {
+    getPropertyLists(): (?React.Element<*>)[] {
         let removeUnsetProperties = true;
         if (this.props.isEditable) {
             removeUnsetProperties = false;
@@ -445,7 +444,7 @@ export default class IndividualView extends React.Component<Props, State> {
             marginLeft: ((this.props.level + 1) * 20) + 'px'
         };
 
-        let lists: (?ReactElement)[] = [];
+        let lists: (?React.Element<*>)[] = [];
         for (let [index, propertyData] of propertyTypes.entries()) {
             let collapseId = [this.props.individual.id, 'level', this.props.level, index, 'collapsed'].join('_');
 
@@ -481,7 +480,7 @@ export default class IndividualView extends React.Component<Props, State> {
         return lists;
     }
 
-    getIdList(): ReactElement {
+    getIdList(): React.Element<*> {
         const idProperty = new RDFProperty('ID');
         const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
         const propertyValues = [idLiteral];
@@ -510,7 +509,7 @@ export default class IndividualView extends React.Component<Props, State> {
         />;
     }
 
-    getLabelsList(): ReactElement | null {
+    getLabelsList(): React.Element<*> | null {
         let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
 
         if (!labels) return null;
@@ -542,7 +541,7 @@ export default class IndividualView extends React.Component<Props, State> {
         )
     }
 
-    getNestedTitleList(): ReactElement | null {
+    getNestedTitleList(): React.Element<*> | null {
         if (!this.props.nested && !this.props.titleView) return null;
 
         let titleView = this.props.titleView;
@@ -573,7 +572,7 @@ export default class IndividualView extends React.Component<Props, State> {
             ).length > 0
             || this.props.isEditable
         );
-        let listItem: ReactElement;
+        let listItem: React.Element<*>;
         if (allowExpansion) {
             listItem = <ListItem button onClick={() => this.toggleExpandedState()}>
                             {titleView}
