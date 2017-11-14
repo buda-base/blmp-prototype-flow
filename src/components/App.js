@@ -1,172 +1,19 @@
 import React, { Component } from 'react';
+import TabContainer from 'containers/TabContentContainer';
 import './App.css';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import Button from 'material-ui/Button';
-import Drawer from 'material-ui/Drawer';
-import { ListItem } from 'material-ui/List';
 
-import SplitPane from 'react-split-pane';
-import IndividualEditor from './IndividualEditor'
-import Preview from './Preview'
-import IndividualHeading from './IndividualHeading';
-import ResourceViewContainer from 'containers/ResourceViewContainer';
-import ResourceSelector from 'components/ResourceSelector';
-import Serializer from '../lib/Serializer'
-import API from '../api/api';
+type Props = {
+    selectedTabId: number | null
+}
 
-const DEFAULT_OBJECT_ID = 'G844';
-
-class App extends Component {
-    _rootIRI = 'http://purl.bdrc.io/ontology/';
-    _mainSplitPane = null;
-    _mainSplitPaneWidth = 600;
-    _secondarySplitPane = null;
-    _secondarySplitPaneWidth = 350;
-    _api: API;
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            ontology: null,
-            individual: null,
-            graphText: null,
-            hidePreview: false,
-            splitWidth: this._mainSplitPaneWidth,
-            subSplitWidth: this._secondarySplitPaneWidth,
-        };
-
-        this._api = new API();
-
-        this.init();
-    }
-
-    async init() {
-        const ontology = await this._api.getOntology();
-        console.log('ontology: %o', ontology);
-        let place = await this._api.getResource(DEFAULT_OBJECT_ID);
-        console.log('place: %o', place);
-        this.setState((prevState, props) => {
-            return {
-                ...prevState,
-                ontology,
-                individual: place
-            }
-        });
-    }
-
-    updateGraphText() {
-        let serializer = new Serializer();
-        const baseURI = 'http://purl.bdrc.io/ontology/core/';
-        serializer.serialize(this.state.individual, baseURI, this.state.individual.namespaces)
-            .then((str) => {
-                this.setState((prevState, props) => {
-                    return {
-                        ...prevState,
-                        graphText: str
-                    }
-                });
-            });
-    }
+class App extends Component<Props> {
 
     render() {
-        if (!this.state.graphText && this.state.individual) {
-            this.updateGraphText();
-        }
-
-        let onIndividualUpdated = () => {
-            this.updateGraphText();
-        };
-
-        const previewToggleStyle = {
-            position: 'absolute',
-            top: '20px',
-            right: '0px'
-        };
-
-        const toggleShowPreview = () => {
-            this.setState((prevState, props) => {
-                let visibleWidth = this._secondarySplitPaneWidth;
-                if (this._secondarySplitPane) {
-                    if (!prevState.hidePreview) {
-                        this._secondarySplitPaneWidth = this._secondarySplitPane.state.draggedSize;
-                    } else {
-                        visibleWidth = this._secondarySplitPaneWidth;
-                    }
-                }
-                const width = (prevState.hidePreview) ? visibleWidth : '100%';
-                return {
-                    ...prevState,
-                    hidePreview: !(prevState.hidePreview),
-                    subSplitWidth: width
-                }
-            });
-
-        };
-
         return (
             <div className="App">
-                <SplitPane
-                    split="vertical"
-                    minSize={350}
-                    size={this.state.splitWidth}
-                    allowResize={true}
-                    ref={(split) => this._mainSplitPane = split}
-                >
-                    <SplitPane split="horizontal" size={90} allowResize={false}>
-                        <div>
-                            <IndividualHeading individual={this.state.individual} />
-                        </div>
-                        <div>
-                            <IndividualEditor
-                                individual={this.state.individual}
-                                ontology={this.state.ontology}
-                                onIndividualUpdated={onIndividualUpdated}
-                                onAddResource={this.props.onAddResource}
-                            />
-                            {this.props.addingResource &&
-                                <ResourceSelector 
-                                    isOpen={true}
-                                    individual={this.props.addingResource.individual}
-                                    property={this.props.addingResource.property}
-                                    findResource={this.props.onFindResource}
-                                    cancel={this.props.onCancelAddingResource}
-                                    findingResourceId={this.props.findingResourceId}
-                                    findingResource={this.props.findingResource}
-                                    findingResourceError={this.props.findingResourceError}
-                                    ontology={this.state.ontology}
-                                    addedProperty={() => {
-                                        this.props.onAddedProperty();
-                                        this.updateGraphText();
-                                    }}
-                                />
-                            }
-                        </div>
-                    </SplitPane>
-                    <SplitPane
-                        minSize={350}
-                        size={this.state.subSplitWidth}
-                        allowResize={true}
-                        ref={(split) => this._secondarySplitPane = split}
-                    >
-                        <SplitPane split="horizontal" size={90} allowResize={false}>
-                            <div>
-                                <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.state.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
-                            </div>
-                            <ResourceViewContainer 
-                                ontology={this.state.ontology}
-                            />
-                        </SplitPane>
-                        <SplitPane split="horizontal" size={90} allowResize={false}>
-                            <div className="preview">
-                                <h2>Turtle Preview</h2>
-                            </div>
-                            <Preview
-                                graphText={this.state.graphText}
-                            />
-                        </SplitPane>
-                    </SplitPane>
-                </SplitPane>
+                <TabContainer 
+                    tabId={this.props.selectedTabId}
+                />
             </div>
         );
     }
