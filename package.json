@@ -68,7 +68,7 @@
   "scripts": {
     "start": "cross-env NODE_PATH=src node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "cross-env NODE_PATH=src node scripts/test.js --env=jsdom",
     "flow": "flow"
   },
   "jest": {
