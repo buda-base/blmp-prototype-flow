@@ -2,18 +2,22 @@
 import type { Action } from 'state/actions';
 import createReducer from 'lib/createReducer';
 import * as actions from './actions';
+import type { OntologyAction } from './actions';
 import Individual from 'lib/Individual';
+import Ontology from '../../lib/Ontology';
 
 export type DataState = {
     loading: {[string]: boolean},
     failures: {[string]: string},
     resources: {[IRI:string]: Individual},
+    ontology: Ontology | null
 }
 
 const DEFAULT_STATE: DataState = {
     loading: {},
     failures: {},
-    resources: {}
+    resources: {},
+    ontology: null
 }
 
 let reducers = {};
@@ -52,6 +56,14 @@ export const resourceFailed = (state: DataState, action: actions.ResourceFailedA
     }
 }
 reducers[actions.TYPES.resourceFailed] = resourceFailed;
+
+export const loadedOntology = (state: DataState, action: OntologyAction) => {
+    return {
+        ...state,
+        ontology: action.payload
+    }
+}
+reducers[actions.TYPES.loadedOntology] = loadedOntology;
 
 // Data Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);

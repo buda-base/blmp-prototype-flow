@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { initiateApp } from 'state/actions';
 import AppContainer from './containers/AppContainer';
 import './index.css';
 
@@ -33,6 +34,8 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 sagaMiddleware.run(rootSaga);
+
+store.dispatch(initiateApp());
 
 ReactDOM.render(
     // setup redux store

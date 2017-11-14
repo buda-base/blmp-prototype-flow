@@ -17,5 +17,4 @@ let selectors = {
     ...globalize(ui, 'ui'),
     ...globalize(data, 'data')        
 }
-
 export default selectors;

@@ -2,6 +2,7 @@
 import { createAction } from 'redux-actions';
 import type { Action } from 'state/actions';
 import Individual from 'lib/Individual';
+import Ontology from '../../lib/Ontology';
 
 export const TYPES = {};
 
@@ -65,5 +66,17 @@ export const resourceFailed = (IRI: string, error: string): ResourceFailedAction
             IRI,
             error
         }
+    }
+}
+
+export type OntologyAction = {
+    type: string,
+    payload: Ontology
+}
+TYPES.loadedOntology = 'LOADED_ONTOLOGY';
+export const loadedOntology = (ontology: Ontology): OntologyAction => {
+    return {
+        type: TYPES.loadedOntology,
+        payload: ontology
     }
 }

@@ -1,10 +1,41 @@
-import { call, put, takeLatest, select, all } from 'redux-saga/effects'
+import { call, put, takeLatest, select, all } from 'redux-saga/effects';
+import { INITIATE_APP } from 'state/actions';
 import * as dataActions from 'state/data/actions';
 import * as uiActions from 'state/ui/actions';
 import selectors from 'state/selectors';
 import bdrcApi from 'api/api';
 
 const api = new bdrcApi();
+
+function* initiateApp() {
+    try {
+        const ontology = yield call([api, api.getOntology]);
+        yield put(dataActions.loadedOntology(ontology));
+        yield put(uiActions.newTab());
+    } catch(e) {
+        console.log('initiateApp error: %o', e);
+        // TODO: add action for initiation failure
+    }
+} 
+
+function* watchInitiateApp() {
+    yield takeLatest(INITIATE_APP, initiateApp);
+}
+
+/* Temporarily auto-load resource.
+   Using this just so the UI is usable while waiting for the resource selector
+   to be added for new/blank tabs.
+*/
+function* loadDefaultResource() {
+    const resourceIRI = 'http://purl.bdrc.io/resource/G844';
+    yield put(uiActions.editingResource(1, resourceIRI));
+    yield call(loadResource, resourceIRI);
+}
+
+function* watchNewTab() {
+    yield takeLatest(uiActions.TYPES.newTab, loadDefaultResource);
+}
+/* END Temporarily auto-load resource */
 
 export function* loadResource(IRI) {
     yield put(dataActions.loading(IRI, true));
@@ -48,8 +79,10 @@ export function* watchFindResource() {
 
 export default function* rootSaga() {
     yield all([
+        watchInitiateApp(),
         watchLoadResource(),
         watchSelectedResource(),
-        watchFindResource()
+        watchFindResource(),
+        watchNewTab()
     ])
 }
