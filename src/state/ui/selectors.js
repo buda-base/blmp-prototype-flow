@@ -6,6 +6,10 @@ export const getSelectedTabId = (state: UIState): number | null => {
     return state.activeTabId;
 }
 
+export const getTabsOrder = (state: UIState): number[] => {
+    return state.tabsOrder;
+}
+
 export const getEditingResourceIRI = (state: UIState, tabId: number): string | null => {
     return state.editingResources[tabId].resourceId;
 }

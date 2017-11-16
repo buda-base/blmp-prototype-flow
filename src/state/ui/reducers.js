@@ -16,12 +16,14 @@ export type TabState = {
 
 export type UIState = {
     editingResources: {[tabId: number]: TabState},
-    activeTabId: null
+    activeTabId: number | null,
+    tabsOrder: number[]
 }
 
 const DEFAULT_STATE: UIState = {
     editingResources: {},
-    activeTabId: null
+    activeTabId: null,
+    tabsOrder: []
 }
 
 const DEFAULT_TAB_STATE: TabState = {
@@ -69,7 +71,11 @@ export const newTab = (state: UIState, action: Action) => {
                 tabId
             }
         },
-        activeTabId: tabId
+        activeTabId: tabId,
+        tabsOrder: [
+            ...state.tabsOrder,
+            tabId
+        ]
     }
 }
 reducers[actions.TYPES.newTab] = newTab;
