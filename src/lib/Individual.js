@@ -1,7 +1,10 @@
 // @flow
+import Literal from 'lib/Literal';
 
 let UNIQUE_ID = 0;
 let ID = 0;
+
+let LABEL_IRI = "http://www.w3.org/2000/01/rdf-schema#label";
 
 export default class Individual {
     _id: ?string;
@@ -27,7 +30,7 @@ export default class Individual {
         }
     }
 
-    get id(): ?string {
+    get id(): string {
         if (!this._id) {
             this._id = '_:b' + ID++;
             this._hasGeneratedId = true;
@@ -40,6 +43,17 @@ export default class Individual {
             newId = ":" + newId;
         }
         this._id = newId;
+    }
+
+    get label(): ?string {
+        const labels = this.getProperty(LABEL_IRI);
+        let label;
+        if (labels && labels.length > 0) {
+            if (labels[0] instanceof Literal) {
+                label = labels[0].value;
+            }
+        }
+        return label;
     }
 
     get hasGeneratedId(): boolean {
