@@ -2,10 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import * as ui from 'state/ui/actions';
 import selectors from 'state/selectors';
-import Individual from 'lib/Individual';
-import RDFProperty from 'lib/RDFProperty';
 
 import App from 'components/App';
 
