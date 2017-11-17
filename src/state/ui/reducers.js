@@ -89,6 +89,7 @@ export const selectTab = (state: UIState, action: Action) => {
 reducers[actions.TYPES.selectTab] = selectTab;
 
 export const editingResource = (state: UIState, action: TabAction): UIState => {
+    state = updateTabState(action.meta.tabId, state, 'findResource', null);
     return updateTabState(action.meta.tabId, state, 'resourceId', action.payload);
 }
 reducers[actions.TYPES.editingResource] = editingResource;
