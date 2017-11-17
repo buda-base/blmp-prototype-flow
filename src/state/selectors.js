@@ -15,6 +15,6 @@ const globalize = (selectors: {}, stateKey: string) => {
 
 let selectors = {
     ...globalize(ui, 'ui'),
-    ...globalize(data, 'data')        
+    ...globalize(data, 'data')
 }
 export default selectors;
