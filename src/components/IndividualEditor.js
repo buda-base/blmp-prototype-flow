@@ -3,10 +3,6 @@ import './IndividualEditor.css';
 import IndividualViewContainer from 'containers/IndividualViewContainer';
 
 export default class IndividualEditor extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         let editor;
         let individual = this.props.individual;
