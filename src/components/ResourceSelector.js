@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import Dialog, {
     DialogActions,
@@ -5,10 +6,16 @@ import Dialog, {
     DialogContentText,
     DialogTitle,
   } from 'material-ui/Dialog';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import IndividualView from 'components/IndividualView';
 import Loader from 'react-loader';
+
+import Ontology from 'lib/Ontology';
+import RDFProperty from 'lib/RDFProperty';
+import Individual from 'lib/Individual';
 
 function validatePropertyValue(property: RDFProperty, individual: Individual): boolean {
     let isValid = false;
@@ -22,10 +29,11 @@ function validatePropertyValue(property: RDFProperty, individual: Individual): b
 }
 
 type Props = {
-    isOpen: boolean,
-    individual: Individual,
-    property: RDFProperty,
-    addedProperty: () => void,
+    isDialog: boolean,
+    individual?: Individual,
+    property?: RDFProperty,
+    addedProperty?: () => void,
+    selectedResource?: (resource: Individual) => void,
     findResource: (search: string) => void,
     cancel: () => void,
     findingResourceId?: string,
@@ -38,18 +46,26 @@ export default class ResourceSelector extends React.Component<Props> {
     _textfield = null;
 
     selectedResource() {
-        if (this.props.findingResource) {
+        if (this.props.findingResource && this.props.individual && this.props.property) {
             const individual = this.props.individual;
             const property = this.props.property;
             individual.addProperty(property.IRI, this.props.findingResource);
-        }
 
-        this.props.addedProperty();
+            if (this.props.addedProperty) {
+                this.props.addedProperty();
+            }
+        } else if (this.props.selectedResource && this.props.findingResource) {
+            this.props.selectedResource(this.props.findingResource);
+        }
     }
 
     findResource() {
-        const searchTerm = this._textfield.value;
-        this.props.findResource(searchTerm);
+        if (this._textfield) {
+            const searchTerm = this._textfield.value;
+            if (searchTerm) {
+                this.props.findResource(searchTerm.toUpperCase());
+            }
+        }
     }
 
     render() {
@@ -57,9 +73,13 @@ export default class ResourceSelector extends React.Component<Props> {
         let isValid;
         if (this.props.findingResourceId) {
             if (this.props.findingResource) {
-                isValid = validatePropertyValue(this.props.property, this.props.findingResource);
+                isValid = true;
+                if (this.props.individual && this.props.property) {
+                    isValid = validatePropertyValue(this.props.property, this.props.findingResource);
+                }
+                
                 message = <div>
-                    <DialogContentText>Found:</DialogContentText>
+                    <Typography>Found:</Typography>
                     <IndividualView
                         individual={this.props.findingResource}
                         isEditable={false}
@@ -68,20 +88,64 @@ export default class ResourceSelector extends React.Component<Props> {
                         nested={true}
                         level={0}
                         ontology={this.props.ontology}
-                        onIndividualUpdated={() => null}
-                        onAddResource={() => null}
                     />
                     {!isValid &&
                         <p>Error: this resource is not valid for this property.</p>
                     }   
                 </div>
             } else if (this.props.findingResourceError) {
-                message = <DialogContentText>Error loading resource: {this.props.findingResourceError}</DialogContentText>
+                message = <Typography>Error loading resource: {this.props.findingResourceError}</Typography>
             } else {
                 message = <Loader loaded={false} />
             }
         }
 
+        let view = <Card>
+            <CardContent>
+                <Typography type="headline" component="h2">
+                    Select a resource
+                </Typography>
+                <TextField 
+                    autoFocus
+                    label="Resource ID"
+                    id="resourceID"
+                    type="text"
+                    inputRef={(searchInput) => this._textfield = searchInput}
+                />
+                <Button onClick={this.findResource.bind(this)}>
+                    Search
+                </Button>
+            </CardContent>
+            
+            {this.props.findingResourceId &&
+                <CardContent>
+                    {message}
+                </CardContent>
+            }
+
+            <CardActions>
+                {this.props.isDialog &&
+                    <Button onClick={this.props.cancel}>
+                        Cancel
+                    </Button>
+                }
+                {isValid &&
+                    <Button onClick={this.selectedResource.bind(this)}>
+                        Select
+                    </Button>
+                }
+            </CardActions>
+        </Card>
+
+        if (this.props.isDialog) {
+            view = <Dialog open={true}>{view}</Dialog>
+        }
+
+        return(
+            view
+        );
+
+        /*
         return(
             <div>
                 <p>ResourceSelector!</p>
@@ -122,5 +186,6 @@ export default class ResourceSelector extends React.Component<Props> {
                 </Dialog>
             </div>
         );
+        */
     }
 }
