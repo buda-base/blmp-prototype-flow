@@ -28,6 +28,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onSelectTab: (tabId: number) => {
             dispatch(ui.selectTab(tabId));
+        },
+        onCloseTab: (tabId: number) => {
+            dispatch(ui.closeTab(tabId));
+        },
+        onNewTab: () => {
+            dispatch(ui.newTab());
         }
     }
 }
