@@ -1,3 +1,4 @@
+// @flow
 import { createAction } from 'redux-actions';
 import type { Action } from 'state/actions';
 import Individual from 'lib/Individual';
@@ -19,6 +20,9 @@ export const newTab = createAction(TYPES.newTab);
 
 TYPES.selectTab = 'SELECT_TAB';
 export const selectTab = createAction(TYPES.selectTab, tabId => tabId);
+
+TYPES.closeTab = 'CLOSE_TAB';
+export const closeTab = createAction(TYPES.closeTab, tabId => tabId);
 
 TYPES.editingResource = 'EDITING_RESOURCE';
 export const editingResource = (tabId: number, resourceIRI: string): TabAction => {

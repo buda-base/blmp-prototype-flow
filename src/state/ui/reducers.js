@@ -3,6 +3,7 @@ import type { Action } from 'state/actions';
 import createReducer from 'lib/createReducer';
 import * as actions from './actions';
 import type { TabAction, AddingResource } from './actions';
+import * as uiActions from 'state/ui/actions';
 import Individual from 'lib/Individual';
 import RDFProperty from 'lib/RDFProperty';
 
@@ -79,6 +80,28 @@ export const newTab = (state: UIState, action: Action) => {
     }
 }
 reducers[actions.TYPES.newTab] = newTab;
+
+export const closeTab = (state: UIState, action: Action) => {
+    const tabId = action.payload;
+    if (!tabId) {
+        return;
+    }
+    let editingResources = {
+        ...state.editingResources
+    };
+    delete editingResources[tabId];
+    const tabsOrder = state.tabsOrder.filter(orderedTabId => orderedTabId !== tabId);
+    state = {
+        ...state,
+        editingResources,
+        tabsOrder
+    };
+    if (tabsOrder.length === 0) state = newTab(state, uiActions.newTab());
+    console.log('closeTab state: %o', state);
+
+    return state;
+}
+reducers[actions.TYPES.closeTab] = closeTab;
 
 export const selectTab = (state: UIState, action: Action) => {
     return {
