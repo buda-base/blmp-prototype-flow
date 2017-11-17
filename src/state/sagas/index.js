@@ -22,26 +22,20 @@ function* watchInitiateApp() {
     yield takeLatest(INITIATE_APP, initiateApp);
 }
 
-/* Temporarily auto-load resource.
-   Using this just so the UI is usable while waiting for the resource selector
-   to be added for new/blank tabs.
-*/
-function* loadDefaultResource() {
-    const resourceIRI = 'http://purl.bdrc.io/resource/G844';
-    yield put(uiActions.editingResource(1, resourceIRI));
-    yield call(loadResource, resourceIRI);
+function* watchEditingResource() {
+    yield takeLatest(uiActions.TYPES.editingResource, selectedResource);
 }
-
-function* watchNewTab() {
-    yield takeLatest(uiActions.TYPES.newTab, loadDefaultResource);
-}
-/* END Temporarily auto-load resource */
 
 export function* loadResource(IRI) {
     yield put(dataActions.loading(IRI, true));
     try {
         const individual = yield call([api, api.getResource], IRI);
         yield put(dataActions.loadedResource(IRI, individual));
+        // IRI might only be the resource ID so make sure the 
+        // actual IRI is set as well.
+        if (individual.id !== IRI) {
+            yield put(dataActions.loadedResource(individual.id, individual));    
+        }
     } catch(e) {
         yield put(dataActions.resourceFailed(IRI, e.message));
         yield put(dataActions.loading(IRI, false));
@@ -83,6 +77,6 @@ export default function* rootSaga() {
         watchLoadResource(),
         watchSelectedResource(),
         watchFindResource(),
-        watchNewTab()
+        watchEditingResource()
     ])
 }
