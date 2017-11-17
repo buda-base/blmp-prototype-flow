@@ -63,6 +63,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     const tabId = ownProps.tabId;
     return {
+        onOpenedResource: (resource: Individual) => {
+            dispatch(ui.editingResource(tabId, resource.id));
+        },
         onSelectedResource: (IRI: string) => {
             dispatch(ui.selectedResourceIRI(tabId, IRI));
         },
