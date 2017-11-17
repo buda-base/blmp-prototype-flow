@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import TabContainer from 'containers/TabContentContainer';
+import TabsContainer from 'containers/TabsContainer';
+import TabContentContainer from 'containers/TabContentContainer';
 import './App.css';
 
 type Props = {
@@ -11,7 +12,8 @@ class App extends Component<Props> {
     render() {
         return (
             <div className="App">
-                <TabContainer 
+                <TabsContainer />
+                <TabContentContainer 
                     tabId={this.props.selectedTabId}
                 />
             </div>
