@@ -30,6 +30,7 @@ type Props = {
     findingResourceId: string,
     findingResource: Individual,
     findingResourceError: string,
+    onOpenedResource: (resource: Individual) => void,
     onSelectedResource: (IRI: string) => void,
     onAddResource: (indvidual: Individual, property: RDFProperty) => void,
     onCancelAddingResource: () => void,
@@ -115,76 +116,83 @@ class TabContent extends Component<Props, State> {
 
         return (
             <div className="TabContent">
-                <div>
-                    {this.props.editingResource === null &&
-                        <p>Nothing selected.</p>
-                        // TODO: add resource selector
-                    }
-                    {this.props.editingResource &&
+                {!this.props.editingResource &&
+                    <div className="tabResourceSelector">
+                        <ResourceSelector 
+                            isDialog={false}
+                            selectedResource={this.props.onOpenedResource}
+                            findResource={this.props.onFindResource}
+                            cancel={this.props.onCancelAddingResource}
+                            findingResourceId={this.props.findingResourceId}
+                            findingResource={this.props.findingResource}
+                            findingResourceError={this.props.findingResourceError}
+                            ontology={this.props.ontology}
+                        />
+                    </div>
+                }
+                {this.props.editingResource &&
+                    <SplitPane
+                    split="vertical"
+                    minSize={350}
+                    size={this.state.splitWidth}
+                    allowResize={true}
+                    ref={(split) => this._mainSplitPane = split}
+                    >
+                        <SplitPane split="horizontal" size={90} allowResize={false}>
+                            <div>
+                                <IndividualHeading individual={this.props.individual} />
+                            </div>
+                            <div>
+                                <IndividualEditor
+                                    individual={this.props.individual}
+                                    ontology={this.props.ontology}
+                                    onIndividualUpdated={onIndividualUpdated}
+                                    onAddResource={this.props.onAddResource}
+                                />
+                                {this.props.addingResource &&
+                                    <ResourceSelector 
+                                        isDialog={true}
+                                        individual={this.props.addingResource.individual}
+                                        property={this.props.addingResource.property}
+                                        findResource={this.props.onFindResource}
+                                        cancel={this.props.onCancelAddingResource}
+                                        findingResourceId={this.props.findingResourceId}
+                                        findingResource={this.props.findingResource}
+                                        findingResourceError={this.props.findingResourceError}
+                                        ontology={this.props.ontology}
+                                        addedProperty={() => {
+                                            this.props.onAddedProperty();
+                                            this.updateGraphText();
+                                        }}
+                                    />
+                                }
+                            </div>
+                        </SplitPane>
                         <SplitPane
-                        split="vertical"
-                        minSize={350}
-                        size={this.state.splitWidth}
-                        allowResize={true}
-                        ref={(split) => this._mainSplitPane = split}
+                            minSize={350}
+                            size={this.state.subSplitWidth}
+                            allowResize={true}
+                            ref={(split) => this._secondarySplitPane = split}
                         >
                             <SplitPane split="horizontal" size={90} allowResize={false}>
                                 <div>
-                                    <IndividualHeading individual={this.props.individual} />
+                                    <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.state.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
                                 </div>
-                                <div>
-                                    <IndividualEditor
-                                        individual={this.props.individual}
-                                        ontology={this.props.ontology}
-                                        onIndividualUpdated={onIndividualUpdated}
-                                        onAddResource={this.props.onAddResource}
-                                    />
-                                    {this.props.addingResource &&
-                                        <ResourceSelector 
-                                            isOpen={true}
-                                            individual={this.props.addingResource.individual}
-                                            property={this.props.addingResource.property}
-                                            findResource={this.props.onFindResource}
-                                            cancel={this.props.onCancelAddingResource}
-                                            findingResourceId={this.props.findingResourceId}
-                                            findingResource={this.props.findingResource}
-                                            findingResourceError={this.props.findingResourceError}
-                                            ontology={this.props.ontology}
-                                            addedProperty={() => {
-                                                this.props.onAddedProperty();
-                                                this.updateGraphText();
-                                            }}
-                                        />
-                                    }
-                                </div>
+                                <ResourceViewContainer 
+                                    ontology={this.props.ontology}
+                                />
                             </SplitPane>
-                            <SplitPane
-                                minSize={350}
-                                size={this.state.subSplitWidth}
-                                allowResize={true}
-                                ref={(split) => this._secondarySplitPane = split}
-                            >
-                                <SplitPane split="horizontal" size={90} allowResize={false}>
-                                    <div>
-                                        <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.state.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
-                                    </div>
-                                    <ResourceViewContainer 
-                                        ontology={this.props.ontology}
-                                    />
-                                </SplitPane>
-                                <SplitPane split="horizontal" size={90} allowResize={false}>
-                                    <div className="preview">
-                                        <h2>Turtle Preview</h2>
-                                    </div>
-                                    <Preview
-                                        graphText={this.state.graphText}
-                                    />
-                                </SplitPane>
+                            <SplitPane split="horizontal" size={90} allowResize={false}>
+                                <div className="preview">
+                                    <h2>Turtle Preview</h2>
+                                </div>
+                                <Preview
+                                    graphText={this.state.graphText}
+                                />
                             </SplitPane>
                         </SplitPane>
-                    }
-                </div>
-                
+                    </SplitPane>
+                }
             </div>
         );
     }

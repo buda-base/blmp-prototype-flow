@@ -1,5 +1,6 @@
 .TabContent {
     display: flex;
+    width: 100%;
 }
 
 .individualEditor {
@@ -89,4 +90,10 @@
 
 .Resizer.disabled:hover {
     border-color: transparent;
+}
+
+/* Resource Selector */
+.tabResourceSelector {
+    width: 500px;
+    margin: 40px auto;
 }
