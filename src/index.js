@@ -22,13 +22,22 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from 'state/reducers';
 
+const logger = store => next => action => {
+  console.group(action.type)
+  console.info('dispatching', action)
+  let result = next(action)
+  console.log('next state', store.getState())
+  console.groupEnd(action.type)
+  return result
+}
+
 const sagaMiddleware = createSagaMiddleware();
 let store;
 if (process.env.NODE_ENV === 'development') {
     store = createStore(
         rootReducer,
         composeWithDevTools(
-            applyMiddleware(sagaMiddleware)
+            applyMiddleware(sagaMiddleware,logger)
         )
     );
 } else {
@@ -37,6 +46,7 @@ if (process.env.NODE_ENV === 'development') {
         applyMiddleware(sagaMiddleware)
     );
 }
+
 
 sagaMiddleware.run(rootSaga);
 
@@ -58,3 +68,5 @@ ReactDOM.render(
     </Provider>,
     document.getElementById('root')
 );
+
+
