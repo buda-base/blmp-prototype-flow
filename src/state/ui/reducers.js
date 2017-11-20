@@ -97,6 +97,7 @@ export const closeTab = (state: UIState, action: Action) => {
         tabsOrder
     };
     if (tabsOrder.length === 0) state = newTab(state, uiActions.newTab());
+    //else state = selectTab(state,uiActions.selectTab(123))
     //console.log('closeTab state: %o', state);
 
     return state;
