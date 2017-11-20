@@ -11,7 +11,11 @@ export const getTabsOrder = (state: UIState): number[] => {
 }
 
 export const getEditingResourceIRI = (state: UIState, tabId: number): string | null => {
-    return state.editingResources[tabId].resourceId;
+    let editingResourceIRI = null;
+    if (state.editingResources[tabId]) {
+        editingResourceIRI = state.editingResources[tabId].resourceId;
+    }
+    return editingResourceIRI;
 }
 
 export const getSelectedResourceIRI = (state: UIState, tabId: number): string | null => {
