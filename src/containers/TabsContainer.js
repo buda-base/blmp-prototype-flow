@@ -31,10 +31,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(ui.selectTab(tabId));
         },
         onCloseTab: (tabId: number) => {
-            dispatch(ui.closeTab(tabId));
-            let tab = store.getState().ui.tabsOrder
-            dispatch(ui.selectTab(tab[tab.length-1]));
-            
+            dispatch(ui.closeTab(tabId));            
         },
         onNewTab: () => {
             dispatch(ui.newTab());

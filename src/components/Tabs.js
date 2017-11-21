@@ -6,6 +6,8 @@ import AddBoxIcon from 'material-ui-icons/AddBox';
 import HighlighOffIcon from 'material-ui-icons/HighlightOff';
 import Individual from 'lib/Individual';
 import formatIRI from 'lib/formatIRI';
+import store from '../index.js';
+import * as ui from 'state/ui/actions';
 
 export type TabData = {
     tabId: number,
@@ -28,10 +30,18 @@ export default class Tabs extends Component<Props> {
         this.props.onSelectTab(tabId);
     }
 
-    _onCloseTab(event: Event) {
-        const tabId = this.props.tabData[this.props.selectedTabIndex].tabId;
+    _onCloseTab(i:number, event: Event) {
+        const tabId = this.props.tabData[i].tabId;
+        console.log("closeTab?",i,tabId,this.props);
         event.stopPropagation();
         this.props.onCloseTab(tabId);
+        if(i == this.props.selectedTabIndex)
+        {
+           //this.props.onSelectTab(this.props.tabData[this.props.tabData.length-1].tabId);
+           
+            let tab = store.getState().ui.tabsOrder
+            store.dispatch(ui.selectTab(tab[tab.length-1]));
+        }
     }
 
     _onNewTab(event: {}) {
@@ -55,7 +65,7 @@ export default class Tabs extends Component<Props> {
                     onChange={this._onSelectTab.bind(this)}
                     value={this.props.selectedTabIndex}
                 >
-                    {this.props.tabData.map(data => {
+                    {this.props.tabData.map((data,i) => {
                         return <Tab
                             style={{
                                 width: 300
@@ -63,7 +73,7 @@ export default class Tabs extends Component<Props> {
                             label={
                                 <div> 
                                     <IconButton
-                                        onClick={this._onCloseTab.bind(this)}
+                                        onClick={this._onCloseTab.bind(this,i)}
                                         style={{
                                             position: 'absolute',
                                             top: 1,
