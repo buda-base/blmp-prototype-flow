@@ -23,7 +23,10 @@ export const getSelectedResourceIRI = (state: UIState, tabId: number): string | 
     if (state.editingResources[tabId]) {
         selectedResourceIRI = state.editingResources[tabId].selectedResourceIRI;
     }
-    return selectedResourceIRI;
+    
+   //console.log("selected IRI",state,tabId,selectedResourceIRI)
+   
+    return selectedResourceIRI ;
 }
 
 export const getAddingResource = (state: UIState, tabId: number): AddingResource | null => {

@@ -24,6 +24,8 @@ const mapStateToProps = (state, ownProps) => {
 
     let addingResource;
     let selectedResourceIRI;
+    
+    //console.log("mapstate2prop?",state,ownProps);
 
     if (tabId) {
         editingResourceIRI = selectors.getEditingResourceIRI(state, tabId);
@@ -43,6 +45,8 @@ const mapStateToProps = (state, ownProps) => {
 
         addingResource = selectors.getAddingResource(state, tabId);
         selectedResourceIRI = selectors.getSelectedResourceIRI(state, tabId);
+        
+        
     }
     
     return {
