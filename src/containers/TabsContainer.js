@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import * as ui from 'state/ui/actions';
 import selectors from 'state/selectors';
 import Tabs from 'components/Tabs';
+import store from "../index.js";
 
 const mapStateToProps = (state) => {
     const tabsOrder: number[] = selectors.getTabsOrder(state);
@@ -31,6 +32,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         onCloseTab: (tabId: number) => {
             dispatch(ui.closeTab(tabId));
+            let tab = store.getState().ui.tabsOrder
+            dispatch(ui.selectTab(tab[tab.length-1]));
+            
         },
         onNewTab: () => {
             dispatch(ui.newTab());

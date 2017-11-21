@@ -61,7 +61,7 @@ export default class Tabs extends Component<Props> {
                                 width: 300
                             }}
                             label={
-                                <div>
+                                <div> 
                                     <IconButton
                                         onClick={this._onCloseTab.bind(this)}
                                         style={{

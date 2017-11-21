@@ -37,6 +37,9 @@ export const editingResource = (tabId: number, resourceIRI: string): TabAction =
 
 TYPES.selectedResourceIRI = 'SELECT_RESOURCE_IRI';
 export const selectedResourceIRI = (tabId: number, IRI: string): TabAction => {
+   
+   //console.log("action",tabId,IRI);
+   
     return {
         type: TYPES.selectedResourceIRI,
         payload: IRI,

@@ -6,10 +6,14 @@ import selectors from 'state/selectors';
 
 import IndividualView from 'components/IndividualView';
 
+import store from "../index.js";
+
 const mapDispatchToProps = (dispatch) => {
     return {
         onSelectedResource: (IRI) => {
-            dispatch(ui.selectedResourceIRI(IRI));
+           
+            //console.log("selected ?",IRI)
+            dispatch(ui.selectedResourceIRI(store.getState().ui.activeTabId,IRI));
         }
     }
 };

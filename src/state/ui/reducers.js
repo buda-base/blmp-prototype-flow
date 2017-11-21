@@ -45,11 +45,19 @@ function getNewTabId(): number {
 }
 
 function updateTabState(tabId: number, state: UIState, key: string, value: any):UIState {
+   
+    
     let tabState = state.editingResources[tabId];
+    
+    //console.log("updating",tabState);
+    
     tabState = {
         ...tabState,
         [key]: value
     }
+    
+    //console.log("updated:",tabState);
+    
     return {
         ...state,
         editingResources: {
@@ -97,7 +105,8 @@ export const closeTab = (state: UIState, action: Action) => {
         tabsOrder
     };
     if (tabsOrder.length === 0) state = newTab(state, uiActions.newTab());
-    console.log('closeTab state: %o', state);
+    //else state = selectTab(state,uiActions.selectTab(123))
+    //console.log('closeTab state: %o', state);
 
     return state;
 }
@@ -118,7 +127,10 @@ export const editingResource = (state: UIState, action: TabAction): UIState => {
 reducers[actions.TYPES.editingResource] = editingResource;
 
 export const selectedResourceIRI = (state: UIState, action: TabAction): UIState => {
-    return updateTabState(action.meta.tabId, state, 'selectedResourceIRI', action.payload);
+   
+    //console.log("selectedIRI:",action)
+   
+    return updateTabState(action.meta.tabId, state, 'selectedResourceIRI', action.payload); // action.meta.tabId);
 };
 reducers[actions.TYPES.selectedResourceIRI] = selectedResourceIRI;
 
