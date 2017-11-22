@@ -35,7 +35,9 @@ type Props = {
     onAddResource: (indvidual: Individual, property: RDFProperty) => void,
     onCancelAddingResource: () => void,
     onFindResource: (id: string) => void,
-    onAddedProperty: () => void
+    onAddedProperty: () => void,
+    onResizeCentralPanel: (tabId: number) => void,
+    onResizePreviewPanel: (tabId: number) => void
 }
 
 type State = {
@@ -50,7 +52,12 @@ class TabContent extends Component<Props, State> {
     _mainSplitPaneWidth = 600;
     _secondarySplitPane = null;
     _secondarySplitPaneWidth = 350;
-
+    
+    // cancellers for timeouts
+    updaSpli = 0 ;
+    updaSuSpli = 0 ;
+    
+    
     constructor(props: Props) {
         super(props);
 
@@ -60,8 +67,54 @@ class TabContent extends Component<Props, State> {
             splitWidth: this._mainSplitPaneWidth,
             subSplitWidth: this._secondarySplitPaneWidth,
         };
+        
     }
-
+    
+    updateSplitWidth(width : number) 
+    { 
+      if(this.updaSpli != 0) clearTimeout(this.updaSpli);
+      this.updaSpli = setTimeout((function(that,wid) 
+      { 
+         return function() {
+            //console.log("timeo",that,wid);
+            
+            that.props.onResizeCentralPanel(wid)
+            
+            /*// react state version
+            that.setState((prevState: State, props: Props) => {
+                  return {
+                     ...prevState,
+                     splitWidth:wid
+                  }
+            })}
+            
+            */
+         
+         }})(this,width), 500) ;
+    }
+    
+    updateSubSplitWidth(width : number) {  
+      if(this.updaSuSpli != 0) clearTimeout(this.updaSuSpli);
+      this.updaSuSpli = setTimeout((function(that,wid) 
+      { 
+         return function() {
+            //console.log("timeo",that,wid);
+            
+            that.props.onResizePreviewPanel(wid)
+            
+            /* // react state version
+            that.setState((prevState: State, props: Props) => {
+                  return {
+                     ...prevState,
+                     subSplitWidth:wid
+                  }
+            })}
+            
+            */
+         }})(this,width), 500) ;
+    }
+    
+    
     updateGraphText() {
         if (!this.props.individual) {
             return;
@@ -114,6 +167,15 @@ class TabContent extends Component<Props, State> {
 
         };
 
+//         console.log("render/state",this.state);
+//         console.log("props",this.props);
+        
+         // first react state version :
+         //    onChange={ console.log("resize",this.state.splitWidth) } 
+         //    onChange={ this.updateSplitWidth.bind(this) } 
+         // first redux version :
+         //    onChange={ width => this.props.onResizeCentralPanel(width) } 
+        
         return (
             <div className="TabContent">
                 {!this.props.editingResource &&
@@ -134,11 +196,13 @@ class TabContent extends Component<Props, State> {
                     <SplitPane
                     split="vertical"
                     minSize={350}
-                    size={this.state.splitWidth}
-                    allowResize={true}
+                    onChange={ this.updateSplitWidth.bind(this) } 
+                    size={ this.props.splitWidth }
+                    allowResize={true}                    
                     ref={(split) => this._mainSplitPane = split}
                     >
-                        <SplitPane split="horizontal" size={90} allowResize={false}>
+                        <SplitPane split="horizontal" size={90} allowResize={false}
+                        >
                             <div>
                                 <IndividualHeading individual={this.props.individual} />
                             </div>
@@ -170,7 +234,8 @@ class TabContent extends Component<Props, State> {
                         </SplitPane>
                         <SplitPane
                             minSize={350}
-                            size={this.state.subSplitWidth}
+                           onChange={ this.updateSubSplitWidth.bind(this) }  
+                           size={ this.props.subSplitWidth }
                             allowResize={true}
                             ref={(split) => this._secondarySplitPane = split}
                         >

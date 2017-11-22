@@ -2,6 +2,16 @@
 import type { UIState } from './reducers';
 import type { AddingResource } from './actions';
 
+export const getWidthInfo = (state: UIState, tabId: number): number | null => {
+    let tab = null, ssw = 0, sw = 0;
+    if (state.editingResources[tabId]) {
+        tab = state.editingResources[tabId];
+        sw = tab.splitWidth ;
+        ssw = tab.subSplitWidth ;
+    }
+    return { splitWidth : sw, subSplitWidth : ssw } 
+}
+
 export const getSelectedTabId = (state: UIState): number | null => {
     return state.activeTabId;
 }

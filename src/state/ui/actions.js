@@ -107,3 +107,31 @@ export const addedFoundResource = (tabId: number): TabAction => {
         }
     }
 }
+
+
+
+TYPES.resizeCentralPanel = 'RESIZE_CENTRAL_PANEL';
+export const resizeCentralPanel = (tabId: number, width:number): TabAction => {
+    return {
+        type: TYPES.resizeCentralPanel,
+        payload: width,
+        meta: {
+            tabId
+        }
+    }
+}
+
+TYPES.resizePreviewPanel = 'RESIZE_PREVIEW_PANEL';
+export const resizePreviewPanel = (tabId: number, width:number): TabAction => {
+    return {
+        type: TYPES.resizePreviewPanel,
+        payload: width,
+        meta: {
+            tabId
+        }
+    }
+}
+/*
+TYPES.resizePreviewPanel = 'RESIZE_PREVIEW_PANEL';
+export const resizePreviewPanel = createAction(TYPES.resizePreviewPanel);
+*/

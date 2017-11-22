@@ -12,7 +12,11 @@ export type TabState = {
     resourceId: string | null,
     selectedResourceIRI: string | null,
     addingResource: AddingResource | null,
-    findResource: string | null
+    findResource: string | null,
+
+    splitWidth:number,
+    subSplitWidth:string | number,
+    hidePreview:boolean
 }
 
 export type UIState = {
@@ -32,7 +36,10 @@ const DEFAULT_TAB_STATE: TabState = {
     resourceId: null,
     selectedResourceIRI: null,
     addingResource: null,
-    findResource: null
+    findResource: null,
+    splitWidth:600,
+    subSplitWidth:350,
+    hidePreview:false
 }
 
 let reducers = {};
@@ -156,6 +163,41 @@ export const addedFoundResource = (state: UIState, action: TabAction): UIState =
     return state;
 }
 reducers[actions.TYPES.addedFoundResource] = addedFoundResource;
+
+
+
+
+export const resizeCentralPanel = (state: UIState, action: Action) => {
+    const tabId = action.meta.tabId ;
+    return {
+        ...state,
+        editingResources: {
+            ...state.editingResources,
+            [tabId]: {
+               ...state.editingResources[tabId],
+               splitWidth : action.payload
+            }
+        }
+    }
+}
+reducers[actions.TYPES.resizeCentralPanel] = resizeCentralPanel;
+
+
+export const resizePreviewPanel = (state: UIState, action: Action) => {
+    const tabId = action.meta.tabId ;
+    return {
+        ...state,
+        editingResources: {
+            ...state.editingResources,
+            [tabId]: {
+               ...state.editingResources[tabId],
+               subSplitWidth : action.payload
+            }
+        }
+    }
+}
+reducers[actions.TYPES.resizePreviewPanel] = resizePreviewPanel;
+
 
 // UI Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);

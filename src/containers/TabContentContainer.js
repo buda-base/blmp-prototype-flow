@@ -25,6 +25,8 @@ const mapStateToProps = (state, ownProps) => {
     let addingResource;
     let selectedResourceIRI;
     
+    let widthInfo ;
+    
     //console.log("mapstate2prop?",state,ownProps);
 
     if (tabId) {
@@ -46,8 +48,15 @@ const mapStateToProps = (state, ownProps) => {
         addingResource = selectors.getAddingResource(state, tabId);
         selectedResourceIRI = selectors.getSelectedResourceIRI(state, tabId);
         
-        
+        widthInfo = selectors.getWidthInfo(state,tabId);
+        /*
+        splitWidth,
+        subSplitWidth,
+        hidePreview
+        */
     }
+    
+//     console.log("state=",state,ownProps);
     
     return {
         ontology,
@@ -60,8 +69,14 @@ const mapStateToProps = (state, ownProps) => {
         addingResource,
         findingResourceId,
         findingResource,
-        findingResourceError
+        findingResourceError,
+        ...widthInfo
     }
+        /*
+        splitWidth,
+        subSplitWidth,
+        hidePreview
+        */
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -78,7 +93,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         onCancelAddingResource: () => dispatch(ui.cancelAddingResource(tabId)),
         onFindResource: (id) => dispatch(ui.findResource(tabId, id)),
-        onAddedProperty: () => dispatch(ui.addedFoundResource(tabId))
+        onAddedProperty: () => dispatch(ui.addedFoundResource(tabId)),
+        
+        onResizeCentralPanel: (w) => dispatch(ui.resizeCentralPanel(tabId,w)),
+        onResizePreviewPanel: (w) => dispatch(ui.resizePreviewPanel(tabId,w))
     }
 };
 
