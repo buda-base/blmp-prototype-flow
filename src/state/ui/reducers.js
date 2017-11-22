@@ -198,6 +198,26 @@ export const resizePreviewPanel = (state: UIState, action: Action) => {
 }
 reducers[actions.TYPES.resizePreviewPanel] = resizePreviewPanel;
 
+export const togglePreviewPanel = (state: UIState, action: Action) => {
+    const tabId = action.payload ;
+    let off = !state.editingResources[tabId].hidePreview ;    
+    
+    // interesting way of conditionnaly adding attributes    
+    // ...(off && { subSplitWidth : "100%" })
+    
+    return {
+        ...state,
+        editingResources: {
+            ...state.editingResources,
+            [tabId]: {
+               ...state.editingResources[tabId],
+               hidePreview : off
+            }
+        }
+    }
+}
+reducers[actions.TYPES.togglePreviewPanel] = togglePreviewPanel;
+
 
 // UI Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);

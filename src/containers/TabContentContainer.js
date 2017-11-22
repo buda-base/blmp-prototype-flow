@@ -96,7 +96,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         onAddedProperty: () => dispatch(ui.addedFoundResource(tabId)),
         
         onResizeCentralPanel: (w) => dispatch(ui.resizeCentralPanel(tabId,w)),
-        onResizePreviewPanel: (w) => dispatch(ui.resizePreviewPanel(tabId,w))
+        onResizePreviewPanel: (w) => dispatch(ui.resizePreviewPanel(tabId,w)),
+        onTogglePreviewPanel: () => dispatch(ui.togglePreviewPanel(tabId))
     }
 };
 

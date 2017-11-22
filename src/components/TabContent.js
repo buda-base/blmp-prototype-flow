@@ -148,6 +148,12 @@ class TabContent extends Component<Props, State> {
         };
 
         const toggleShowPreview = () => {
+           
+            this.props.onTogglePreviewPanel(); 
+            
+            //if(this.props.hidePreview)
+            
+           /*
             this.setState((prevState: State, props: Props) => {
                 let visibleWidth = this._secondarySplitPaneWidth;
                 if (this._secondarySplitPane) {
@@ -164,11 +170,11 @@ class TabContent extends Component<Props, State> {
                     subSplitWidth: width
                 }
             });
-
+            */
         };
 
 //         console.log("render/state",this.state);
-//         console.log("props",this.props);
+        console.log("props",this.props);
         
          // first react state version :
          //    onChange={ console.log("resize",this.state.splitWidth) } 
@@ -235,19 +241,18 @@ class TabContent extends Component<Props, State> {
                         <SplitPane
                             minSize={350}
                            onChange={ this.updateSubSplitWidth.bind(this) }  
-                           size={ this.props.subSplitWidth }
+                           size={ this.props.hidePreview?"100%":this.props.subSplitWidth  }
                             allowResize={true}
-                            ref={(split) => this._secondarySplitPane = split}
-                        >
-                            <SplitPane split="horizontal" size={90} allowResize={false}>
+                            ref={(split) => this._secondarySplitPane = split} >
+                            <SplitPane split="horizontal" size={90} allowResize={false} >
                                 <div>
-                                    <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.state.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
+                                    <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.props.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
                                 </div>
                                 <ResourceViewContainer 
                                     ontology={this.props.ontology}
                                 />
                             </SplitPane>
-                            <SplitPane split="horizontal" size={90} allowResize={false}>
+                            <SplitPane split="horizontal" size={90} allowResize={false} >
                                 <div className="preview">
                                     <h2>Turtle Preview</h2>
                                 </div>

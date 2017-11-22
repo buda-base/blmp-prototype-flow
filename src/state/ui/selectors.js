@@ -3,13 +3,14 @@ import type { UIState } from './reducers';
 import type { AddingResource } from './actions';
 
 export const getWidthInfo = (state: UIState, tabId: number): number | null => {
-    let tab = null, ssw = 0, sw = 0;
+    let tab = null, ssw = 0, sw = 0, hide = false ;
     if (state.editingResources[tabId]) {
         tab = state.editingResources[tabId];
         sw = tab.splitWidth ;
         ssw = tab.subSplitWidth ;
+        hide = tab.hidePreview ;
     }
-    return { splitWidth : sw, subSplitWidth : ssw } 
+    return { splitWidth : sw, subSplitWidth : ssw, hidePreview : hide } 
 }
 
 export const getSelectedTabId = (state: UIState): number | null => {
