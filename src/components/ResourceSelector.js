@@ -71,13 +71,21 @@ export default class ResourceSelector extends React.Component<Props> {
         }
     }
 
-    _handleKeypress(e)
+    handleChange(e)
     {
+       console.log("change")
+       this._isValid = false ;
+    }
+    
+    handleKeypress(e)
+    {
+       console.log("keypress")
+       
        if (e.key === 'Enter') 
        {
           if(!this._isValid) { this.findResource(); }
           else { this.selectedResource(); }
-      }  
+       }
       
     }
     
@@ -125,7 +133,8 @@ export default class ResourceSelector extends React.Component<Props> {
                     id="resourceID"
                     type="text"
                     inputRef={(searchInput) => this._textfield = searchInput}
-                    onKeyPress={this._handleKeypress.bind(this)}                    
+                    onKeyPress={this.handleKeypress.bind(this)}            
+                    onChange={this.handleChange.bind(this)}                    
                 />
                 <Button  onClick={this.findResource.bind(this)}>
                     Search
