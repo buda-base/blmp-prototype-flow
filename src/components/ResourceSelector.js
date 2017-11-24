@@ -44,7 +44,8 @@ type Props = {
 
 export default class ResourceSelector extends React.Component<Props> {
     _textfield = null;
-
+    _isValid = false ;
+    
     selectedResource() {
         if (this.props.findingResource && this.props.individual && this.props.property) {
             const individual = this.props.individual;
@@ -57,6 +58,8 @@ export default class ResourceSelector extends React.Component<Props> {
         } else if (this.props.selectedResource && this.props.findingResource) {
             this.props.selectedResource(this.props.findingResource);
         }
+        
+      
     }
 
     findResource() {
@@ -68,6 +71,16 @@ export default class ResourceSelector extends React.Component<Props> {
         }
     }
 
+    _handleKeypress(e)
+    {
+       if (e.key === 'Enter') 
+       {
+          if(!this._isValid) { this.findResource(); }
+          else { this.selectedResource(); }
+      }  
+      
+    }
+    
     render() {
         let message;
         let isValid;
@@ -77,6 +90,7 @@ export default class ResourceSelector extends React.Component<Props> {
                 if (this.props.individual && this.props.property) {
                     isValid = validatePropertyValue(this.props.property, this.props.findingResource);
                 }
+                this._isValid = isValid 
                 
                 message = <div>
                     <Typography>Found:</Typography>
@@ -111,8 +125,9 @@ export default class ResourceSelector extends React.Component<Props> {
                     id="resourceID"
                     type="text"
                     inputRef={(searchInput) => this._textfield = searchInput}
+                    onKeyPress={this._handleKeypress.bind(this)}                    
                 />
-                <Button onClick={this.findResource.bind(this)}>
+                <Button  onClick={this.findResource.bind(this)}>
                     Search
                 </Button>
             </CardContent>

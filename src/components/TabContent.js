@@ -174,7 +174,7 @@ class TabContent extends Component<Props, State> {
         };
 
 //         console.log("render/state",this.state);
-        console.log("props",this.props);
+//         console.log("props",this.props);
         
          // first react state version :
          //    onChange={ console.log("resize",this.state.splitWidth) } 
