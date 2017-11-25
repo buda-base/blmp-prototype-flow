@@ -18,6 +18,9 @@ export default class Preview extends Component {
     }
 
     render() {
+       
+//        console.log("graphText",this.props.graphText);
+       
         return (
             <div className="graphPreview">
                 <pre>

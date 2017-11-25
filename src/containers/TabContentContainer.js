@@ -26,6 +26,7 @@ const mapStateToProps = (state, ownProps) => {
     let selectedResourceIRI;
     
     let widthInfo ;
+    let graphText ;
     
     //console.log("mapstate2prop?",state,ownProps);
 
@@ -36,6 +37,7 @@ const mapStateToProps = (state, ownProps) => {
             individual = editingResource;
             editingResourceIsLoading = selectors.isResourceLoading(state, editingResourceIRI);
             editingResourceError = selectors.getResourceError(state, editingResourceIRI);
+            
         }
 
         findingResourceId = selectors.getFindResource(state, tabId);
@@ -49,6 +51,13 @@ const mapStateToProps = (state, ownProps) => {
         selectedResourceIRI = selectors.getSelectedResourceIRI(state, tabId);
         
         widthInfo = selectors.getWidthInfo(state,tabId);
+        
+        // + charger le graphText
+         // + cf LiteralView
+    
+    
+        
+        
         /*
         splitWidth,
         subSplitWidth,
@@ -70,8 +79,10 @@ const mapStateToProps = (state, ownProps) => {
         findingResourceId,
         findingResource,
         findingResourceError,
-        ...widthInfo
+        ...widthInfo,
     }
+        //graphText
+        
         /*
         splitWidth,
         subSplitWidth,

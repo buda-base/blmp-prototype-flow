@@ -55,6 +55,9 @@ export default class LiteralView extends Component<Props, State> {
     }
 
     valueChanged(event: {}) {
+       
+       console.log("VALUE_CHANGED")
+       
         let value = event.target.value;
         if (this.props.literal.isDate && (value instanceof String)) {
             value = new Date(value);

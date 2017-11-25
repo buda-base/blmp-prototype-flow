@@ -5,19 +5,23 @@ import * as actions from './actions';
 import type { OntologyAction } from './actions';
 import Individual from 'lib/Individual';
 import Ontology from '../../lib/Ontology';
+import Serializer from '../../lib/Serializer';
+
 
 export type DataState = {
     loading: {[string]: boolean},
     failures: {[string]: string},
     resources: {[IRI:string]: Individual},
     ontology: Ontology | null
+    //graphText:string | null
 }
 
 const DEFAULT_STATE: DataState = {
     loading: {},
     failures: {},
     resources: {},
-    ontology: null
+    ontology: null,
+    //graphText:null
 }
 
 let reducers = {};
@@ -33,15 +37,36 @@ export const loading = (state: DataState, action: actions.LoadingAction) => {
 }
 reducers[actions.TYPES.loading] = loading;
 
+
 export const loadedResource = (state: DataState, action: actions.LoadedResourceAction) => {
     state = loading(state, actions.loading(action.payload.IRI, false));
-    return {
-        ...state,
-        resources: {
+    
+    /*
+    // no need to do anything more in actions finally
+    //(cf TabContent.graphTextIRI)
+    let serializer = new Serializer();
+    const baseURI = 'http://purl.bdrc.io/ontology/core/';
+    let indiv = action.payload.individual
+    let graphT ;
+    let txt = serializer.serialize(indiv, baseURI, indiv.namespaces)
+    .then((str) => { return str; })
+     */ 
+    
+      return {
+      ...state,
+      
+      /*
+      graph:{
+         ...state.graph,
+         [action.payload.IRI]:txt
+      },
+      */
+      
+      resources: {
             ...state.resources,
             [action.payload.IRI]: action.payload.individual
-        }
-    }
+      }
+   }
 }
 reducers[actions.TYPES.loadedResource] = loadedResource;
 

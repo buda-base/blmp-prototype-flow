@@ -73,13 +73,13 @@ export default class ResourceSelector extends React.Component<Props> {
 
     handleChange(e)
     {
-       console.log("change")
+//        console.log("change")
        this._isValid = false ;
     }
     
     handleKeypress(e)
     {
-       console.log("keypress")
+//        console.log("keypress")
        
        if (e.key === 'Enter') 
        {

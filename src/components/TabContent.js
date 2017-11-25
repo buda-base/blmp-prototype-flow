@@ -52,6 +52,7 @@ class TabContent extends Component<Props, State> {
     _mainSplitPaneWidth = 600;
     _secondarySplitPane = null;
     _secondarySplitPaneWidth = 350;
+    _graphTextIRI = null ;
     
     // cancellers for timeouts
     updaSpli = 0 ;
@@ -69,6 +70,17 @@ class TabContent extends Component<Props, State> {
         };
         
     }
+    
+    
+    componentDidUpdate(prevProps, prevState) 
+    {
+       if(this._graphTextIRI != this.props.editingResourceIRI)
+       {
+         this.updateGraphText();
+         this._graphTextIRI = this.props.editingResourceIRI ;
+       }
+    }
+    
     
     updateSplitWidth(width : number) 
     { 
@@ -116,14 +128,18 @@ class TabContent extends Component<Props, State> {
     
     
     updateGraphText() {
+       
         if (!this.props.individual) {
             return;
         }
+        console.log("updateGraph",this.props.individual)
+        
         let serializer = new Serializer();
         const baseURI = 'http://purl.bdrc.io/ontology/core/';
         serializer.serialize(this.props.individual, baseURI, this.props.individual.namespaces)
             .then((str) => {
                 this.setState((prevState, props) => {
+                   
                     return {
                         ...prevState,
                         graphText: str
@@ -174,7 +190,7 @@ class TabContent extends Component<Props, State> {
         };
 
 //         console.log("render/state",this.state);
-//         console.log("props",this.props);
+        console.log("props",this.props);
         
          // first react state version :
          //    onChange={ console.log("resize",this.state.splitWidth) } 

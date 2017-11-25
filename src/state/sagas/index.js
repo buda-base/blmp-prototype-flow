@@ -27,6 +27,9 @@ function* watchEditingResource() {
 }
 
 export function* loadResource(IRI) {
+   
+   console.log("watchLoad");
+   
     yield put(dataActions.loading(IRI, true));
     try {
         const individual = yield call([api, api.getResource], IRI);
@@ -43,6 +46,9 @@ export function* loadResource(IRI) {
 }
 
 export function* watchLoadResource() {
+   
+   console.log("watchLoad*");
+   
     yield takeLatest(
         dataActions.TYPES.loadResource, 
         (action) => loadResource(action.payload)

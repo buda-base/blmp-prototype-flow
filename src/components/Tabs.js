@@ -32,7 +32,7 @@ export default class Tabs extends Component<Props> {
 
     _onCloseTab(i:number, event: Event) {
         const tabId = this.props.tabData[i].tabId;
-        console.log("closeTab?",i,tabId,this.props);
+//         console.log("closeTab?",i,tabId,this.props);
         event.stopPropagation();
         this.props.onCloseTab(tabId);
         if(i == this.props.selectedTabIndex)

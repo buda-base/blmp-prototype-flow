@@ -19,6 +19,7 @@ const mapStateToProps = (state) => {
             resource
         }
     });
+    
     return {
         tabData,
         selectedTabIndex

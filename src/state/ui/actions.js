@@ -131,6 +131,7 @@ export const resizePreviewPanel = (tabId: number, width:number): TabAction => {
         }
     }
 }
+
 TYPES.togglePreviewPanel = 'TOGGLE_PREVIEW_PANEL';
 export const togglePreviewPanel = (tabId: number): TabAction => {
     return {

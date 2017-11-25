@@ -6,6 +6,7 @@ import type { TabAction, AddingResource } from './actions';
 import * as uiActions from 'state/ui/actions';
 import Individual from 'lib/Individual';
 import RDFProperty from 'lib/RDFProperty';
+import selectors from 'state/selectors';
 
 export type TabState = {
     tabId: number,
@@ -39,7 +40,8 @@ const DEFAULT_TAB_STATE: TabState = {
     findResource: null,
     splitWidth:600,
     subSplitWidth:350,
-    hidePreview:false
+    hidePreview:false,
+    graphText:null
 }
 
 let reducers = {};
@@ -129,14 +131,12 @@ reducers[actions.TYPES.selectTab] = selectTab;
 
 export const editingResource = (state: UIState, action: TabAction): UIState => {
     state = updateTabState(action.meta.tabId, state, 'findResource', null);
-    return updateTabState(action.meta.tabId, state, 'resourceId', action.payload);
+    state = updateTabState(action.meta.tabId, state, 'resourceId', action.payload);
+    return state ;
 }
 reducers[actions.TYPES.editingResource] = editingResource;
 
 export const selectedResourceIRI = (state: UIState, action: TabAction): UIState => {
-   
-    //console.log("selectedIRI:",action)
-   
     return updateTabState(action.meta.tabId, state, 'selectedResourceIRI', action.payload); // action.meta.tabId);
 };
 reducers[actions.TYPES.selectedResourceIRI] = selectedResourceIRI;
