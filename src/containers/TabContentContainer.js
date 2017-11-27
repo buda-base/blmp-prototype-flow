@@ -52,11 +52,6 @@ const mapStateToProps = (state, ownProps) => {
         
         widthInfo = selectors.getWidthInfo(state,tabId);
         
-        // + charger le graphText
-         // + cf LiteralView
-    
-    
-        
         
         /*
         splitWidth,

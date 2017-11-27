@@ -23,7 +23,8 @@ const langs = {
     'bo': 'Tibetan',
     'bo-x-ewts': 'Wylie',
     'en': 'English',
-    'fr': 'French'
+    'fr': 'French',
+    'zh': 'Chinese'
 };
 
 interface Props {
