@@ -23,6 +23,7 @@ const langs = {
     'bo': 'Tibetan',
     'bo-x-ewts': 'Wylie',
     'en': 'English',
+    "en-x-mixed":'mixed English',
     'fr': 'French',
     'zh': 'Chinese'
 };
