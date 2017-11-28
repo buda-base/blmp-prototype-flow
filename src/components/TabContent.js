@@ -190,7 +190,7 @@ class TabContent extends Component<Props, State> {
         };
 
 //         console.log("render/state",this.state);
-        console.log("props",this.props);
+//         console.log("render/props",this.props);
         
          // first react state version :
          //    onChange={ console.log("resize",this.state.splitWidth) } 
@@ -225,7 +225,7 @@ class TabContent extends Component<Props, State> {
                     >
                         <SplitPane split="horizontal" size={90} allowResize={false}
                         >
-                            <div>
+                            <div className="inDivHeading">
                                 <IndividualHeading individual={this.props.individual} />
                             </div>
                             <div>

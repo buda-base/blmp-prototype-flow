@@ -40,7 +40,7 @@ const DEFAULT_TAB_STATE: TabState = {
     findResource: null,
     splitWidth:600,
     subSplitWidth:350,
-    hidePreview:false,
+    hidePreview:true,
     graphText:null
 }
 

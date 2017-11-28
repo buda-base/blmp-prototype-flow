@@ -1,3 +1,7 @@
+
+/* debug mode - everything visible */
+/* * { background-color:rgba(255,0,128,0.2); } */
+
 .App {
     display: flex;
     flex-direction: column;

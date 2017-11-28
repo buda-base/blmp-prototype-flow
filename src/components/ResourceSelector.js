@@ -109,6 +109,7 @@ export default class ResourceSelector extends React.Component<Props> {
                         isExpandable={false}
                         nested={true}
                         level={0}
+                        showLabel={true}
                         ontology={this.props.ontology}
                     />
                     {!isValid &&

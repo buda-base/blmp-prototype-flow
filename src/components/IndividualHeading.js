@@ -1,6 +1,7 @@
 import React from 'react';
 import formatIRI from '../lib/formatIRI';
 import './IndividualHeading.css';
+import LiteralView from './LiteralView';
 
 export default class IndividualHeading extends React.Component {
 
@@ -34,11 +35,26 @@ export default class IndividualHeading extends React.Component {
     }
 
     render() {
+    
+         let pref = []
+               
+         let lab = this.props.individual.getProperty("http://www.w3.org/2004/02/skos/core#prefLabel") ;
+         //console.log("label",lab[0])
+         
+         for(var l of lab) {
+            pref.push( 
+            <LiteralView literal={l} isEditable={false} noPrefix={true} />
+                        );
+         }
+         
+               
         return (
-            <div className="IndividualHeading">
+            [ <div className="IndividualHeading">
                 <h1>{this.title}</h1>
                 <h2>{this.subtitle}</h2>
-            </div>
+            </div>,
+                  <div><div className="prefLabel">{pref}</div></div>
+            ]
         );
     }
 }

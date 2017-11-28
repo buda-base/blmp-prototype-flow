@@ -67,6 +67,7 @@ type IndividualPropertyProps = {
     propertyValues: any[],
     title: string,
     tooltip: string,
+    showLabel: boolean,
 }
 
 class IndividualProperty extends React.Component<IndividualPropertyProps> {
@@ -560,11 +561,28 @@ export default class IndividualView extends React.Component<Props, State> {
             if (this.props.individual.types[0]) {
                 subtitle = formatIRI(this.props.individual.types[0]);
             }
-
-            titleView = <ListItemText
-                primary={title}
-                secondary={subtitle}
-            />
+            
+            titleView = [ <ListItemText
+                  primary={title}
+                  secondary={subtitle}
+               /> ]
+               
+            if(this.props.showLabel)
+            {
+               let pref = []
+               
+               let lab = this.props.individual.getProperty("http://www.w3.org/2004/02/skos/core#prefLabel") ;
+               //console.log("label",lab[0])
+               
+               for(var l of lab) {
+                  pref.push( 
+                  <LiteralView literal={l} isEditable={false} noPrefix={true} />
+                            );
+               }
+               
+               titleView.push(<div className="prefLabel">{pref}</div>)
+            }
+            
         }
     
         const allowExpansion = this.props.isExpandable && (Object.keys(
@@ -604,6 +622,10 @@ export default class IndividualView extends React.Component<Props, State> {
         if (this.props.isExpanded) {
             classes.push("isExpanded");
         }
+        
+//         console.log("IndiView/render/props",this.props);
+        
+        // vv {idList}
         
         return (
             <div className={classnames(...classes)} onClick={this.props.onClick}>

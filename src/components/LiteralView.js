@@ -30,7 +30,8 @@ const langs = {
 interface Props {
     literal: Literal,
     onChange?: (value: string, language: string) => void,
-    isEditable: boolean
+    isEditable: boolean,
+    noPrefix:boolean
 }
 
 interface State {
@@ -56,9 +57,7 @@ export default class LiteralView extends Component<Props, State> {
     }
 
     valueChanged(event: {}) {
-       
-       console.log("VALUE_CHANGED")
-       
+              
         let value = event.target.value;
         if (this.props.literal.isDate && (value instanceof String)) {
             value = new Date(value);
@@ -134,7 +133,7 @@ export default class LiteralView extends Component<Props, State> {
 
         return (
             <div className="literalView">
-                {this.props.literal.language && !this.props.isEditable &&
+                {this.props.literal.language && !this.props.isEditable && !this.props.noPrefix &&
                 <strong>{langs[this.props.literal.language]}: </strong>
                 }
                 {this.props.literal.hasLanguage && this.props.isEditable &&
