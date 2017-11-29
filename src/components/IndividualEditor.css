@@ -12,3 +12,8 @@
 .inDivHeading > div:last-child { margin:0 15px; font-size:20px; text-align:right; }
 
 .IndividualHeading h1 { margin-top:0 !important; }
+
+
+
+/* LiteralView */
+.literalView > div:first-child:last-child { width:calc(100% - 20px); }

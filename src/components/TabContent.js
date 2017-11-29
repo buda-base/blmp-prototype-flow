@@ -132,7 +132,8 @@ class TabContent extends Component<Props, State> {
         if (!this.props.individual) {
             return;
         }
-        console.log("updateGraph",this.props.individual)
+        
+        //console.log("updateGraph",this.props.individual)
         
         let serializer = new Serializer();
         const baseURI = 'http://purl.bdrc.io/ontology/core/';

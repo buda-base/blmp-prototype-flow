@@ -401,7 +401,7 @@ export default class IndividualView extends React.Component<Props, State> {
     getPropertyLists(): (?React.Element<*>)[] {
         let removeUnsetProperties = true;
         if (this.props.isEditable) {
-            removeUnsetProperties = false;
+            removeUnsetProperties = true; //false;
         }
 
         let availableProperties = this.getAvailableProperties();
@@ -410,23 +410,28 @@ export default class IndividualView extends React.Component<Props, State> {
         let annotationProps = availableProperties[ANNOTATION_PROPERTY.value];
         let properties = this.props.individual.getProperties();
 
-        const datatypeHeading = (!this.props.nested) ? 'Datatype Properties' : '';
+        const objectHeading = '' //(!this.props.nested) ? 'Object Properties' : '';
+        let objectRows = this.propertyGroupRows(objectProps, properties, removeUnsetProperties);
+        
+        const datatypeHeading = '' // (!this.props.nested) ? 'Datatype Properties' : '';
         const datatypeRows = this.propertyGroupRows(dataTypeProps, properties, removeUnsetProperties);
-
-        const objectHeading = (!this.props.nested) ? 'Object Properties' : '';
-        const objectRows = this.propertyGroupRows(objectProps, properties, removeUnsetProperties);
-
-        const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : '';
-        const annotationRows = this.propertyGroupRows(annotationProps, properties,  removeUnsetProperties);
-
+         
+        const annotationHeading = '' //(!this.props.nested) ? 'Annotation Properties' : '';
+        let annotationRows = this.propertyGroupRows(annotationProps, properties,  removeUnsetProperties);
+        
+        objectRows.unshift(annotationRows[0])        
+        delete annotationRows[0]
+        
+        
         const propertyTypes = [
-            {
-                heading: datatypeHeading,
-                rows: datatypeRows
-            },
+            
             {
                 heading: objectHeading,
                 rows: objectRows
+            },
+            {
+                heading: datatypeHeading,
+                rows: datatypeRows
             },
             {
                 heading: annotationHeading,
@@ -453,12 +458,14 @@ export default class IndividualView extends React.Component<Props, State> {
                 this.toggleCollapseState(collapseId);
             };
 
-            if (this.props.nested) {
+            //if (this.props.nested) {
                 lists.push(
                     <List>
                         {propertyData.rows}
                     </List>
                 )
+                
+            /* // no need anymore
             } else {
                 lists.push(
                     <List>
@@ -476,6 +483,7 @@ export default class IndividualView extends React.Component<Props, State> {
                     </List>
                 );
             }
+            */
         }
 
         return lists;

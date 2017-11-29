@@ -11,21 +11,29 @@ import Literal from '../lib/Literal';
 
 const styles = {
     inlineSelect: {
-        width: '120px',
+        width: '105px',
         float: 'left'
     },
     valueField: {
-        width: 'calc(100% - 140px)'
+        width: 'calc(100% - 125px)'
     }
 };
 
 const langs = {
     'bo': 'Tibetan',
-    'bo-x-ewts': 'Wylie',
+    'bo-x-ewts': 'Tibetan (Wylie)',
     'en': 'English',
     "en-x-mixed":'English (mixed)',
     'fr': 'French',
-    'zh': 'Chinese'
+    'pi-Sinh': 'Pali (Sinhalese)',
+    'pi-Thai': 'Pali (Thai)',
+    'pi-x-iast': 'Pali (IAST)',
+    'sa-x-ndia':'Sanskrit (IAST without diacritics)',
+    'zh': 'Chinese',
+    'zh-Hans' : 'Chinese (simplified)',
+    'zh-Hant' : 'Chinese (traditional)',
+    'zh-Latn-pinyin' : 'Chinese (Pinyin)',
+    'zh-x-wade':'Chinese (Wade-Giles)'
 };
 
 interface Props {
@@ -115,7 +123,8 @@ export default class LiteralView extends Component<Props, State> {
                     value={this.state.value}
                     ref={(textField) => this._valueControl = textField}
                     onChange={this.valueChanged.bind(this)}
-                    style={styles.valueField}
+                    { ... this.props.literal.hasLanguage && this.props.isEditable ? 
+                        {style: styles.valueField } : {}}
                     id={this.generateId('TextField')}
                 />
             }
@@ -139,7 +148,7 @@ export default class LiteralView extends Component<Props, State> {
                 }
                 {this.props.literal.hasLanguage && this.props.isEditable &&
                 <FormControl>
-                    <InputLabel htmlFor={selectId}>lang</InputLabel>
+                    <InputLabel htmlFor={selectId}>language</InputLabel>
                     <Select
                         // floatingLabelText="lang"
                         // floatingLabelFixed={true}
