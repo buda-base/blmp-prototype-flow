@@ -34,7 +34,29 @@ const langs = {
     'zh-Hant' : 'Chinese (traditional)',
     'zh-Latn-pinyin' : 'Chinese (Pinyin)',
     'zh-x-wade':'Chinese (Wade-Giles)'
+}; 
+
+/* // some structure like that
+const langTree = {
+   'bo':
+   {
+      'bo': 'Tibetan',
+      'bo-x-ewts': 'Tibetan (Wylie)'
+   },
+    'en': 'English',
+    "en-x-mixed":'English (mixed)',
+    'fr': 'French',
+    'pi-Sinh': 'Pali (Sinhalese)',
+    'pi-Thai': 'Pali (Thai)',
+    'pi-x-iast': 'Pali (IAST)',
+    'sa-x-ndia':'Sanskrit (IAST without diacritics)',
+    'zh': 'Chinese',
+    'zh-Hans' : 'Chinese (simplified)',
+    'zh-Hant' : 'Chinese (traditional)',
+    'zh-Latn-pinyin' : 'Chinese (Pinyin)',
+    'zh-x-wade':'Chinese (Wade-Giles)'
 };
+*/
 
 interface Props {
     literal: Literal,

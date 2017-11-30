@@ -73,6 +73,9 @@ type IndividualPropertyProps = {
 class IndividualProperty extends React.Component<IndividualPropertyProps> {
     
     render() {
+       
+       console.log("IndivProp.render",this.props.individual._id)
+       
         const greenColor = {
             fill: green[800]
         };
@@ -127,7 +130,12 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
                 }
             } else if (propertyValue instanceof Individual) {
                 const onClick = () => {
-                    if (!propertyValue.hasGeneratedId && this.props.onSelectedResource) {
+                    if (!propertyValue.hasGeneratedId && this.props.onSelectedResource
+                       && propertyValue.id.match(/([A-Z]+[0-9]+)+$/)
+                  ) {
+                       
+                        // here is where to check whether resource is viewable on central panel
+                        console.log("propVal",propertyValue.id,propertyValue)
                         this.props.onSelectedResource(propertyValue.id);
                     }
                 }
@@ -494,6 +502,8 @@ export default class IndividualView extends React.Component<Props, State> {
         const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
         const propertyValues = [idLiteral];
 
+        console.log("getId",propertyValues);
+        
         const onChange = (value) => {
             this.props.individual.id = value;
             this.forceUpdate();
@@ -620,6 +630,7 @@ export default class IndividualView extends React.Component<Props, State> {
         // ID
         let idList = null;
         if (!this.props.nested) {
+           console.log("indivProps",this.props);
             idList = this.getIdList();
         }
 
