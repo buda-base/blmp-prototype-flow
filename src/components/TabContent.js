@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import SplitPane from 'react-split-pane';
 import IndividualEditor from './IndividualEditor';
+// import IndividualEditorContainer from 'containers/IndividualEditorContainer';
 import Preview from './Preview';
 import IndividualHeading from './IndividualHeading';
 import ResourceViewContainer from 'containers/ResourceViewContainer';
@@ -73,11 +74,12 @@ class TabContent extends Component<Props, State> {
     
     
     componentDidUpdate(prevProps, prevState) 
-    {
+    {    
        if(this._graphTextIRI != this.props.editingResourceIRI)
        {
          this.updateGraphText();
          this._graphTextIRI = this.props.editingResourceIRI ;
+         
        }
     }
     
@@ -154,7 +156,10 @@ class TabContent extends Component<Props, State> {
             this.updateGraphText();
         }
 
-        let onIndividualUpdated = () => {
+        let onIndividualUpdated = () => 
+        {
+           console.log("updated!!!");
+           
             this.updateGraphText();
         };
 
@@ -199,6 +204,7 @@ class TabContent extends Component<Props, State> {
          // first redux version :
          //    onChange={ width => this.props.onResizeCentralPanel(width) } 
         
+        
         return (
             <div className="TabContent">
                 {!this.props.editingResource &&
@@ -230,12 +236,13 @@ class TabContent extends Component<Props, State> {
                                 <IndividualHeading individual={this.props.individual} />
                             </div>
                             <div>
-                                <IndividualEditor
+                              <IndividualEditor
+                                    onSelectTab={ (i) => console.log("select",i) }
                                     individual={this.props.individual}
                                     ontology={this.props.ontology}
                                     onIndividualUpdated={onIndividualUpdated}
                                     onAddResource={this.props.onAddResource}
-                                />
+                                /> 
                                 {this.props.addingResource &&
                                     <ResourceSelector 
                                         isDialog={true}

@@ -10,9 +10,11 @@ type Props = {
 class App extends Component<Props> {
 
     render() {
+       let tabs=<TabsContainer /> ;
+       
         return (
             <div className="App">
-                <TabsContainer />
+                {tabs}
                 <TabContentContainer 
                     tabId={this.props.selectedTabId}
                 />

@@ -85,8 +85,25 @@ export default class LiteralView extends Component<Props, State> {
             language: language,
             value: props.literal.value
         }
+        //console.log("LiteralView.state",this.state)
     }
-
+    
+   /*
+   componentWillReceiveProps(newProps)
+   {
+        console.log("will receiveprops literalView",this.props.literal) 
+   }
+    
+   componentWillUpdate()
+   {
+        console.log("will update literalView",this.props.literal) 
+    }
+   componentDidUpdate()
+   {
+        console.log("did update literalView",this.props.literal) 
+    }
+    */
+   
     valueChanged(event: {}) {
               
         let value = event.target.value;
@@ -134,7 +151,7 @@ export default class LiteralView extends Component<Props, State> {
             if (this.props.literal.isDate) {
                 value = <TextField
                     type="date"
-                    value={this.state.value}
+                    value={this.props.literal.value}
                     onChange={this.valueChanged.bind(this)}
                 />
             } else {
@@ -142,7 +159,7 @@ export default class LiteralView extends Component<Props, State> {
                 value = <TextField
                     // floatingLabelText={valueFloatingLabel}
                     // floatingLabelFixed={true}
-                    value={this.state.value}
+                    value={this.props.literal.value}
                     ref={(textField) => this._valueControl = textField}
                     onChange={this.valueChanged.bind(this)}
                     { ... this.props.literal.hasLanguage && this.props.isEditable ? 
@@ -176,7 +193,7 @@ export default class LiteralView extends Component<Props, State> {
                         // floatingLabelFixed={true}
                         // fullWidth={false}
                         style={styles.inlineSelect}
-                        value={this.state.language}
+                        value={this.props.literal.language}
                         ref={(select) => this._languageControl = select}
                         onChange={this.languageChanged.bind(this)}
                         // id={selectId}

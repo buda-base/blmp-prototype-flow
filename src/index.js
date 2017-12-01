@@ -22,6 +22,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from 'state/reducers';
 
+
 const logger = store => next => action => {
   console.group(action.type)
   console.info('dispatching', action)
