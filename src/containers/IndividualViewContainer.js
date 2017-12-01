@@ -21,7 +21,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onSelectedResource: (IRI) => {
            
-            console.log("selected ?",IRI)
+            //console.log("selected ?",IRI)
             dispatch(ui.selectedResourceIRI(store.getState().ui.activeTabId,IRI));
         }
     }

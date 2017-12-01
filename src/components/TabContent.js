@@ -237,7 +237,6 @@ class TabContent extends Component<Props, State> {
                             </div>
                             <div>
                               <IndividualEditor
-                                    onSelectTab={ (i) => console.log("select",i) }
                                     individual={this.props.individual}
                                     ontology={this.props.ontology}
                                     onIndividualUpdated={onIndividualUpdated}
