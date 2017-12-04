@@ -53,7 +53,8 @@ const getListItemStyle = (level) => {
         padding: "0 0 5px 0px",
         display: 'flex',
         alignItems: 'flex-end',
-        marginLeft: 30 + 'px'
+        marginLeft: 30 + 'px',
+//              paddingRight:"50px"
     };
 };
 
@@ -136,8 +137,10 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
             </ListItem>;
 
         // Values
+           
         let valueRows = [];
         for (let propertyValue of this.props.propertyValues) {
+            let sty = "" 
             let view = null;
             let titleView = undefined;
             let isEditable = !this.props.nested || this.props.isEditable(propertyValue);
@@ -155,10 +158,15 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
                     classes.push('individualLiteralRow');
                 }
                 
+                sty = "lit" ;
+                
                 //console.log("view1",view)
                 
                 
             } else if (propertyValue instanceof Individual) {
+               
+               sty = "ind" ;
+               
                 const onClick = () => {
                     if (!propertyValue.hasGeneratedId && this.props.onSelectedResource
                        && propertyValue.id.match(/([_A-Z]+[0-9]+)+$/)
@@ -220,7 +228,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
                     onClick={onTapRemove}
                     className="removeButton"
                 >
-                    <RemoveCircleIcon style={{...redColor, ...iconSizes.small,right:"25px",marginTop:"-30px"}}/>
+                    <RemoveCircleIcon style={{...redColor, ...iconSizes.small}}/>
                 </IconButton>;
             }
 
@@ -228,7 +236,9 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
                 style={listItemStyle}
             >
                 {view}
-                <ListItemSecondaryAction>{removeButton}</ListItemSecondaryAction> 
+                <ListItemSecondaryAction 
+                  className={"remoBut "+sty}
+                >{removeButton}</ListItemSecondaryAction> 
             </ListItem>);
             
 //              this.props.isExpanded && 
@@ -265,6 +275,7 @@ type State = {
 
 export default class IndividualView extends React.Component<Props, State> {
     _editableIndividuals = [];
+    _allowExpansion = false ;
 
     constructor(props: Props) {
         super(props);
@@ -687,39 +698,44 @@ export default class IndividualView extends React.Component<Props, State> {
             
         }
     
-        const allowExpansion = this.props.isExpandable && (Object.keys(
+        this._allowExpansion = this.props.isExpandable && (Object.keys(
                 this.props.individual.getProperties()
             ).length > 0
             //|| this.props.isEditable
         );
         let listItem: React.Element<*>;
-        if (allowExpansion) {
-            listItem = [ <ListItem button onClick={() => this.toggleExpandedState()}>
+        if (this._allowExpansion) {
+           listItem = []
+            listItem.push( <ListItem button onClick={() => this.toggleExpandedState()}>
                             {titleView}
                             
                             {this.state.isExpanded ? <ExpandLess /> : <ExpandMore />}
-            { this.props.nested && this.props.level == 0 && 
-               
-                              <ListItemSecondaryAction>
+            
+                              
+                       </ListItem>)
+                       
+           if(this.props.nested && this.props.level == 0)
+           {
+               listItem.push(
+                              <ListItemSecondaryAction className="plusBut"> 
                                  <IconButton
-                                    style={{paddingLeft:"20px"}}
                                     onClick={this.onOpenNewTab.bind(this)}
                                  >
                                        <AddBoxIcon />
                                  </IconButton>
-                              </ListItemSecondaryAction> }
-                              
-                       </ListItem> ]
-                       
+                              </ListItemSecondaryAction> 
+                        )
+           
+            }
                               
         } else {
-            listItem = <ListItem button>
+            listItem = <ListItem  button>
                             {titleView}
                             
                        </ListItem>
         }
         return(
-            <List>
+            <List >
                 {listItem}
             </List>
         )
@@ -746,17 +762,22 @@ export default class IndividualView extends React.Component<Props, State> {
         if (this.props.isExpanded) {
             classes.push("isExpanded");
         }
+        if(this._allowExpansion){
+           classes.push("expan")
+         } else {
+           classes.push("noExpan")       
+         }
         
 //         console.log("IndiView/render/props",this.props);
         
         let ret = (
             <div className={classnames(...classes)} onClick={this.props.onClick}>
                 {this.getNestedTitleList()}
-                <Collapse in={this.state.isExpanded}>
+                <Collapse in={this.state.isExpanded} >
                     {idList}
                     {this.getLabelsList()}
                     {this.getPropertyLists()}
-                </Collapse>
+                </Collapse>                
             </div>
         );
         

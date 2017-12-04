@@ -36,6 +36,7 @@ export const editingResource = (tabId: number, resourceIRI: string): TabAction =
 }
 TYPES.editingResourceInNewTab = 'EDITING_RESOURCE_IN_NEW_TAB';
 export const editingResourceInNewTab = (resourceIRI: string): TabAction => {
+   
     return {
         type: TYPES.editingResourceInNewTab,
         payload: resourceIRI,

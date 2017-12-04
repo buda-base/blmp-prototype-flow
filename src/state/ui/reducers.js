@@ -100,8 +100,6 @@ reducers[actions.TYPES.newTab] = newTab;
 
 export const editingResourceInNewTab = (state: UIState, action: Action) => {
    
-   console.log("iNewTab reduce ?")
-   
     const tabId = getNewTabId();
     let newState =  {
         ...state,
