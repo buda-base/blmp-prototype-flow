@@ -12,6 +12,8 @@ import RDFProperty from '../lib/RDFProperty';
 import type { RDFComment } from '../lib/RDFProperty';
 import capitalize from '../lib/capitalize';
 import { REMOTE_ENTITIES } from '../api/api';
+import store from "../index.js";
+import * as ui from 'state/ui/actions';
 
 // redux
 import * as uiActions from 'state/ui/actions';
@@ -28,6 +30,7 @@ import IconButton from 'material-ui/IconButton';
 import AddCircleIcon from 'material-ui-icons/AddCircle';
 import RemoveCircleIcon from 'material-ui-icons/RemoveCircle';
 import {red, green} from 'material-ui/colors';
+import AddBoxIcon from 'material-ui-icons/AddBox';
 
 const iconSizes = {
     small: {
@@ -631,8 +634,15 @@ export default class IndividualView extends React.Component<Props, State> {
         )
     }
 
+   onOpenNewTab(event)  {
+      console.log("NEW",this)
+      store.dispatch(ui.editingResourceInNewTab(this.props.individual.id))
+   }
+
+         
     getNestedTitleList(): React.Element<*> | null {
-        if (!this.props.nested && !this.props.titleView) return null;
+       
+         if (!this.props.nested && !this.props.titleView) return null;
 
         let titleView = this.props.titleView;
         if (!titleView) {
@@ -684,13 +694,28 @@ export default class IndividualView extends React.Component<Props, State> {
         );
         let listItem: React.Element<*>;
         if (allowExpansion) {
-            listItem = <ListItem button onClick={() => this.toggleExpandedState()}>
+            listItem = [ <ListItem button onClick={() => this.toggleExpandedState()}>
                             {titleView}
+                            
                             {this.state.isExpanded ? <ExpandLess /> : <ExpandMore />}
-                       </ListItem>
+            { this.props.nested && this.props.level == 0 && 
+               
+                              <ListItemSecondaryAction>
+                                 <IconButton
+                                    style={{paddingLeft:"20px"}}
+                                    onClick={this.onOpenNewTab.bind(this)}
+                                 >
+                                       <AddBoxIcon />
+                                 </IconButton>
+                              </ListItemSecondaryAction> }
+                              
+                       </ListItem> ]
+                       
+                              
         } else {
             listItem = <ListItem button>
                             {titleView}
+                            
                        </ListItem>
         }
         return(
@@ -711,8 +736,8 @@ export default class IndividualView extends React.Component<Props, State> {
             idList = this.getIdList();
         }
         
-        console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id)
-        console.log(this.props);
+        //console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id)
+        //console.log(this.props);
 
         let classes = ["individualView"];
         if (this.props.isEditable) {
@@ -736,7 +761,7 @@ export default class IndividualView extends React.Component<Props, State> {
         );
         
 
-         console.groupEnd()
+         //console.groupEnd()
          
         return ret ;
         

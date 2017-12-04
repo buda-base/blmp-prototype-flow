@@ -36,6 +36,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         onNewTab: () => {
             dispatch(ui.newTab());
+        },
+        onEditingResourceInNewTab: (resourceIRI: string) => {
+            dispatch(ui.editingResourceInNewTab(resourceIRI));
         }
     }
 }

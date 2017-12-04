@@ -98,6 +98,34 @@ export const newTab = (state: UIState, action: Action) => {
 }
 reducers[actions.TYPES.newTab] = newTab;
 
+export const editingResourceInNewTab = (state: UIState, action: Action) => {
+   
+   console.log("iNewTab reduce ?")
+   
+    const tabId = getNewTabId();
+    let newState =  {
+        ...state,
+        editingResources: {
+            ...state.editingResources,
+            [tabId]: {
+                ...DEFAULT_TAB_STATE,
+                tabId
+            }
+        },
+        activeTabId: tabId,
+        tabsOrder: [
+            ...state.tabsOrder,
+            tabId
+        ]
+    }
+    
+    newState = updateTabState(tabId, newState, 'findResource', null);
+    newState = updateTabState(tabId, newState, 'resourceId', action.payload);
+    
+    return newState ;
+}
+reducers[actions.TYPES.editingResourceInNewTab] = editingResourceInNewTab;
+
 export const closeTab = (state: UIState, action: Action) => {
     const tabId = action.payload;
     if (!tabId) {
