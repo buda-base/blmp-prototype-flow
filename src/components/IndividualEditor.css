@@ -6,8 +6,9 @@
 /* .tabResourceSelector .MuiListItemText-root-157:not(:last-of-type) { text-align:right; } */
 /* .tabResourceSelector .MuiListItemText-root-157 + .MuiListItemText-root-157 { text-align:left; } */
 .tabResourceSelector .individualView .prefLabel { flex: 10 1 auto ; margin-left:10px; }
-.tabResourceSelector .individualView .prefLabel .individualView { line-height:1.0; }
 .tabResourceSelector .individualView ul li > :first-child { flex: 1 10 auto ;  text-align:left; }
+
+.prefLabel .literalView { line-height:1.1; }
 
 .inDivHeading { display:flex; align-items: center; justify-content: space-between; width:100%; }
 .inDivHeading > div:last-child { margin:0 15px; font-size:20px; text-align:right; }

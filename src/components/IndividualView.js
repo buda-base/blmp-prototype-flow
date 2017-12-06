@@ -207,6 +207,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
                             nested={true}
                             ontology={this.props.ontology}
                             titleView={titleView}
+                            showLabel={true}
                 />;
                 
                 
@@ -687,13 +688,16 @@ export default class IndividualView extends React.Component<Props, State> {
                let lab = this.props.individual.getProperty("http://www.w3.org/2004/02/skos/core#prefLabel") ;
                //console.log("label",lab[0])
                
-               for(var l of lab) {
-                  pref.push( 
-                  <LiteralView literal={l} isEditable={false} noPrefix={true} />
-                            );
+               if(lab != null && lab.length > 0)
+               {
+                  for(var l of lab) {
+                     pref.push( 
+                     <LiteralView literal={l} isEditable={false} noPrefix={true} />
+                              );
+                  }
+                  
+                  titleView.push(<div className="prefLabel">{pref}</div>)
                }
-               
-               titleView.push(<div className="prefLabel">{pref}</div>)
             }
             
         }

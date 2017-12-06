@@ -68,7 +68,7 @@ export default class Tabs extends Component<Props> {
                     {this.props.tabData.map((data,i) => {
                         return <Tab
                             style={{
-                                width: 300
+                                width: 200
                             }}
                             label={
                                 <div> 

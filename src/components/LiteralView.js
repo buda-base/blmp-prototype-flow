@@ -150,8 +150,8 @@ export default class LiteralView extends Component<Props, State> {
         if (this.props.isEditable) {
             if (this.props.literal.isDate) {
                 value = <TextField
-                    type="date"
-                    value={this.props.literal.value}
+                    type="datetime-local"
+                    value={this.props.literal.value.replace(/:[.0-9]+Z$/,"")} 
                     onChange={this.valueChanged.bind(this)}
                 />
             } else {
