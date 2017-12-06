@@ -223,7 +223,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
                 }
             };
             let removeButton = "";
-            if (isEditable) {
+            if (isEditable && this.props.title != "ID") {
                 removeButton = <IconButton
                     onClick={onTapRemove}
                     className="removeButton"
@@ -706,7 +706,7 @@ export default class IndividualView extends React.Component<Props, State> {
         let listItem: React.Element<*>;
         if (this._allowExpansion) {
            listItem = []
-            listItem.push( <ListItem button onClick={() => this.toggleExpandedState()}>
+            listItem.push( <ListItem {...this.props.isEditable ? {className:"noPad"}:{} } button onClick={() => this.toggleExpandedState()}>
                             {titleView}
                             
                             {this.state.isExpanded ? <ExpandLess /> : <ExpandMore />}
