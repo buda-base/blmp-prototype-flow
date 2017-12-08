@@ -62,6 +62,8 @@ export default class Ontology {
     }
 
     init() {
+         console.groupCollapsed("init ontology");
+       
         const datatypeProps = this.addPropertyType(
             DATATYPE_PROPERTY.value,
             this.getProperties(DATATYPE_PROPERTY)
@@ -80,9 +82,21 @@ export default class Ontology {
             ...objectProperties,
             ...annotationProperties
         };
+        this._propertiesArray = {
+            [DATATYPE_PROPERTY.value]: this.getPropertiesArray(DATATYPE_PROPERTY),
+            [OBJECT_PROPERTY.value]: this.getPropertiesArray(OBJECT_PROPERTY),
+            [ANNOTATION_PROPERTY.value]: this.getPropertiesArray(ANNOTATION_PROPERTY)
+        };
+
 
         this.processInverseOf();
         this.extractClasses();
+        
+        console.log("dataP",datatypeProps);
+        console.log("objP",objectProperties);
+        console.log("annoP",annotationProperties);
+        
+        console.groupEnd();
     }
 
     addPropertyType(type: string, properties: {}): {} {
@@ -114,8 +128,12 @@ export default class Ontology {
     }
 
     getClassProperties(iri: string): RDFProperty[] {
-        let properties = [];
+        let properties = [] ; //this._properties; //[];
         let rdfClass = this._classes[iri];
+        
+        console.log("classes",this._classes);
+        console.log("properties",this._properties);
+        
         if (!rdfClass) {
             return properties;
         }
@@ -133,6 +151,13 @@ export default class Ontology {
         return typeData['ranges'];
     }
 
+    getPropertiesArray(propertyType: NamedNode): RDFProperty[] {
+       const obj = this.getProperties(propertyType);
+       let ret = []
+       for (let k of Object.keys(obj)) ret.push(obj[k]) ;
+       return ret ;
+    }
+    
     getProperties(propertyType: NamedNode): {} {
         const propsStatements = this.getStatements(undefined, TYPE, propertyType);
         let props = {};
@@ -366,6 +391,9 @@ export default class Ontology {
                 rdfClass.addProperty(annotationProp);
             }
         }
+        
+        
+//         console.log("class",classIRI,rdfClass);
 
         return rdfClass;
     }
@@ -393,6 +421,8 @@ export default class Ontology {
             }
         }
 
+//         console.log("prop",propertyIRI,rdfProperty);
+        
         return rdfProperty;
     }
 
