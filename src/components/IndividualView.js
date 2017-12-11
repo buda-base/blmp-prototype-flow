@@ -69,6 +69,7 @@ type IndividualPropertyProps = {
     ontology: Ontology,
     property: RDFProperty,
     propertyValues: any[],
+    propertyType: any,
     title: string,
     tooltip: string,
     showLabel: boolean,
@@ -99,9 +100,9 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
    
     render() {
        
-        console.groupCollapsed("indiProp.render",this.props.title)
-  
-        console.log(this.props.individual.id)
+       // COMM
+//         console.groupCollapsed("indiProp.render",this.props.title)  
+//         console.log(this.props)
        
         const greenColor = {
             fill: green[800]
@@ -209,6 +210,8 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
                             ontology={this.props.ontology}
                             titleView={titleView}
                             showLabel={true}
+                            propertyType={this.props.propertyType}
+                            
                 />;
                 
                 
@@ -246,7 +249,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
 //              this.props.isExpanded && 
         }
 
-        console.groupEnd();
+//         console.groupEnd();
         
         return (<List> 
             {propertySubheader}
@@ -268,6 +271,7 @@ type Props = {
     nested: boolean,
     ontology: Ontology,
     titleView?: React.Element<*>,
+    propertyType: any,
 }
 
 type State = {
@@ -469,7 +473,7 @@ export default class IndividualView extends React.Component<Props, State> {
         let propertyLists = [];
         for (let propertyType in existingProps) {
             let propertyValues = existingProps[propertyType];
-            propertyLists.push(this.listForProperty(props[propertyType], propertyValues));
+            propertyLists.push(this.listForProperty(props[propertyType], propertyValues, propertyType));
         }
         
        
@@ -480,10 +484,11 @@ export default class IndividualView extends React.Component<Props, State> {
         return propertyLists;
     }
 
-    listForProperty(property: RDFProperty, propertyValues: Array<mixed>): {} {
+    listForProperty(property: RDFProperty, propertyValues: Array<mixed>, propertyType:mixed): {} {
        
 //         console.log("RDFprop",property);
 //         console.log("propValues",propertyValues);
+//         console.log("propType",propertyType);
        
         const onLiteralChanged = (event) => {
             if (this.props.onIndividualUpdated) {
@@ -525,14 +530,15 @@ export default class IndividualView extends React.Component<Props, State> {
             ontology={this.props.ontology}
             property={property}
             propertyValues={propertyValues}
+            propertyType={propertyType}
             title={title}
             tooltip={tooltip}
             {...this.props.individual.id.match(/([_A-Z]+[0-9]+)+$/) ? { showLabel : true }:{} }
         />;
         
-        console.log("propView",propertyView.props.title,propertyView)
+//         console.log("propView",propertyView.props.title,propertyView)
 
-        return propertyView;
+        return propertyView ;
     }
 
     getPropertyLists(): (?React.Element<*>)[] {
@@ -555,7 +561,7 @@ export default class IndividualView extends React.Component<Props, State> {
         const datatypeHeading = '' // (!this.props.nested) ? 'Datatype Properties' : '';
         const datatypeRows = this.propertyGroupRows(dataTypeProps, properties, removeUnsetProperties);
          
-        const annotationHeading = '' //(!this.props.nested) ? 'Annotation Properties' : '';
+        const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : '';
         let annotationRows = this.propertyGroupRows(annotationProps, properties,  removeUnsetProperties);
         
         objectRows.unshift(annotationRows[0])        
@@ -709,19 +715,31 @@ export default class IndividualView extends React.Component<Props, State> {
             let subtitle = '';
             let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
             
-//             console.log("labels",labels)
-            
-            if (labels && labels.length > 0) {
-                title = labels[0].value;
-            } else if (this.props.individual.id) {
-                title = formatIRI(this.props.individual.id);
-            } else {
-                title = <i>&lt;no id&gt;</i>;
-            }
+            //console.log("labels",labels)
 
             if (this.props.individual.types[0]) {
                 subtitle = formatIRI(this.props.individual.types[0]);
             }
+            
+            if (labels && labels.length > 0) {
+                title = labels[0].value;
+            } else if (this.props.individual.id) {
+               if(!this.props.individual.hasGeneratedId) { title = formatIRI(this.props.individual.id); }
+               else 
+               { 
+                  title = formatIRI(this.props.individual.types[0]);  
+                  subtitle = formatIRI(this.props.propertyType); 
+               }
+            } else {
+                title = <i>&lt;no id&gt;</i>;
+            }
+
+            
+            if(this.props.propertyType && this.props.level >= 2)
+            {  
+                  subtitle = formatIRI(this.props.propertyType); 
+            }
+            
             
             titleView = [ <ListItemText
                   primary={title}
@@ -733,7 +751,7 @@ export default class IndividualView extends React.Component<Props, State> {
         else { titleView = [ titleView ] }
         
         
-         //if(this.props.showLabel)
+//          if(this.props.showLabel)
          {
             let pref = []
             
@@ -806,8 +824,9 @@ export default class IndividualView extends React.Component<Props, State> {
             idList = this.getIdList();
         }
         
-        console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
-        console.log(this.props);
+        // COMM
+        //console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
+        //console.log(this.props);
 
         let classes = ["individualView"];
         if (this.props.isEditable) {
@@ -824,17 +843,18 @@ export default class IndividualView extends React.Component<Props, State> {
          }
          */
         
-        console.log("props",this.props);
+        // COMM
+//         console.log("props",this.props);
         
-        console.group("getProp");
+//         console.group("getProp");
         const propList = this.getPropertyLists();
-        console.groupEnd();
-        console.group("getLab");
+//         console.groupEnd();
+//         console.group("getLab");
         const labList = this.getLabelsList()
-        console.groupEnd();
+//         console.groupEnd();
         
-        console.log("labList",labList);
-        console.log("propList",propList);
+//         console.log("labList",labList);
+//         console.log("propList",propList);
         
         let ret = (
             <div className={classnames(...classes)} onClick={this.props.onClick}>
@@ -848,7 +868,7 @@ export default class IndividualView extends React.Component<Props, State> {
         );
         
 
-         console.groupEnd()
+//          console.groupEnd()
          
         return ret ;
         
