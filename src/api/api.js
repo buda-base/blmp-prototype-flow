@@ -5,14 +5,14 @@ import Ontology from '../lib/Ontology';
 import Individual from '../lib/Individual';
 
 const directoryPrefixes = {
-    'C': 'corporations',
+    'C': 'corporations', //
     'UT': 'etexts',
     'I': 'items',
     'L': 'lineages',
-    'R': 'offices',
+    'R': 'offices',  //
     'P': 'persons',
     'G': 'places',
-    'PR': 'products',
+    'PR': 'products', //
     'T': 'topics',
     'W': 'works'
 }
@@ -155,7 +155,12 @@ export default class API {
         const checksum = md5(id);
         const objectDir = checksum.substr(0, 2);
     
+        
         let url = [OBJECT_PATH, dir, objectDir, id].join('/') + '.ttl';
+        if(id.match(/^(([CR])|(PR(HD)?))[0-9]+/)) url = [OBJECT_PATH, dir, id].join('/') + '.ttl';
+        
+//         console.log([OBJECT_PATH, dir, objectDir, id, url])
+        
         if (this._server) {
             url = this._server + url;
         }

@@ -38,7 +38,7 @@ const DEFAULT_TAB_STATE: TabState = {
     selectedResourceIRI: null,
     addingResource: null,
     findResource: null,
-    splitWidth:600,
+    splitWidth:"50%",
     subSplitWidth:350,
     hidePreview:true,
     graphText:null
