@@ -76,7 +76,12 @@ type IndividualPropertyProps = {
     nested: boolean,
 }
 
-class IndividualProperty extends React.Component<IndividualPropertyProps> {
+type CollapState = {
+    collapseState: {},
+    isExpanded: boolean
+}
+  
+class IndividualProperty extends React.Component<IndividualPropertyProps,CollapState> {
   
    /*
    componentWillMount()
@@ -97,7 +102,49 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
         console.log("did update indiProp",this.props.individual.id) 
     }
    */
-   
+ 
+    constructor(props: Props) {
+        super(props);
+
+        this.state = {
+            collapseState: {},
+            isExpanded: props.isExpanded
+        }
+    }
+    
+    setCollapseState(id: string, open: boolean) {
+        const collapseState = {
+            ...this.state.collapseState,
+            [id]: open
+        };
+        this.setState((prevState, props) => {
+            return {
+                ...prevState,
+                collapseState
+            }
+        })
+    }
+
+    toggleCollapseState(id: string) {
+        let open;
+        if (this.state.collapseState[id] === undefined) {
+            open = true;
+        } else {
+            open = !this.state.collapseState[id];
+        }
+
+        this.setCollapseState(id, open);
+    }
+
+    toggleExpandedState() {
+        this.setState((prevState, props) => {
+            return {
+                ...prevState,
+                isExpanded: !prevState.isExpanded
+            }
+        })
+    }
+    
     render() {
        
        // COMM
@@ -251,10 +298,52 @@ class IndividualProperty extends React.Component<IndividualPropertyProps> {
 
 //         console.groupEnd();
         
-        return (<List> 
-            {propertySubheader}
-            {valueRows}
-         </List> );
+        if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
+            || this.props.propertyValues.length > 10)
+        {
+            let collapseId = [this.props.individual.id, 'level', this.props.level, 0, 'collapsed'].join('_');
+
+            let handleCollapse = () => {
+                this.toggleCollapseState(collapseId);
+            };
+            
+            
+            const headingStyles = {
+                  fontSize: '12px',
+                  fontWeight: 'normal',
+                  padding: '0px 0px 0px 30px',
+                  margin: '0',
+                  textTransform:"uppercase"
+            };
+
+            const dataRowStyle = {
+                  marginLeft: ((this.props.level + 1) * 20) + 'px'
+            };
+
+            return ( <List> 
+                    <List>
+                        {propertySubheader}
+                        <ListItem button onClick={handleCollapse}>
+                            <ListItemText
+                                disableTypography
+                                primary={(this.state.collapseState[collapseId] ? "hide":"show")+" ("+this.props.propertyValues.length+")"}
+                                style={headingStyles}
+                            />
+                            {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
+                        </ListItem>
+                        <Collapse className="inCollapse" in={this.state.collapseState[collapseId]} style={dataRowStyle} >
+                           {valueRows}
+                        </Collapse>
+                     </List>
+                  </List> );
+         }
+         else 
+         {
+            return (<List> 
+               {propertySubheader}
+               {valueRows}
+            </List>);
+         }
     }
 }
 
@@ -477,8 +566,8 @@ export default class IndividualView extends React.Component<Props, State> {
         }
         
        
+//       console.log("return",propertyLists)
 //        console.groupEnd()
-//         console.log("return",propertyLists)
         
          
         return propertyLists;
@@ -603,6 +692,7 @@ export default class IndividualView extends React.Component<Props, State> {
                 this.toggleCollapseState(collapseId);
             };
 
+            
             //if (this.props.nested) {
                 lists.push(
                     <List>
@@ -611,7 +701,10 @@ export default class IndividualView extends React.Component<Props, State> {
                 )
                 
             /* // no need anymore
-            } else {
+            } 
+            else 
+            {
+               
                 lists.push(
                     <List>
                         <ListItem button onClick={handleCollapse}>
@@ -627,8 +720,8 @@ export default class IndividualView extends React.Component<Props, State> {
                         </Collapse>
                     </List>
                 );
-            }
-            */
+            }*/
+            
         }
 
         return lists;
@@ -825,8 +918,8 @@ export default class IndividualView extends React.Component<Props, State> {
         }
         
         // COMM
-        //console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
-        //console.log(this.props);
+//         console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
+//         console.log(this.props);
 
         let classes = ["individualView"];
         if (this.props.isEditable) {
@@ -844,13 +937,16 @@ export default class IndividualView extends React.Component<Props, State> {
          */
         
         // COMM
-//         console.log("props",this.props);
-        
+//         console.log("props",this.props);        
 //         console.group("getProp");
+        
         const propList = this.getPropertyLists();
+        
 //         console.groupEnd();
 //         console.group("getLab");
+        
         const labList = this.getLabelsList()
+        
 //         console.groupEnd();
         
 //         console.log("labList",labList);
@@ -868,7 +964,7 @@ export default class IndividualView extends React.Component<Props, State> {
         );
         
 
-//          console.groupEnd()
+//         console.groupEnd()
          
         return ret ;
         

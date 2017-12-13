@@ -171,6 +171,9 @@ export default class API {
         try {
             let url = this._getResourceURL(id);
             let resourceData = this.getURLContents(url);
+            
+//             console.log("reData");
+            
             return resourceData;
         } catch(e) {
             throw e;
@@ -184,6 +187,8 @@ export default class API {
         } catch(e) {
             throw e;
         }
+        
+//         console.log("getRe");
 
         let ontology;
         try {
