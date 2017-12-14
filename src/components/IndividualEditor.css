@@ -30,5 +30,5 @@ li.noPad { padding-right:0; }
 .plusBut,.remoBut { position:relative !important; margin-top:10px !important;display:flex;align-items:top;right:0 !important;} 
 /* .remoBut.ind { margin-right:24px; } */
 
-.Pane2 .individualView > ul, .inCollapse { display:flex; }
+.Pane2 .individualView > ul, .inCollapse > div > div > div { display:flex; }
 .Pane2 .individualView > ul > li, .inCollapse > div  { flex-grow:1; }
