@@ -64,17 +64,19 @@ export default class Ontology {
     init() {
          console.groupCollapsed("init ontology");
        
+        let dProps,oProps,aProps ;
+         
         const datatypeProps = this.addPropertyType(
             DATATYPE_PROPERTY.value,
-            this.getProperties(DATATYPE_PROPERTY)
+            dProps = this.getProperties(DATATYPE_PROPERTY)
         );
         const objectProperties = this.addPropertyType(
             OBJECT_PROPERTY.value,
-            this.getProperties(OBJECT_PROPERTY)
+            oProps = this.getProperties(OBJECT_PROPERTY)
         );
         const annotationProperties = this.addPropertyType(
             ANNOTATION_PROPERTY.value,
-            this.getProperties(ANNOTATION_PROPERTY)
+            aProps = this.getProperties(ANNOTATION_PROPERTY)
         );
         this._annotationProperties = annotationProperties;
         this._properties = {
@@ -83,9 +85,9 @@ export default class Ontology {
             ...annotationProperties
         };
         this._propertiesArray = {
-            [DATATYPE_PROPERTY.value]: this.getPropertiesArray(DATATYPE_PROPERTY),
-            [OBJECT_PROPERTY.value]: this.getPropertiesArray(OBJECT_PROPERTY),
-            [ANNOTATION_PROPERTY.value]: this.getPropertiesArray(ANNOTATION_PROPERTY)
+            [DATATYPE_PROPERTY.value]: this.toPropertiesArray(datatypeProps),  //DATATYPE_PROPERTY),
+            [OBJECT_PROPERTY.value]: this.toPropertiesArray(objectProperties), //this.getPropertiesArray(OBJECT_PROPERTY),
+            [ANNOTATION_PROPERTY.value]: this.toPropertiesArray(annotationProperties) //this.getPropertiesArray(ANNOTATION_PROPERTY)
         };
 
 
@@ -158,9 +160,18 @@ export default class Ontology {
        return ret ;
     }
     
+    toPropertiesArray(obj: NamedNode): RDFProperty[] {
+       let ret = []
+       for (let k of Object.keys(obj)) ret.push(obj[k]) ;
+       return ret ;
+    }
+    
     getProperties(propertyType: NamedNode): {} {
         const propsStatements = this.getStatements(undefined, TYPE, propertyType);
         let props = {};
+        
+//         console.groupCollapsed("onto props",propertyType)
+        
         for (let property of propsStatements) {
             let prop = this._properties[property.subject.value];
             if (!prop) {
@@ -168,28 +179,34 @@ export default class Ontology {
                 this._properties[prop.IRI] = prop;
             }
             const comments = this.getComments(property.subject);
+//             console.log("getComm",comments)
             for (let comment of comments) {
                 prop.addComment(comment);
             }
+//             console.log("=>",prop.comments)
+            
             prop.label = this.getLabel(property.subject);
             this.getDomains(property.subject).map(domain => prop.addDomain(domain));
             let ranges = this.getRanges(property.subject);
             ranges.map(range => prop.addRange(range));
             const superProperties = this.getSuperProperties(property.subject);
             if (superProperties) {
-                superProperties.map(superPropertyIRI => {
-                    let superProperty = this.addProperty(superPropertyIRI);
-                    if (superProperty) {
-                        prop.addSuperProperty(superProperty);
-                        let superPropertyNode = rdf.sym(superPropertyIRI);
-                        this.getProperties(superPropertyNode);
-                    }
-                });
+               superProperties.map(superPropertyIRI => {
+                  let superProperty = this.addProperty(superPropertyIRI);
+                  if (superProperty) {
+                     prop.addSuperProperty(superProperty);
+                     let superPropertyNode = rdf.sym(superPropertyIRI);
+                     this.getProperties(superPropertyNode);
+                  }
+               });
             }
 
             props[property.subject.value] = prop;
         }
-
+        
+//         console.groupEnd();
+//         console.log("props:",props)
+         
         return props;
     }
 

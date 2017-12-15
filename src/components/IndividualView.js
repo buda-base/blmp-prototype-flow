@@ -584,6 +584,9 @@ export default class IndividualView extends React.Component<Props, State> {
                 this.props.onIndividualUpdated();
             }
         };
+        
+//         console.log("property.comments",property.comments);
+        
         let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
         let title = (property.label) ? capitalize(property.label) : formatIRI(property.IRI);
         const propIsEditable = this.props.isEditable;
