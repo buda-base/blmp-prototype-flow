@@ -14,21 +14,24 @@ const mapStateToProps = (state) => {
     let props = {
         IRI: selectors.getSelectedResourceIRI(state,state.ui.activeTabId),
         resource: null,
-        loadingResource: false
+        loadingResource: false,
+        failure:null
     }
    
-    //console.log("mapState2Props",state,props);
+    console.log("mapState2Props",state,props);
         
     if (props.IRI) {
         props.resource = selectors.getResource(state, props.IRI);
         props.loadingResource = selectors.isResourceLoading(state, props.IRI);
+        props.failure = selectors.getResourceError(state,props.IRI);
     }
+    
     return props;
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {
    
-   //console.log("dispatch2props?")
+//    console.log("dispatch2props?")
    
     return {
         onSelectedResource: (IRI) => {
