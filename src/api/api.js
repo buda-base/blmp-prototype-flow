@@ -197,15 +197,26 @@ export default class API {
             throw e;
         }
         
+//         console.log("getOnto");
+    
         let graph;
         try {
             graph = await Graph.create(data, BASE_IRI, TURTLE_MIME_TYPE, ontology);
+//             console.log("attendu?")
         } catch(e) {
             throw e;
         }
-    
-        const ind = graph.getIndividualWithId(this._getResourceIRI(id));
+
+//         console.log("getGra",this._getResourceIRI(id));
+        Graph.current = this._getResourceIRI(id) ;
+//         console.log("?",Graph.current);
+        const ind = graph.getIndividualWithId(this._getResourceIRI(id),true);        
+        Graph.current = null ;  
         ind.namespaces = graph.namespaces;
+        
+//         console.log("ind",ind);
+
+        
         return ind;
     }
 }
