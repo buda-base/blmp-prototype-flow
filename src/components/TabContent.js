@@ -158,7 +158,7 @@ class TabContent extends Component<Props, State> {
 
         let onIndividualUpdated = () => 
         {
-           console.log("updated!!!");
+//            console.log("updated!!!");
            
             this.updateGraphText();
         };

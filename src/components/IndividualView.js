@@ -32,6 +32,7 @@ import RemoveCircleIcon from 'material-ui-icons/RemoveCircle';
 import {red, green} from 'material-ui/colors';
 import AddBoxIcon from 'material-ui-icons/AddBox';
 
+
 const iconSizes = {
     small: {
         width: 20,

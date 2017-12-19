@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { initiateApp } from 'state/actions';
+import * as ui from 'state/ui/actions';
+import * as data from 'state/data/actions';
 import AppContainer from './containers/AppContainer';
 import './index.css';
 
@@ -71,4 +73,7 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
+// let id = "G844" ;
+// setTimeout(function(){ store.dispatch(data.loadResource(id)) },500)
+// setTimeout(function(){ store.dispatch(ui.editingResource(1,"http://purl.bdrc.io/resource/"+id)) },1000)
 

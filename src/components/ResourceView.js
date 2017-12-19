@@ -19,7 +19,7 @@ export default class ResourceView extends React.Component<Props> {
     render() {
         let view;
         
-        console.log("rView",this.props);
+//         console.log("rView",this.props);
         
         if (!this.props.IRI) {
             view = <p className="statusMessage">Nothing selected.</p>

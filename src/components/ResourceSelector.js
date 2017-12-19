@@ -103,6 +103,7 @@ export default class ResourceSelector extends React.Component<Props> {
                 message = <div>
                     <Typography>Found:</Typography>
                     <IndividualView
+                        onClick={this.selectedResource.bind(this)}
                         individual={this.props.findingResource}
                         isEditable={false}
                         isExpanded={false}

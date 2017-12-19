@@ -18,7 +18,7 @@ const mapStateToProps = (state) => {
         failure:null
     }
    
-    console.log("mapState2Props",state,props);
+//     console.log("mapState2Props",state,props);
         
     if (props.IRI) {
         props.resource = selectors.getResource(state, props.IRI);

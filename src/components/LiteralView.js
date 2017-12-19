@@ -8,6 +8,10 @@ import Input, { InputLabel } from 'material-ui/Input';
 import { MenuItem } from 'material-ui/Menu';
 import { FormControl, FormHelperText } from 'material-ui/Form';
 import Literal from '../lib/Literal';
+import Collapse from 'material-ui/transitions/Collapse';
+import List , {ListItem, ListItemText, ListSubheader, ListItemSecondaryAction, ListItemIcon} from 'material-ui/List';
+import ExpandMore from 'material-ui-icons/ExpandMore';
+import ExpandLess from 'material-ui-icons/ExpandLess';
 
 const styles = {
     inlineSelect: {
@@ -22,13 +26,20 @@ const styles = {
 const langs = {
     'bo': 'Tibetan',
     'bo-x-ewts': 'Tibetan (Wylie)',
+    
     'en': 'English',
     "en-x-mixed":'English (mixed)',
+    
     'fr': 'French',
+    
+    'pi': 'Pali',
     'pi-Sinh': 'Pali (Sinhalese)',
     'pi-Thai': 'Pali (Thai)',
     'pi-x-iast': 'Pali (IAST)',
+    
+    'sa':'Sanskrit',
     'sa-x-ndia':'Sanskrit (IAST without diacritics)',
+    
     'zh': 'Chinese',
     'zh-Hans' : 'Chinese (simplified)',
     'zh-Hant' : 'Chinese (traditional)',
@@ -36,27 +47,16 @@ const langs = {
     'zh-x-wade':'Chinese (Wade-Giles)'
 }; 
 
-/* // some structure like that
+// some structure like that
 const langTree = {
-   'bo':
-   {
-      'bo': 'Tibetan',
-      'bo-x-ewts': 'Tibetan (Wylie)'
-   },
-    'en': 'English',
-    "en-x-mixed":'English (mixed)',
-    'fr': 'French',
-    'pi-Sinh': 'Pali (Sinhalese)',
-    'pi-Thai': 'Pali (Thai)',
-    'pi-x-iast': 'Pali (IAST)',
-    'sa-x-ndia':'Sanskrit (IAST without diacritics)',
-    'zh': 'Chinese',
-    'zh-Hans' : 'Chinese (simplified)',
-    'zh-Hant' : 'Chinese (traditional)',
-    'zh-Latn-pinyin' : 'Chinese (Pinyin)',
-    'zh-x-wade':'Chinese (Wade-Giles)'
+   'bo' : [ 'bo-x-ewts' ],
+   'en' : [ 'en-x-mixed' ],
+   'fr' : [ ],
+   'pi' : [ 'pi-Sinh', 'pi-Thai', 'pi-x-iast' ],
+   'sa' : [ 'sa-x-ndia' ],
+   'zh' : [ 'zh-Hans', 'zh-Hant','zh-Latn-pinyin', 'zh-x-wade' ]
 };
-*/
+
 
 interface Props {
     literal: Literal,
@@ -67,7 +67,8 @@ interface Props {
 
 interface State {
     language: string,
-    value: string
+    value: string,
+    collapseState: {},
 }
 
 export default class LiteralView extends Component<Props, State> {
@@ -83,10 +84,46 @@ export default class LiteralView extends Component<Props, State> {
         const language = (props.literal.language !== undefined) ? props.literal.language : 'en';
         this.state = {
             language: language,
-            value: props.literal.value
+            value: props.literal.value,
+            collapseState: {}
         }
         //console.log("LiteralView.state",this.state)
     }
+    
+    
+    setCollapseState(id: string, open: boolean) {
+        const collapseState = {
+            ...this.state.collapseState,
+            [id]: open
+        };
+        this.setState((prevState, props) => {
+            return {
+                ...prevState,
+                collapseState
+            }
+        })
+    }
+
+    toggleCollapseState(id: string) {
+        let open;
+        if (this.state.collapseState[id] === undefined) {
+            open = true;
+        } else {
+            open = !this.state.collapseState[id];
+        }
+
+        this.setCollapseState(id, open);
+    }
+
+    toggleExpandedState() {
+        this.setState((prevState, props) => {
+            return {
+                ...prevState,
+                isExpanded: !prevState.isExpanded
+            }
+        })
+    }
+    
     
    /*
    componentWillReceiveProps(newProps)
@@ -168,41 +205,92 @@ export default class LiteralView extends Component<Props, State> {
                 />
             }
         }
-        let langItems = [];
-        for (let lang in langs) {
-            langItems.push(<MenuItem
-                key={lang}
-                value={lang}
-            >
-                {langs[lang]}
-            </MenuItem>);
-        }
+   
+/*   
+         let handleCollapse = (e,collapseId) => {
+                  e.preventDefault(); 
+               this.toggleCollapseState(collapseId);
+                  return false; 
+         };
 
+         let langItems = [ ];
+        let list = ['zh'].concat(langTree['zh'])
+        
+
+            
+        for (let lang in list) {
+            langItems.push(
+               <MenuItem
+                        
+                  key={list[lang]}
+                  value={list[lang]}
+               >
+                  {langs[list[lang]]}
+               </MenuItem>               
+            );
+        }
+        
+        
+        langItems = [ <ListItem onClick={(e) => handleCollapse(e,'zh')}> { langs['zh'] } <ExpandMore/></ListItem>,<Collapse in={this.state.collapseState['zh']}> {langItems} </Collapse>,
+               <ListItem onClick={(e) => handleCollapse(e,'pi')}> { langs['pi'] } <ExpandMore /></ListItem>,<Collapse in={this.state.collapseState['pi']}> {langItems} </Collapse> 
+      ];
+         */
+
+
+
+         let langItems = [ ];            
+        for (let lang in langs) {
+            langItems.push(
+               <MenuItem
+                        
+                  key={lang}
+                  value={lang}
+               >
+                  {langs[lang]}
+               </MenuItem>               
+            );
+        }
+   
         const selectId = this.generateId(this.props.literal.uniqueId);
 
+            //</Collapse>
         return (
             <div className="literalView">
                 {this.props.literal.language && !this.props.isEditable && !this.props.noPrefix &&
                 <strong>{langs[this.props.literal.language]}: </strong>
                 }
                 {this.props.literal.hasLanguage && this.props.isEditable &&
+                /*
                 <FormControl>
                     <InputLabel htmlFor={selectId}>language</InputLabel>
-                    <Select
-                        // floatingLabelText="lang"
-                        // floatingLabelFixed={true}
-                        // fullWidth={false}
-                        style={styles.inlineSelect}
-                        value={this.props.literal.language}
-                        ref={(select) => this._languageControl = select}
-                        onChange={this.languageChanged.bind(this)}
-                        // id={selectId}
-                        input={<Input id={selectId} />}
-                    >
-                        {langItems}
-                    </Select>
+                     <Select
+                        disabled={true}
+                        value={ this.props.literal.language }                        
+                        style={ styles.inlineSelect }
+                        onInputChange={ function(e) { e.preventDefault(); console.log("youpi"); return false; } }
+                     >
+                        <List>{langItems}</List>
+                     </Select>
                 </FormControl>
-                }
+                 */
+                
+                     <FormControl>
+                        <InputLabel htmlFor={selectId}>language</InputLabel>
+                           <Select
+                              // floatingLabelText="lang"
+                              // floatingLabelFixed={true}
+                              // fullWidth={false}
+                              style={styles.inlineSelect}
+                              value={this.props.literal.language}
+                              ref={(select) => this._languageControl = select}
+                              onChange={this.languageChanged.bind(this)}
+                              // id={selectId}
+                              input={<Input id={selectId} />}
+                              >
+                              {langItems}
+                           </Select>
+                     </FormControl>
+                  }
                 {value}
             </div>
         );
