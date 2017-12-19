@@ -3,6 +3,21 @@ import formatIRI from '../lib/formatIRI';
 import './IndividualHeading.css';
 import LiteralView from './LiteralView';
 
+
+const prefix = {
+    'C': 'Corporation', //
+    'UT': 'Etext',
+    'I': 'Item',
+    'L': 'Lineage',
+    'R': 'Office',  //
+    'P': 'Person',
+    'G': 'Place',
+    'PR': 'Product', //
+    'T': 'Topic',
+    'W': 'Work'
+}
+
+
 export default class IndividualHeading extends React.Component {
 
     constructor(props) {
@@ -27,10 +42,16 @@ export default class IndividualHeading extends React.Component {
 
     get subtitle() {
         let subtitle = "";
-        if (this.props.individual && this.props.individual.types[0]) {
-            subtitle = formatIRI(this.props.individual.types[0]);
+        
+//         console.log(prefix,this.props.individual.id);
+        
+        if (this.props.individual) { // && this.props.individual.types[0]) {
+           subtitle = prefix[formatIRI(this.props.individual.id).charAt(0)]
+           if(subtitle == undefined) subtitle = "?" ;
         }
-
+        
+//         subtitle = formatIRI(this.props.individual.types[0]);
+        
         return subtitle;
     }
 
