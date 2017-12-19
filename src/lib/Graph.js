@@ -12,6 +12,7 @@ export default class Graph {
     _ontology: Ontology;
     _store: rdf.IndexedFormula;
     static _current : string ;
+    static _individuAll : {} ; 
 
     static create(data: string, baseIRI: string, mimeType: string, ontology: Ontology): Promise<Graph> {
         return new Promise((resolve, reject) => {
@@ -34,7 +35,17 @@ export default class Graph {
     static set current(id : string)
     {
        this._current = id ;
-//        console.log("set",id,this.current)
+//        console.log("set",id,this.individuAll)
+    }
+    
+    static get individuAll()
+    {
+       return this._individuAll;
+    }
+    static set individuAll(ids : {})
+    {
+       this._individuAll = ids ;
+//        console.log("set",id,this.individuAll)
     }
 
     constructor(data: string, baseIRI: string, mimeType: string, ontology: Ontology,
@@ -82,21 +93,15 @@ export default class Graph {
         return types;
     }
 
-    getIndividualWithId(id: string, pass: boolean = false): Individual {
+    getIndividualWithId(id: string): Individual {
        
 //         console.log("getIndiv",id,Graph.current);
         
         let individual = new Individual(id);
         
-        /*
-        if(!pass && Graph.current && Graph.current == id) {
+        Graph.individuAll[id] = individual;
         
-           console.log("loop!",id);
-           
-           return individual;
-           
-        }
-        */
+//         console.log(Graph.individuAll);
            
         this.getIndividualTypes(id).map(type => individual.addType(type));
         const node = rdf.sym(id);
@@ -135,19 +140,21 @@ export default class Graph {
             this._updateIndividual(individual, prop.value, individualRange, statement.object);
 
         }
-
+        
         return individual;
     }
 
     _updateIndividual(individual: Individual, property: string, propertyRange: string, object: Node) {
         if (this._ontology.isClass(propertyRange) && object instanceof NamedNode) {
-//            console.log("recursive loop ?",individual.id,Graph.current)
-           if(individual.id != Graph.current)
-           {
-              let value = this.getIndividualWithId(object.value);
-               value.addType(propertyRange);
-               individual.addProperty(property, value);
-           }
+           
+               if(object.value != Graph.current && !Graph.individuAll[object.value]) {
+//                let value = Graph.individuAll[object.value]
+                  let value = this.getIndividualWithId(object.value);
+                  console.log("recursive loop ?",individual.id,Graph.current,object.value)
+                  value.addType(propertyRange);
+                  individual.addProperty(property, value);           
+               }
+           
         } else if (object instanceof BlankNode) {
             let blankIndividual = new Individual();
             let blankTypes = this._store.statementsMatching(object, TYPE, undefined);

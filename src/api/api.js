@@ -209,8 +209,9 @@ export default class API {
 
 //         console.log("getGra",this._getResourceIRI(id));
         Graph.current = this._getResourceIRI(id) ;
+        Graph.individuAll = {}
 //         console.log("?",Graph.current);
-        const ind = graph.getIndividualWithId(this._getResourceIRI(id),true);        
+        const ind = graph.getIndividualWithId(this._getResourceIRI(id));        
         Graph.current = null ;  
         ind.namespaces = graph.namespaces;
         
