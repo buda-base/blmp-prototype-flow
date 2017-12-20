@@ -36,6 +36,7 @@ export default class Ontology {
     _properties = {};
     // store annotation properties as they are available for all classes
     _annotationProperties = {};
+    _types = {}
 
     static create(data: string, baseIRI: string, mimeType: string): Promise<Ontology> {
         return new Promise((resolve, reject) => {
@@ -93,6 +94,10 @@ export default class Ontology {
 
         this.processInverseOf();
         this.extractClasses();
+
+        
+        // build _types/possible value
+        
         
         console.log("dataP",datatypeProps);
         console.log("objP",objectProperties);

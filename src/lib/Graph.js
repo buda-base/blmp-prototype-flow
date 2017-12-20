@@ -150,7 +150,7 @@ export default class Graph {
                if(object.value != Graph.current && !Graph.individuAll[object.value]) {
 //                let value = Graph.individuAll[object.value]
                   let value = this.getIndividualWithId(object.value);
-                  console.log("recursive loop ?",individual.id,Graph.current,object.value)
+//                   console.log("recursive loop ?",individual.id,Graph.current,object.value)
                   value.addType(propertyRange);
                   individual.addProperty(property, value);           
                }
