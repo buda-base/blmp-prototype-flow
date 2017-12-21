@@ -36,7 +36,6 @@ export default class Ontology {
     _properties = {};
     // store annotation properties as they are available for all classes
     _annotationProperties = {};
-    _types = {}
 
     static create(data: string, baseIRI: string, mimeType: string): Promise<Ontology> {
         return new Promise((resolve, reject) => {

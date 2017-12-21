@@ -20,7 +20,8 @@ export default class RDFComponent extends React.Component<Props> {
         super(props);
 
         this._individual = props.individual;
-    }
+     
+   }
 
     get IRI(): string {
         return this._IRI;
@@ -29,6 +30,7 @@ export default class RDFComponent extends React.Component<Props> {
     joinProps(IRIs: Array<string>, joiner: string = ', '): string {
         const components = IRIs.map((propIRI) => {
             const values = this.props.individual.getProperty(propIRI);
+            
             if (values) {
                 return values.map(value => {
                     if (value instanceof Literal && value.isDate) {

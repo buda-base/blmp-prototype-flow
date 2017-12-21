@@ -227,6 +227,8 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                     }
                 }
 
+                console.log("ranges",this.props.property.ranges)
+                
                 for (let range of this.props.property.ranges) {
                     if (range in RDFComponents) {
                         const rdfComponent = RDFComponents[range];
@@ -240,8 +242,10 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                             level: this.props.level + 1,
                             nested: true,
                             ontology: this.props.ontology,
+                           onChange:this.props.onLiteralChanged
                         }, null);
 //                         console.log("propView",titleView);
+                        
                         break;
                     }
                 }

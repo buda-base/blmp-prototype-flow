@@ -75,6 +75,7 @@ export default class LiteralView extends Component<Props, State> {
     _languageControl: Component<any>;
     _valueControl: Component<any>;
     _id: {} = {};
+    _literal: Literal;
 
     props: Props;
     state: State;
@@ -87,6 +88,8 @@ export default class LiteralView extends Component<Props, State> {
             value: props.literal.value,
             collapseState: {}
         }
+        this._literal = this.props.literal ;
+        
         //console.log("LiteralView.state",this.state)
     }
     
@@ -183,6 +186,7 @@ export default class LiteralView extends Component<Props, State> {
     }
 
     render() {
+              
         let value = this.props.literal.value;
         if (this.props.isEditable) {
             if (this.props.literal.isDate) {
