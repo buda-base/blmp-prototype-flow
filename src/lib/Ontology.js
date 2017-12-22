@@ -24,6 +24,7 @@ export const DATATYPE_PROPERTY = OWL('DatatypeProperty');
 export const OBJECT_PROPERTY = OWL('ObjectProperty');
 export const ANNOTATION_PROPERTY = OWL('AnnotationProperty');
 const UNION_OF = OWL('unionOf');
+const INDIVIDUAL = OWL('NamedIndividual');
 
 type PropertyData = {
     domains: string[];
@@ -96,6 +97,19 @@ export default class Ontology {
 
         
         // build _types/possible value
+
+        let indiv = this.getStatements(undefined, TYPE, INDIVIDUAL);  
+        
+        console.log("indiv",indiv)
+        
+        indiv = indiv.reduce((result, cur) => {
+//            console.log("i=",cur.subject,cur.predicate)
+           let tmp = this.getStatements(cur.subject,TYPE);  
+//            console.log(tmp[1].object.value);
+//            console.log(this._classes[tmp[1].object.value])
+           this._classes[tmp[1].object.value].addValue(cur.subject.value)
+        }, []);
+        
         
         
         console.log("dataP",datatypeProps);

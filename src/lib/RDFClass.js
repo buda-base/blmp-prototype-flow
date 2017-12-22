@@ -7,6 +7,8 @@ export default class RDFClass {
     _superclasses: RDFClass[];
     _properties = {};
     _children: RDFClass[] = [];
+    _values: string[] = [];
+
 
     constructor(IRI: string) {
         this._IRI = IRI;
@@ -56,4 +58,15 @@ export default class RDFClass {
             this._children.push(child);
         }
     }
+    
+    get values(): RDFProperty[] {
+        return this._values;
+    }
+
+    addValue(value: RDFProperty) {
+        if (this._values.indexOf(value) === -1) {
+            this._values.push(value);
+        }
+    }
+
 }

@@ -227,7 +227,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                     }
                 }
 
-                console.log("ranges",this.props.property.ranges)
+//                 console.log("ranges",this.props.property.ranges)
                 
                 for (let range of this.props.property.ranges) {
                     if (range in RDFComponents) {

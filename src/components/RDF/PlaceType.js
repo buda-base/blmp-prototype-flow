@@ -10,13 +10,24 @@ import Menu from 'material-ui/Menu/Menu.js';
 import {MenuItem} from 'material-ui/Menu';
 import List, {ListItem, ListItemText, ListSubheader, ListItemSecondaryAction, ListItemIcon} from 'material-ui/List';
 
+import store from "../../index.js"
+
 export const IRI = 'http://purl.bdrc.io/ontology/core/PlaceType';
 
 export default class PlaceType extends RDFComponent {
-
+   _list : [] ;
+   
    constructor(props) {
       super(props);
-              
+      
+      let onto = store.getState().data.ontology
+//       console.log(this.props.individual.types[0],onto._classes[this.props.individual.types[0]]._values);
+      
+      this._list = onto._classes[this.props.individual.types[0]]._values.map((val) => 
+      {
+         return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{formatIRI(val)}</MenuItem> )
+      })
+            
       this.state = {
          open: false,
       };
@@ -72,10 +83,7 @@ export default class PlaceType extends RDFComponent {
                //targetOrigin={{horizontal: 'left', vertical: 'top'}}
                onRequestClose={this.handleRequestClose}
             >
-               <List >
-                  <MenuItem onClick={(ev) => this.handleMenu(ev,"YOUPI")}>youpi</MenuItem>
-                  <MenuItem onClick={(ev) => this.handleMenu(ev,"SAD")}>sad</MenuItem>
-               </List>
+               <List>{this._list}</List>
             </Popover>
          </div>
         )
