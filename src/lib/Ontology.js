@@ -5,6 +5,9 @@ import {BlankNode} from 'rdflib';
 import RDFClass from './RDFClass';
 import RDFProperty from './RDFProperty';
 import type { RDFComment } from './RDFProperty';
+import RDFComponents from '../components/RDF/rdf_components';
+// import * as PlaceType from '../components/RDF/PlaceType';
+import * as Type from '../components/RDF/Type';
 
 const RDF  = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 const RDFS = Namespace('http://www.w3.org/2000/01/rdf-schema#');
@@ -100,16 +103,21 @@ export default class Ontology {
 
         let indiv = this.getStatements(undefined, TYPE, INDIVIDUAL);  
         
-        console.log("indiv",indiv)
+//         console.log("indiv",indiv)
         
         indiv = indiv.reduce((result, cur) => {
 //            console.log("i=",cur.subject,cur.predicate)
            let tmp = this.getStatements(cur.subject,TYPE);  
-//            console.log(tmp[1].object.value);
-//            console.log(this._classes[tmp[1].object.value])
+           console.log(tmp[1].object.value);
+           console.log(this._classes[tmp[1].object.value])
            this._classes[tmp[1].object.value].addValue(cur.subject.value)
+           if(this._classes[tmp[1].object.value].hasSuperclass("http://purl.bdrc.io/ontology/core/Type"))
+           {
+              RDFComponents[tmp[1].object.value]=Type.default;
+           }
         }, []);
         
+//          console.log(RDFComponents)
         
         
         console.log("dataP",datatypeProps);
