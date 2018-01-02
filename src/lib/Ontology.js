@@ -40,7 +40,8 @@ export default class Ontology {
     _properties = {};
     // store annotation properties as they are available for all classes
     _annotationProperties = {};
-
+    _individuals = {}
+    
     static create(data: string, baseIRI: string, mimeType: string): Promise<Ontology> {
         return new Promise((resolve, reject) => {
             new Ontology(data, baseIRI, mimeType, (ontology, error) => {
@@ -97,25 +98,7 @@ export default class Ontology {
 
         this.processInverseOf();
         this.extractClasses();
-
-        
-        // build _types/possible value
-
-        let indiv = this.getStatements(undefined, TYPE, INDIVIDUAL);  
-        
-//         console.log("indiv",indiv)
-        
-        indiv = indiv.reduce((result, cur) => {
-//            console.log("i=",cur.subject,cur.predicate)
-           let tmp = this.getStatements(cur.subject,TYPE);  
-           console.log(tmp[1].object.value);
-           console.log(this._classes[tmp[1].object.value])
-           this._classes[tmp[1].object.value].addValue(cur.subject.value)
-           if(this._classes[tmp[1].object.value].hasSuperclass("http://purl.bdrc.io/ontology/core/Type"))
-           {
-              RDFComponents[tmp[1].object.value]=Type.default;
-           }
-        }, []);
+        this.extractIndividuals();
         
 //          console.log(RDFComponents)
         
@@ -145,6 +128,33 @@ export default class Ontology {
         classes = classes.reduce((result, cur) => {
             this.addClass(cur.subject.value);
         }, []);
+    }
+    
+    extractIndividuals() {        
+        let indiv = this.getStatements(undefined, TYPE, INDIVIDUAL);  
+        
+        indiv = indiv.reduce((result, cur) => {
+//            console.log("i=",cur.subject.value,cur)
+           let tmp = this.getStatements(cur.subject,TYPE);  
+//            console.log(tmp[1].object.value);
+//            console.log(this._classes[tmp[1].object.value])
+           if(this._classes[tmp[1].object.value].hasSuperclass("http://purl.bdrc.io/ontology/core/Type"))
+           {
+               this._classes[tmp[1].object.value].addValue(cur.subject.value)
+               RDFComponents[tmp[1].object.value]=Type.default;
+           }
+           /*
+           else {
+              
+            console.log("not a type",cur.subject.value,tmp[1].object.value);
+            
+            }
+            */
+            
+            this._individuals[cur.subject.value] = cur.subject;
+            
+        }, []);
+
     }
 
     getClasses() {
