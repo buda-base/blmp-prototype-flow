@@ -23,7 +23,9 @@ export default class Type extends RDFComponent {
       let onto = store.getState().data.ontology
 //       console.log(this.props.individual.types[0],onto._classes[this.props.individual.types[0]]._values);
       
-      if(props.isEditable)for(let i in this.props.individual.types)
+      console.log(this.props.individual.types[0],props)
+      
+      if(this.props.isEditable) for(let i in this.props.individual.types)
       {
          let t = this.props.individual.types[i]
 //          console.log("t i",t,i)
@@ -78,9 +80,11 @@ export default class Type extends RDFComponent {
             <ListItemText
                   primary={formatIRI(this.props.individual.id)}
                   secondary={formatIRI(this.props.individual.types[0])}
+                  onClick={this.handleClick}
                />
            
-            { this.props.isEditable && 
+           { 
+              this.props.isEditable  &&
                <Popover
                   open={this.state.open}
                   anchorEl={this.state.anchorEl}
@@ -90,7 +94,7 @@ export default class Type extends RDFComponent {
                >
                   <List>{this._list}</List>
                </Popover>
-            }
+           }
          </div>
         )
     }

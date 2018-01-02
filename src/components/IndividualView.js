@@ -236,7 +236,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                             onSelectedResource: this.props.onSelectedResource,
                             onClick: onClick,
                             individual: propertyValue,
-                            isEditable: false,
+                            isEditable: isEditable,
                             isExpandable: true,
                             isExpanded: false,
                             level: this.props.level + 1,
