@@ -154,6 +154,8 @@ export default class Ontology {
             this._individuals[cur.subject.value] = cur.subject;
             
         }, []);
+        
+        console.log("RDFcomps",RDFComponents)
 
     }
 

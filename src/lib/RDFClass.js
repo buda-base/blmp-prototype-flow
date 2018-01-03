@@ -43,6 +43,14 @@ export default class RDFClass {
                     .length > 0;
     }
 
+
+    hasAncestorclass(superclassIRI: string): boolean {
+        return this._superclasses &&
+                this._superclasses
+                    .filter(superclass => superclass.IRI === superclassIRI || superclass.hasSuperclass(superclassIRI))
+                    .length > 0;
+    }
+    
     addProperty(property: RDFProperty) {
         if (!this._properties[property.IRI]) {
             this._properties[property.IRI] = property;

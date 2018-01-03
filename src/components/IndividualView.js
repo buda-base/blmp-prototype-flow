@@ -209,7 +209,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                 
                 sty = "lit" ;
                 
-                //console.log("view1",view)
+//                 console.log("view1",view)
                 
                 
             } else if (propertyValue instanceof Individual ) { 
@@ -226,6 +226,10 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                         this.props.onSelectedResource(propertyValue.id);
                     }
                 }
+                
+                
+                // pourquoi :TraditionGeluk a comme _types :PlaceEvent ?? 
+                
 
 //                 console.log("ranges",this.props.property.ranges)
                 
@@ -236,12 +240,13 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                             onSelectedResource: this.props.onSelectedResource,
                             onClick: onClick,
                             individual: propertyValue,
-                            isEditable: isEditable,
+                            isEditable: this.props.isEditable(propertyValue), //isEditable,
                             isExpandable: true,
                             isExpanded: false,
                             level: this.props.level + 1,
                             nested: true,
                             ontology: this.props.ontology,
+                            property: this.props.property,
                            onChange:this.props.onLiteralChanged
                         }, null);
 //                         console.log("propView",titleView);
@@ -267,7 +272,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                 />;
                 
                 
-                //console.log("view2",view)
+//                 console.log("view2",view)
                 
                 
                 key += propertyValue.id + '_' + propertyValue.uniqueId;
@@ -301,7 +306,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
 //              this.props.isExpanded && 
         }
 
-//         console.groupEnd();
+//          console.groupEnd();
         
         if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
             || this.props.propertyValues.length > 10)
@@ -450,6 +455,8 @@ export default class IndividualView extends React.Component<Props, State> {
             return;
         }
 
+        console.log("add",propertyType);
+        
         const propertyRange = property.ranges[0];
         if (ontology.isClass(propertyRange)) {
             const propertyIndividual = new Individual();
@@ -597,6 +604,7 @@ export default class IndividualView extends React.Component<Props, State> {
         const propIsEditable = this.props.isEditable;
         const isEditable = (propertyValue) => {
             let isEditable = propIsEditable;
+            /*
             if (propertyValue && propertyValue instanceof Individual) {
                 if (this._editableIndividuals.indexOf(propertyValue) !== -1) {
                     isEditable = true;
@@ -604,6 +612,7 @@ export default class IndividualView extends React.Component<Props, State> {
                     isEditable = false;
                 }
             }
+            */
             return isEditable;
         };
 
@@ -818,8 +827,9 @@ export default class IndividualView extends React.Component<Props, State> {
             
             //console.log("labels",labels)
 
-            if (this.props.individual.types[0]) {
-                subtitle = formatIRI(this.props.individual.types[0]);
+            if (this.props.individual.types[0]) 
+            {
+               subtitle = formatIRI(this.props.individual.types[0]);
             }
             
             if (labels && labels.length > 0) {

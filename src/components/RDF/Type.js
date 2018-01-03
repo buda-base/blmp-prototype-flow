@@ -25,14 +25,18 @@ export default class Type extends RDFComponent {
       
       console.log(this.props.individual.types[0],props)
       
-      if(this.props.isEditable) for(let i in this.props.individual.types)
+      if(this.props.isEditable) for(let i in this.props.property.ranges)//this.props.individual.types)
       {
-         let t = this.props.individual.types[i]
+         let t = this.props.property.ranges[i] //.individual.types[i]
 //          console.log("t i",t,i)
-         if(onto._classes[t].hasSuperclass(IRI)) this._list = onto._classes[t]._values.map((val) => 
+         if(onto._classes[t].hasAncestorclass(IRI)) 
          {
-            return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{formatIRI(val)}</MenuItem> )
-         })
+//             console.log("thats'it boy")
+            this._list = onto._classes[t]._values.map((val) => 
+            {
+               return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{formatIRI(val)}</MenuItem> )
+            })
+         }
       }
             
       this.state = {
@@ -79,7 +83,7 @@ export default class Type extends RDFComponent {
            <div style={{flexGrow:1}} >
             <ListItemText
                   primary={formatIRI(this.props.individual.id)}
-                  secondary={formatIRI(this.props.individual.types[0])}
+                  secondary={formatIRI(this.props.property.ranges[0])}
                   onClick={this.handleClick}
                />
            
