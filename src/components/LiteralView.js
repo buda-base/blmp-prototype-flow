@@ -82,7 +82,13 @@ export default class LiteralView extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-        const language = (props.literal.language !== undefined) ? props.literal.language : 'en';
+        
+        let language = (props.literal.language !== undefined) ? props.literal.language : 'en';        
+        for(let l in langs) { if(l.toLowerCase() == language.toLowerCase()) { language = l ; } }
+        this.props.literal.language = language ;
+        
+//         console.log("lang",language)
+        
         this.state = {
             language: language,
             value: props.literal.value,
