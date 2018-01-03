@@ -23,7 +23,7 @@ export default class Type extends RDFComponent {
       let onto = store.getState().data.ontology
 //       console.log(this.props.individual.types[0],onto._classes[this.props.individual.types[0]]._values);
       
-      console.log(this.props.individual.types[0],props)
+//       console.log(this.props.individual.types[0],props)
       
       if(this.props.isEditable) for(let i in this.props.property.ranges)//this.props.individual.types)
       {
