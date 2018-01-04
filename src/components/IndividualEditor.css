@@ -32,3 +32,7 @@ li.noPad { padding-right:0; }
 
 .Pane2 .individualView > ul, .inCollapse > div > div > div { display:flex; }
 .Pane2 .individualView > ul > li, .inCollapse > div  { flex-grow:1; }
+
+
+.RDFCompo > ul > li { padding:0; }
+.RDFCompo > ul > li > div > div { padding:12px 16px 12px 16px !important; }

@@ -232,10 +232,12 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                 
 
 //                 console.log("ranges",this.props.property.ranges)
+                let classN = undefined
                 
                 for (let range of this.props.property.ranges) {
                     if (range in RDFComponents) {
                         const rdfComponent = RDFComponents[range];
+                        classN = "RDFCompo";
                         titleView = React.createElement(rdfComponent, {
                             onSelectedResource: this.props.onSelectedResource,
                             onClick: onClick,
@@ -266,6 +268,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                             nested={true}
                             ontology={this.props.ontology}
                             titleView={titleView}
+                            className={classN}
                             showLabel={true}
                             propertyType={this.props.propertyType}
                             
@@ -954,6 +957,9 @@ export default class IndividualView extends React.Component<Props, State> {
         }
         if (this.props.isExpanded) {
             classes.push("isExpanded");
+        }
+        if(this.props.className) {
+           classes.push(this.props.className);
         }
         /*
         if(this._allowExpansion){
