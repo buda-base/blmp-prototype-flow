@@ -75,5 +75,5 @@ ReactDOM.render(
 
 // let id = "G1928" ;
 // setTimeout(function(){ store.dispatch(data.loadResource(id)) },500)
-// setTimeout(f,prounction(){ store.dispatch(ui.editingResource(1,"http://purl.bdrc.io/resource/"+id)) },1000)
+// setTimeout(function(){ store.dispatch(ui.editingResource(1,"http://purl.bdrc.io/resource/"+id)) },1000)
 

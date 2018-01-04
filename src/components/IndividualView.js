@@ -670,8 +670,17 @@ export default class IndividualView extends React.Component<Props, State> {
         const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : '';
         let annotationRows = this.propertyGroupRows(annotationProps, properties,  removeUnsetProperties);
         
-        objectRows.unshift(annotationRows[0])        
-        delete annotationRows[0]
+        
+        for(let a in annotationRows) 
+        {
+//             console.log("a",annotationRows[a]);
+            if(annotationRows[a].props.propertyType == "http://www.w3.org/2004/02/skos/core#prefLabel")
+            {
+               objectRows.unshift(annotationRows[a])        
+               delete annotationRows[a]
+            }
+        }
+        
         
         
         const propertyTypes = [
