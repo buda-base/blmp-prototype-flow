@@ -171,8 +171,8 @@ export default class Ontology {
         let properties = [] ; //this._properties; //[];
         let rdfClass = this._classes[iri];
         
-        console.log("classes",this._classes);
-        console.log("properties",this._properties);
+//         console.log("classes",this._classes);
+//         console.log("properties",this._properties);
         
         if (!rdfClass) {
             return properties;
@@ -476,7 +476,7 @@ export default class Ontology {
             }
         }
 
-//         console.log("prop",propertyIRI,rdfProperty);
+        console.log("add prop",propertyIRI,rdfProperty);
         
         return rdfProperty;
     }

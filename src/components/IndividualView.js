@@ -149,8 +149,8 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
     render() {
        
        // COMM
-//         console.groupCollapsed("indiProp.render",this.props.title)  
-//         console.log(this.props)
+        console.groupCollapsed("indiProp.render",this.props.title)  
+        console.log(this.props)
        
         const greenColor = {
             fill: green[800]
@@ -309,7 +309,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
 //              this.props.isExpanded && 
         }
 
-//          console.groupEnd();
+         console.groupEnd();
         
         if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
             || this.props.propertyValues.length > 10)
@@ -452,13 +452,14 @@ export default class IndividualView extends React.Component<Props, State> {
         const ontology = this.props.ontology;
         const individual = this.props.individual;
         const type = individual.types[0];
-        const properties = ontology.getClassProperties(type);
-        const property = properties.find((prop: RDFProperty) => prop.IRI === propertyType);
+        const properties = ontology._properties //getClassProperties(type);
+        const property = properties[propertyType] //properties.find((prop: RDFProperty) => prop.IRI === propertyType);
+        
+        console.log("add",propertyType,property,);
+        
         if (!property || property.ranges.length === 0) {
             return;
         }
-
-        console.log("add",propertyType);
         
         const propertyRange = property.ranges[0];
         if (ontology.isClass(propertyRange)) {
@@ -621,12 +622,15 @@ export default class IndividualView extends React.Component<Props, State> {
 
         let onTapAdd = () => this.addProperty(property.IRI);
         for (let range of property.ranges) {
-            if (REMOTE_ENTITIES.indexOf(range) !== -1) {
+            if (REMOTE_ENTITIES.indexOf(range) !== -1) 
+            {
                 onTapAdd = this.props.onAddResource;
                 break;
             }
         }
 
+        console.log("tapAdd",property.IRI,property,onTapAdd,)
+        
         const propertyView = <IndividualProperty
             nested={this.props.nested}
             isEditable={isEditable}
@@ -948,8 +952,8 @@ export default class IndividualView extends React.Component<Props, State> {
         }
         
         // COMM
-//         console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
-//         console.log(this.props);
+        console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
+        console.log(this.props);
 
         let classes = ["individualView"];
         if (this.props.isEditable) {
@@ -980,7 +984,7 @@ export default class IndividualView extends React.Component<Props, State> {
         
         const labList = this.getLabelsList()
         
-//         console.groupEnd();
+        console.groupEnd();
         
 //         console.log("labList",labList);
 //         console.log("propList",propList);
