@@ -228,9 +228,6 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                 }
                 
                 
-                // pourquoi :TraditionGeluk a comme _types :PlaceEvent ?? 
-                
-
 //                 console.log("ranges",this.props.property.ranges)
                 let classN = undefined
                 
@@ -271,6 +268,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                             className={classN}
                             showLabel={true}
                             propertyType={this.props.propertyType}
+                            onAddResource={onTapAdd}
                             
                 />;
                 
@@ -621,15 +619,18 @@ export default class IndividualView extends React.Component<Props, State> {
         };
 
         let onTapAdd = () => this.addProperty(property.IRI);
+        
+        console.log("tapAdd1",onTapAdd)
+        
         for (let range of property.ranges) {
             if (REMOTE_ENTITIES.indexOf(range) !== -1) 
             {
-                onTapAdd = this.props.onAddResource;
+//                 onTapAdd = this.props.onAddResource;
                 break;
             }
         }
 
-        console.log("tapAdd",property.IRI,property,onTapAdd,)
+        console.log("tapAdd2",property.IRI,property,onTapAdd)
         
         const propertyView = <IndividualProperty
             nested={this.props.nested}
