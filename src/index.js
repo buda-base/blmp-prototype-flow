@@ -73,7 +73,7 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-let id = "P1" ;
-setTimeout(function(){ store.dispatch(data.loadResource(id)) },500)
-setTimeout(function(){ store.dispatch(ui.editingResource(1,"http://purl.bdrc.io/resource/"+id)) },1000)
+// let id = "P1" ;
+// setTimeout(function(){ store.dispatch(data.loadResource(id)) },500)
+// setTimeout(function(){ store.dispatch(ui.editingResource(1,"http://purl.bdrc.io/resource/"+id)) },1000)
 

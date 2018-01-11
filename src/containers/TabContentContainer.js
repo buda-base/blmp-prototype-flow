@@ -98,6 +98,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(ui.selectedResourceIRI(tabId, IRI));
         },
         onAddResource: (indvidual: Individual, property: RDFProperty) => {
+           
+//            console.log("addR",indvidual,property);
+           
             dispatch(ui.addingResource(tabId, indvidual, property));
         },
         onCancelAddingResource: () => dispatch(ui.cancelAddingResource(tabId)),

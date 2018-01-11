@@ -65,6 +65,7 @@ type IndividualPropertyProps = {
     onLiteralChanged: (value: string, language: string) => void,
     onSelectedResource: (IRI: string) => void,
     onTapAdd?: (individual: Individual, property: RDFProperty) => void,
+    onAddResource?: (individual: Individual, property: RDFProperty) => void,
     individual: Individual,
     level: number,
     ontology: Ontology,
@@ -149,8 +150,8 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
     render() {
        
        // COMM
-        console.groupCollapsed("indiProp.render",this.props.title)  
-        console.log(this.props)
+//         console.groupCollapsed("indiProp.render",this.props.title)  
+//         console.log(this.props)
        
         const greenColor = {
             fill: green[800]
@@ -163,11 +164,18 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
 
         let onTapAdd = null;
         if (this.props.onTapAdd) {
-            const propsOnTapAdd = this.props.onTapAdd;
+           
+            let propsOnTapAdd = this.props.onTapAdd;
+            
             onTapAdd = () => {
+               
+//                 console.log("tapAdd!")
                 propsOnTapAdd(this.props.individual, this.props.property);
             }
+            
+            
         }
+        
 
         // Header
         const propertySubheader = <ListItem>
@@ -268,7 +276,8 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                             className={classN}
                             showLabel={true}
                             propertyType={this.props.propertyType}
-                            onAddResource={onTapAdd}
+                            onTapAdd={onTapAdd}
+                            onAddResource={this.props.onAddResource}
                             
                 />;
                 
@@ -307,7 +316,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
 //              this.props.isExpanded && 
         }
 
-         console.groupEnd();
+//          console.groupEnd();
         
         if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
             || this.props.propertyValues.length > 10)
@@ -361,6 +370,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
 type Props = {
     onSelectedResource: (id: string) => void,
     onIndividualUpdated?: () => void,
+    onTapAdd?: (individual: Individual, property: RDFProperty) => void,
     onAddResource?: (individual: Individual, property: RDFProperty) => void,
     onClick?: () => void,
     individual: Individual,
@@ -635,17 +645,17 @@ export default class IndividualView extends React.Component<Props, State> {
 
         let onTapAdd = () => this.addProperty(property.IRI);
         
-        console.log("tapAdd1",onTapAdd)
+//         console.log("tapAdd1",onTapAdd)
         
         for (let range of property.ranges) {
             if (REMOTE_ENTITIES.indexOf(range) !== -1) 
             {
-//                 onTapAdd = this.props.onAddResource;
+                onTapAdd = this.props.onAddResource;
                 break;
             }
         }
 
-        console.log("tapAdd2",property.IRI,property,onTapAdd)
+//         console.log("tapAdd2",property.IRI,property,onTapAdd)
         
         const propertyView = <IndividualProperty
             nested={this.props.nested}
@@ -654,6 +664,7 @@ export default class IndividualView extends React.Component<Props, State> {
             onLiteralChanged={onLiteralChanged}
             onSelectedResource={this.props.onSelectedResource}
             onTapAdd={onTapAdd}
+            onAddResource={this.props.onAddResource}
             individual={this.props.individual}
             level={this.props.level}
             ontology={this.props.ontology}
@@ -797,7 +808,8 @@ export default class IndividualView extends React.Component<Props, State> {
             onIndividualUpdated={this.props.onIndividualUpdated}
             onLiteralChanged={onChange}
             onSelectedResource={this.props.onSelectedResource}
-            onTapAdd={this.props.onAddResource}
+            onTapAdd={this.props.onTapAdd}
+            onAddResource={this.props.onAddResource}
             individual={this.props.individual}
             level={this.props.level}
             ontology={this.props.ontology}
@@ -832,6 +844,7 @@ export default class IndividualView extends React.Component<Props, State> {
                     onLiteralChanged={onLiteralChanged}
                     onSelectedResource={this.props.onSelectedResource}
                     onTapAdd={onTapAdd}//this.props.onAddResource}
+                    onAddResource={this.props.onAddResource}
                     individual={this.props.individual}
                     level={this.props.level}
                     ontology={this.props.ontology}
@@ -971,8 +984,8 @@ export default class IndividualView extends React.Component<Props, State> {
         }
         
         // COMM
-        console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
-        console.log(this.props);
+//         console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
+//         console.log(this.props);
 
         let classes = ["individualView"];
         if (this.props.isEditable) {
@@ -1003,7 +1016,7 @@ export default class IndividualView extends React.Component<Props, State> {
         
         const labList = this.getLabelsList()
         
-        console.groupEnd();
+//         console.groupEnd();
         
 //         console.log("labList",labList);
 //         console.log("propList",propList);
