@@ -446,34 +446,49 @@ export default class IndividualView extends React.Component<Props, State> {
         })
     }
 
-    addProperty(propertyType: string) {
+    addProperty(propertyType: string, propy:RDFProperty) {
         const ontology = this.props.ontology;
         const individual = this.props.individual;
         const type = individual.types[0];
         const properties = ontology._properties //getClassProperties(type);
-        const property = properties[propertyType] //properties.find((prop: RDFProperty) => prop.IRI === propertyType);
         
-        console.log("add",propertyType,property,);
+        let property = properties[propertyType] //properties.find((prop: RDFProperty) => prop.IRI === propertyType);
+        if(propy) property = propy
         
-        if (!property || property.ranges.length === 0) {
-            return;
-        }
+//         console.log("add",this.props.individual,propertyType,property,);
         
-        const propertyRange = property.ranges[0];
-        if (ontology.isClass(propertyRange)) {
-            const propertyIndividual = new Individual();
-            propertyIndividual.addType(propertyRange);
-            this._editableIndividuals.push(propertyIndividual);
-            individual.addProperty(propertyType, propertyIndividual);
-        } else {
-            const ranges = ontology.getPropertyRanges(propertyType);
-            const literal = new Literal(ranges[0], '');
+        if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
+        {
+            const literal = new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", '');
             individual.addProperty(propertyType, literal);
         }
-        this.forceUpdate();
-        if (this.props.onIndividualUpdated) {
+        else
+        {
+         if (!property || property.ranges.length === 0 ) {
+               return;
+         }
+         
+         const propertyRange = property.ranges[0];
+         
+//          console.log(propertyRange)
+         
+         if (ontology.isClass(propertyRange)) {
+               const propertyIndividual = new Individual();
+               propertyIndividual.addType(propertyRange);
+               this._editableIndividuals.push(propertyIndividual);
+               individual.addProperty(propertyType, propertyIndividual);
+         } else {
+               const ranges = ontology.getPropertyRanges(propertyType);
+               const literal = new Literal(ranges[0], '');
+               individual.addProperty(propertyType, literal);
+         }
+     }
+     
+      this.forceUpdate();
+      if (this.props.onIndividualUpdated) {
             this.props.onIndividualUpdated();
-        }
+      }
+      
     }
 
     removeProperty(propertyType: string, value: any) {
@@ -805,6 +820,9 @@ export default class IndividualView extends React.Component<Props, State> {
             }
         };
 
+        
+        let onTapAdd = () => this.addProperty(labelProperty.IRI,labelProperty);
+        
         return (
             <List>
                 <IndividualProperty
@@ -813,7 +831,7 @@ export default class IndividualView extends React.Component<Props, State> {
                     onIndividualUpdated={this.props.onIndividualUpdated}
                     onLiteralChanged={onLiteralChanged}
                     onSelectedResource={this.props.onSelectedResource}
-                    onTapAdd={this.props.onAddResource}
+                    onTapAdd={onTapAdd}//this.props.onAddResource}
                     individual={this.props.individual}
                     level={this.props.level}
                     ontology={this.props.ontology}
