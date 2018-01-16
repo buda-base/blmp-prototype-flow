@@ -31,6 +31,9 @@ import AddCircleIcon from 'material-ui-icons/AddCircle';
 import RemoveCircleIcon from 'material-ui-icons/RemoveCircle';
 import {red, green} from 'material-ui/colors';
 import AddBoxIcon from 'material-ui-icons/AddBox';
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu/Menu.js';
+import {MenuItem} from 'material-ui/Menu';
 
 
 const iconSizes = {
@@ -64,7 +67,7 @@ type IndividualPropertyProps = {
     onIndividualUpdated?: () => void,
     onLiteralChanged: (value: string, language: string) => void,
     onSelectedResource: (IRI: string) => void,
-    onTapAdd?: (individual: Individual, property: RDFProperty) => void,
+    onTapAdd?: (individual: Individual, property: RDFProperty, value?:string) => void,
     onAddResource?: (individual: Individual, property: RDFProperty) => void,
     individual: Individual,
     level: number,
@@ -80,10 +83,11 @@ type IndividualPropertyProps = {
 
 type CollapState = {
     collapseState: {},
-    isExpanded: boolean
+    isExpanded: boolean,
 }
 
 class IndividualProperty extends React.Component<IndividualPropertyProps,CollapState> {
+   _list : [] ;
 
    /*
    componentWillMount()
@@ -110,8 +114,32 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
 
         this.state = {
             collapseState: {},
-            isExpanded: props.isExpanded
+            isExpanded: props.isExpanded,
+            open: false,
         }
+
+        const IRI = 'http://purl.bdrc.io/ontology/core/Type';
+
+        let onto = this.props.ontology ;
+
+         // console.log("prop",this.props)
+
+       for(let i in this.props.property.ranges)
+       {
+          let t = this.props.property.ranges[i]
+
+          // console.log("t i",t,i)
+
+          if(onto._classes[t] && onto._classes[t].hasAncestorclass(IRI))
+          {
+             this._list = onto._classes[t]._values.map((val) =>
+             {
+
+                 // console.log("val",val)
+                return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{formatIRI(val)}</MenuItem> )
+             })
+          }
+       }
     }
 
     setCollapseState(id: string, open: boolean) {
@@ -145,13 +173,49 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                 isExpanded: !prevState.isExpanded
             }
         })
-    }
+     }
+
+      handleClick = (event) => {
+         // This prevents ghost click.
+         event.preventDefault();
+
+         this.setState({
+            open: true,
+            anchorEl: event.currentTarget,
+         });
+      };
+
+      handleRequestClose = () => {
+         this.setState({
+            open: false,
+         });
+      };
+
+      handleMenu = (event, value : string = "") => {
+         // This prevents ghost click.
+         event.preventDefault();
+
+         // this.props.individual.id = value ;
+
+         // this.props.onChange()
+
+         console.log("value",value,this.props,this._individual,this.props.individual);
+
+         this.props.onTapAdd(this.props.individual, this.props.property,value)
+
+         // this.addProperty(this.props.property.IRI);
+
+         this.setState({
+            open: false,
+         })
+      };
+
 
     render() {
 
        // COMM
-//         console.groupCollapsed("indiProp.render",this.props.title)
-//         console.log(this.props)
+        console.groupCollapsed("indiProp.render",this.props.title)
+        console.log(this.props)
 
         const greenColor = {
             fill: green[800]
@@ -178,11 +242,11 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
 
 
         // Header
-        const propertySubheader = <ListItem>
+        const propertySubheader = <div><ListItem>
                 {this.props.isEditable() &&  //!this.props.nested && this.props.level < 1 &&
                     <ListItemIcon>
                         <IconButton
-                            onClick={onTapAdd}
+                            onClick={this._list ? this.handleClick : onTapAdd}
                             style={{marginRight: 0}}
                         >
                             <AddCircleIcon style={{...greenColor, ...iconSizes.small}}/>
@@ -191,7 +255,17 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                 }
                 <ListItemText title={this.props.tooltip} primary={this.props.title} disableTypography style={listHeaderStyle} />
 
-            </ListItem>;
+            </ListItem>
+               <Popover
+                  open={this.state.open}
+                  anchorEl={this.state.anchorEl}
+                  anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                  //targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                  onRequestClose={this.handleRequestClose}
+               >
+                  <List>{this._list}</List>
+               </Popover>
+            </div>;
 
         // Values
 
@@ -234,9 +308,9 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                         this.props.onSelectedResource(propertyValue.id);
                     }
                 }
-                
 
-//                 console.log("ranges",this.props.property.ranges)
+
+                console.log("ranges",this.props.property.ranges)
                 let classN = undefined
 
                 for (let range of this.props.property.ranges) {
@@ -316,7 +390,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
 //              this.props.isExpanded &&
         }
 
-//          console.groupEnd();
+         console.groupEnd();
 
         if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
             || this.props.propertyValues.length > 10)
@@ -456,7 +530,7 @@ export default class IndividualView extends React.Component<Props, State> {
         })
     }
 
-    addProperty(propertyType: string, propy:RDFProperty) {
+    addProperty(propertyType: string, propy:RDFProperty, val:string = "") {
         const ontology = this.props.ontology;
         const individual = this.props.individual;
         const type = individual.types[0];
@@ -464,6 +538,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
         let property = properties[propertyType] //properties.find((prop: RDFProperty) => prop.IRI === propertyType);
         if(propy) property = propy
+
 
 //         console.log("add",this.props.individual,propertyType,property,);
 
@@ -485,6 +560,7 @@ export default class IndividualView extends React.Component<Props, State> {
          if (ontology.isClass(propertyRange)) {
                const propertyIndividual = new Individual();
                propertyIndividual.addType(propertyRange);
+               if(val && val != "") propertyIndividual.id = val
                this._editableIndividuals.push(propertyIndividual);
                individual.addProperty(propertyType, propertyIndividual);
          } else {
@@ -643,7 +719,9 @@ export default class IndividualView extends React.Component<Props, State> {
             return isEditable;
         };
 
-        let onTapAdd = () => this.addProperty(property.IRI);
+        let onTapAdd = (id,prop,val) => {
+           this.addProperty(property.IRI,null,val);
+        }
 
 //         console.log("tapAdd1",onTapAdd)
 

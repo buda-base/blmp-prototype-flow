@@ -16,34 +16,34 @@ export const IRI = 'http://purl.bdrc.io/ontology/core/Type';
 
 export default class Type extends RDFComponent {
    _list : [] ;
-   
+
    constructor(props) {
       super(props);
-      
+
       let onto = store.getState().data.ontology
 //       console.log(this.props.individual.types[0],onto._classes[this.props.individual.types[0]]._values);
-      
+
 //       console.log(this.props.individual.types[0],props)
-      
+
       if(this.props.isEditable) for(let i in this.props.property.ranges)//this.props.individual.types)
       {
          let t = this.props.property.ranges[i] //.individual.types[i]
 //          console.log("t i",t,i)
-         if(onto._classes[t].hasAncestorclass(IRI)) 
+         if(onto._classes[t] && onto._classes[t].hasAncestorclass(IRI)) 
          {
 //             console.log("thats'it boy")
-            this._list = onto._classes[t]._values.map((val) => 
+            this._list = onto._classes[t]._values.map((val) =>
             {
                return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{formatIRI(val)}</MenuItem> )
             })
          }
       }
-            
+
       this.state = {
          open: false,
       };
    }
-   
+
    handleClick = (event) => {
       // This prevents ghost click.
       event.preventDefault();
@@ -63,31 +63,31 @@ export default class Type extends RDFComponent {
    handleMenu = (event, value : string = "") => {
       // This prevents ghost click.
       event.preventDefault();
-      
+
       this.props.individual.id = value ;
-      
-      this.props.onChange()      
-        
+
+      this.props.onChange()
+
       console.log("value",value,this.props,this._individual,this.props.individual);
-      
+
       this.setState({
          open: false,
       })
    };
-   
+
 
     render() {
-       
+
          return (
-        
+
            <div style={{flexGrow:1}} >
             <ListItemText
                   primary={formatIRI(this.props.individual.id)}
                   secondary={formatIRI(this.props.property.ranges[0])}
                   onClick={this.handleClick}
                />
-           
-           { 
+
+           {
               this.props.isEditable  &&
                <Popover
                   open={this.state.open}
