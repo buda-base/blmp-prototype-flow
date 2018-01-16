@@ -128,8 +128,6 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
        {
           let t = this.props.property.ranges[i]
 
-          // console.log("t i",t,i)
-
           if(onto._classes[t] && onto._classes[t].hasAncestorclass(IRI))
           {
              this._list = onto._classes[t]._values.map((val) =>
