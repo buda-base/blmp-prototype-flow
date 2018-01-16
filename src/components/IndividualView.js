@@ -135,7 +135,6 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
              this._list = onto._classes[t]._values.map((val) =>
              {
 
-                 // console.log("val",val)
                 return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{formatIRI(val)}</MenuItem> )
              })
           }
