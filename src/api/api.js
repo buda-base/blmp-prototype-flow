@@ -30,6 +30,8 @@ export const REMOTE_ENTITIES = [
     "http://purl.bdrc.io/ontology/core/Person",
     "http://purl.bdrc.io/ontology/core/Place",
     "http://purl.bdrc.io/ontology/admin/Product",
+    "http://purl.bdrc.io/ontology/core/Role",
+    "http://purl.bdrc.io/ontology/core/User",
     "http://purl.bdrc.io/ontology/core/Work",
     "http://purl.bdrc.io/ontology/core/Topic",
     "http://purl.bdrc.io/ontology/core/Work"
@@ -86,7 +88,7 @@ export default class API {
             let ontologyData = await this.getURLContents(this._ontologyPath);
             this._ontology = await this._processOntologyData(ontologyData);
         }
-        
+
         return this._ontology;
     }
 
@@ -110,9 +112,9 @@ export default class API {
 
     /**
      * Return the full IRI for an object.
-     * 
+     *
      * e.g. if given G844, it would return http://purl.bdrc.io/resource/G844
-     * 
+     *
      * If id is already a valid IRI, that will be returned unchanged.
      */
     _getResourceIRI(id: string): string {
@@ -125,9 +127,9 @@ export default class API {
 
     /**
      * Return the resource id of an object.
-     * 
+     *
      * e.g. for http://purl.bdrc.io/resource/G844 it would return G844
-     * 
+     *
      * If id is not an IRI, it will be returned unchanged.
      */
     _getResourceId(id: string): string {
@@ -137,7 +139,7 @@ export default class API {
 
         return id.substr(id.lastIndexOf('/') + 1);
     }
-    
+
     _getResourceURL(objectId: string): string {
         const id = this._getResourceId(objectId);
         let firstChars = null;
@@ -146,40 +148,40 @@ export default class API {
         } catch(e) {
             throw new InvalidResource('The resource does not start with a valid character.');
         }
-    
+
         let dir = directoryPrefixes[firstChars];
         if (!dir) {
             throw new InvalidResource('The resource does not start with a valid character.');
         }
-    
+
         const checksum = md5(id);
         const objectDir = checksum.substr(0, 2);
-    
-        
+
+
         let url = [OBJECT_PATH, dir, objectDir, id].join('/') + '.ttl';
         if(id.match(/^(([CR])|(PR(HD)?))[0-9]+/)) url = [OBJECT_PATH, dir, id].join('/') + '.ttl';
-        
+
 //         console.log([OBJECT_PATH, dir, objectDir, id, url])
-        
+
         if (this._server) {
             url = this._server + url;
         }
         return url;
     }
-    
+
     async _getResourceData(id: string): Promise<string | null> {
         try {
             let url = this._getResourceURL(id);
             let resourceData = this.getURLContents(url);
-            
+
 //             console.log("reData");
-            
+
             return resourceData;
         } catch(e) {
             throw e;
         }
     }
-    
+
     async getResource(id: string): Promise<Individual | null> {
         let data: string;
         try {
@@ -187,7 +189,7 @@ export default class API {
         } catch(e) {
             throw e;
         }
-        
+
 //         console.log("getRe");
 
         let ontology;
@@ -196,9 +198,9 @@ export default class API {
         } catch(e) {
             throw e;
         }
-        
+
 //         console.log("getOnto");
-    
+
         let graph;
         try {
             graph = await Graph.create(data, BASE_IRI, TURTLE_MIME_TYPE, ontology);
@@ -211,14 +213,13 @@ export default class API {
         Graph.current = this._getResourceIRI(id) ;
         Graph.individuAll = {}
 //         console.log("?",Graph.current);
-        const ind = graph.getIndividualWithId(this._getResourceIRI(id));        
-        Graph.current = null ;  
+        const ind = graph.getIndividualWithId(this._getResourceIRI(id));
+        Graph.current = null ;
         ind.namespaces = graph.namespaces;
-        
+
 //         console.log("ind",ind);
 
-        
+
         return ind;
     }
 }
-

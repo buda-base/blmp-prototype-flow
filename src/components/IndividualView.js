@@ -82,29 +82,29 @@ type CollapState = {
     collapseState: {},
     isExpanded: boolean
 }
-  
+
 class IndividualProperty extends React.Component<IndividualPropertyProps,CollapState> {
-  
+
    /*
    componentWillMount()
    {
-        console.log("will mount indiProp",this.props.individual.id) 
+        console.log("will mount indiProp",this.props.individual.id)
     }
    componentDidMount()
    {
-        console.log("did mount indiProp",this.props.individual.id) 
+        console.log("did mount indiProp",this.props.individual.id)
     }
-    
+
    componentWillUpdate()
    {
-        console.log("will update indiProp",this.props.individual.id) 
+        console.log("will update indiProp",this.props.individual.id)
     }
    componentDidUpdate()
    {
-        console.log("did update indiProp",this.props.individual.id) 
+        console.log("did update indiProp",this.props.individual.id)
     }
    */
- 
+
     constructor(props: Props) {
         super(props);
 
@@ -113,7 +113,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
             isExpanded: props.isExpanded
         }
     }
-    
+
     setCollapseState(id: string, open: boolean) {
         const collapseState = {
             ...this.state.collapseState,
@@ -146,13 +146,13 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
             }
         })
     }
-    
+
     render() {
-       
+
        // COMM
-//         console.groupCollapsed("indiProp.render",this.props.title)  
+//         console.groupCollapsed("indiProp.render",this.props.title)
 //         console.log(this.props)
-       
+
         const greenColor = {
             fill: green[800]
         };
@@ -164,18 +164,18 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
 
         let onTapAdd = null;
         if (this.props.onTapAdd) {
-           
+
             let propsOnTapAdd = this.props.onTapAdd;
-            
+
             onTapAdd = () => {
-               
+
 //                 console.log("tapAdd!")
                 propsOnTapAdd(this.props.individual, this.props.property);
             }
-            
-            
+
+
         }
-        
+
 
         // Header
         const propertySubheader = <ListItem>
@@ -194,10 +194,10 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
             </ListItem>;
 
         // Values
-           
+
         let valueRows = [];
         for (let propertyValue of this.props.propertyValues) {
-            let sty = "" 
+            let sty = ""
             let view = null;
             let titleView = undefined;
             let isEditable = !this.props.nested || this.props.isEditable(propertyValue);
@@ -208,37 +208,37 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                                     isEditable={isEditable}
                                     onChange={this.props.onLiteralChanged}
                 />;
-                key += propertyValue.uniqueId 
+                key += propertyValue.uniqueId
                 if (isEditable) {
                     classes.push('individualLiteralRowEditable');
                 } else {
                     classes.push('individualLiteralRow');
                 }
-                
+
                 sty = "lit" ;
-                
+
 //                 console.log("view1",view)
-                
-                
-            } else if (propertyValue instanceof Individual ) { 
-               
+
+
+            } else if (propertyValue instanceof Individual ) {
+
                sty = "ind" ;
-               
+
                 const onClick = () => {
                     if (!propertyValue.hasGeneratedId && this.props.onSelectedResource
                        && propertyValue.id.match(/([_A-Z]+[0-9]+)+$/)
                   ) {
-                       
+
                         // here is where to check whether resource is viewable on central panel
 //                         console.log("propVal",propertyValue.id,propertyValue)
                         this.props.onSelectedResource(propertyValue.id);
                     }
                 }
                 
-                
+
 //                 console.log("ranges",this.props.property.ranges)
                 let classN = undefined
-                
+
                 for (let range of this.props.property.ranges) {
                     if (range in RDFComponents) {
                         const rdfComponent = RDFComponents[range];
@@ -257,11 +257,11 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                            onChange:this.props.onLiteralChanged
                         }, null);
 //                         console.log("propView",titleView);
-                        
+
                         break;
                     }
                 }
-                view = <IndividualView 
+                view = <IndividualView
                             onSelectedResource={this.props.onSelectedResource}
                             onIndividualUpdated={this.props.onIndividualUpdated}
                             onClick={onClick}
@@ -278,13 +278,13 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                             propertyType={this.props.propertyType}
                             onTapAdd={onTapAdd}
                             onAddResource={this.props.onAddResource}
-                            
+
                 />;
-                
-                
+
+
 //                 console.log("view2",view)
-                
-                
+
+
                 key += propertyValue.id + '_' + propertyValue.uniqueId;
             }
 
@@ -308,16 +308,16 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                 style={listItemStyle}
             >
                 {view}
-                <ListItemSecondaryAction 
+                <ListItemSecondaryAction
                   className={"remoBut "+sty}
-                >{removeButton}</ListItemSecondaryAction> 
+                >{removeButton}</ListItemSecondaryAction>
             </ListItem>);
-            
-//              this.props.isExpanded && 
+
+//              this.props.isExpanded &&
         }
 
 //          console.groupEnd();
-        
+
         if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
             || this.props.propertyValues.length > 10)
         {
@@ -326,8 +326,8 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
             let handleCollapse = () => {
                 this.toggleCollapseState(collapseId);
             };
-            
-            
+
+
             const headingStyles = {
                   fontSize: '12px',
                   fontWeight: 'normal',
@@ -340,7 +340,7 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                   marginLeft: ((this.props.level + 1) * 20) + 'px'
             };
 
-            return ( <List> 
+            return ( <List>
                     <List>
                         {propertySubheader}
                         <ListItem button onClick={handleCollapse}>
@@ -357,9 +357,9 @@ class IndividualProperty extends React.Component<IndividualPropertyProps,CollapS
                      </List>
                   </List> );
          }
-         else 
+         else
          {
-            return (<List> 
+            return (<List>
                {propertySubheader}
                {valueRows}
             </List>);
@@ -401,25 +401,25 @@ export default class IndividualView extends React.Component<Props, State> {
             isExpanded: props.isExpanded
         }
     }
-    
+
      /*
-    
+
    componentWillMount()
    {
-        console.log("will mount indiView",this.props.individual.id) 
+        console.log("will mount indiView",this.props.individual.id)
     }
    componentDidMount()
    {
-        console.log("did mount indiView",this.props.individual.id) 
+        console.log("did mount indiView",this.props.individual.id)
     }
-    
+
    componentWillUpdate()
    {
-        console.log("will update indiView",this.props.individual.id) 
+        console.log("will update indiView",this.props.individual.id)
     }
    componentDidUpdate()
    {
-        console.log("did update indiView",this.props.individual.id) 
+        console.log("did update indiView",this.props.individual.id)
     }
    */
 
@@ -461,12 +461,12 @@ export default class IndividualView extends React.Component<Props, State> {
         const individual = this.props.individual;
         const type = individual.types[0];
         const properties = ontology._properties //getClassProperties(type);
-        
+
         let property = properties[propertyType] //properties.find((prop: RDFProperty) => prop.IRI === propertyType);
         if(propy) property = propy
-        
+
 //         console.log("add",this.props.individual,propertyType,property,);
-        
+
         if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
         {
             const literal = new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", '');
@@ -477,11 +477,11 @@ export default class IndividualView extends React.Component<Props, State> {
          if (!property || property.ranges.length === 0 ) {
                return;
          }
-         
+
          const propertyRange = property.ranges[0];
-         
+
 //          console.log(propertyRange)
-         
+
          if (ontology.isClass(propertyRange)) {
                const propertyIndividual = new Individual();
                propertyIndividual.addType(propertyRange);
@@ -493,12 +493,12 @@ export default class IndividualView extends React.Component<Props, State> {
                individual.addProperty(propertyType, literal);
          }
      }
-     
+
       this.forceUpdate();
       if (this.props.onIndividualUpdated) {
             this.props.onIndividualUpdated();
       }
-      
+
     }
 
     removeProperty(propertyType: string, value: any) {
@@ -516,15 +516,15 @@ export default class IndividualView extends React.Component<Props, State> {
 
   /*
         console.log("ontology",ontology);
-        
+
         console.log("type",type);
-        
+
         const properties = ontology.getClassProperties(type);
-        
+
         console.log("availableProperties",properties);
-        
+
         const groupedProps = this.getGroupedProperties(properties);
-  
+
         console.log("grouProps",groupedProps);
 
         const groupedProps = {
@@ -533,7 +533,7 @@ export default class IndividualView extends React.Component<Props, State> {
             [ANNOTATION_PROPERTY.value]: ontology.getPropertiesArray(ANNOTATION_PROPERTY)
         };
 */
-        
+
 //         console.log("grouProps",groupedProps);
 
 
@@ -555,39 +555,39 @@ export default class IndividualView extends React.Component<Props, State> {
     }
 
     propertyGroupRows(availableProps: RDFProperty[], setProps: {}, removeUnsetProps:boolean=false): Array<mixed> {
-       
-       
+
+
 //         console.log("availProp",availableProps)
-         
+
         let rows = [];
         let props = {};
         const availablePropsIRIs = availableProps.map(prop => {
             props[prop.IRI] = prop;
             return prop.IRI;
         });
-         
+
 //         console.log("availPropIRI",availablePropsIRIs)
-        
+
 //         console.log("propertyList",setProps)
-        
+
         let existingProps = {};
         for (let propKey in setProps) {
-           
-            if(availablePropsIRIs.indexOf(propKey) === -1) 
+
+            if(availablePropsIRIs.indexOf(propKey) === -1)
             {
                //if (propKey != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
                //&& propKey != "http://purl.bdrc.io/ontology/admin/status"  )
                {
 //                   console.log("skipping",propKey)
                   continue;
-               
+
                }
             }
-            
+
             existingProps[propKey] = setProps[propKey];
-            
-        }        
-        
+
+        }
+
 //         console.log("existProps",existingProps)
 
         if (!removeUnsetProps) {
@@ -603,29 +603,29 @@ export default class IndividualView extends React.Component<Props, State> {
             let propertyValues = existingProps[propertyType];
             propertyLists.push(this.listForProperty(props[propertyType], propertyValues, propertyType));
         }
-        
-       
+
+
 //       console.log("return",propertyLists)
 //        console.groupEnd()
-        
-         
+
+
         return propertyLists;
     }
 
     listForProperty(property: RDFProperty, propertyValues: Array<mixed>, propertyType:mixed): {} {
-       
+
 //         console.log("RDFprop",property);
 //         console.log("propValues",propertyValues);
 //         console.log("propType",propertyType);
-       
+
         const onLiteralChanged = (event) => {
             if (this.props.onIndividualUpdated) {
                 this.props.onIndividualUpdated();
             }
         };
-        
+
 //         console.log("property.comments",property.comments);
-        
+
         let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
         let title = (property.label) ? capitalize(property.label) : formatIRI(property.IRI);
         const propIsEditable = this.props.isEditable;
@@ -644,11 +644,11 @@ export default class IndividualView extends React.Component<Props, State> {
         };
 
         let onTapAdd = () => this.addProperty(property.IRI);
-        
+
 //         console.log("tapAdd1",onTapAdd)
-        
+
         for (let range of property.ranges) {
-            if (REMOTE_ENTITIES.indexOf(range) !== -1) 
+            if (REMOTE_ENTITIES.indexOf(range) !== -1)
             {
                 onTapAdd = this.props.onAddResource;
                 break;
@@ -656,7 +656,7 @@ export default class IndividualView extends React.Component<Props, State> {
         }
 
 //         console.log("tapAdd2",property.IRI,property,onTapAdd)
-        
+
         const propertyView = <IndividualProperty
             nested={this.props.nested}
             isEditable={isEditable}
@@ -675,7 +675,7 @@ export default class IndividualView extends React.Component<Props, State> {
             tooltip={tooltip}
             {...this.props.individual.id.match(/([_A-Z]+[0-9]+)+$/) ? { showLabel : true }:{} }
         />;
-        
+
 //         console.log("propView",propertyView.props.title,propertyView)
 
         return propertyView ;
@@ -687,8 +687,8 @@ export default class IndividualView extends React.Component<Props, State> {
             removeUnsetProperties = true; //false;
         }
 
-        
-        
+
+
         let availableProperties = this.getAvailableProperties();
         let dataTypeProps = availableProperties[DATATYPE_PROPERTY.value];
         let objectProps = availableProperties[OBJECT_PROPERTY.value];
@@ -697,28 +697,28 @@ export default class IndividualView extends React.Component<Props, State> {
 
         const objectHeading = '' //(!this.props.nested) ? 'Object Properties' : '';
         let objectRows = this.propertyGroupRows(objectProps, properties, removeUnsetProperties);
-        
+
         const datatypeHeading = '' // (!this.props.nested) ? 'Datatype Properties' : '';
         const datatypeRows = this.propertyGroupRows(dataTypeProps, properties, removeUnsetProperties);
-         
+
         const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : '';
         let annotationRows = this.propertyGroupRows(annotationProps, properties,  removeUnsetProperties);
-        
-        
-        for(let a in annotationRows) 
+
+
+        for(let a in annotationRows)
         {
 //             console.log("a",annotationRows[a]);
             if(annotationRows[a].props.propertyType == "http://www.w3.org/2004/02/skos/core#prefLabel")
             {
-               objectRows.unshift(annotationRows[a])        
+               objectRows.unshift(annotationRows[a])
                delete annotationRows[a]
             }
         }
-        
-        
-        
+
+
+
         const propertyTypes = [
-            
+
             {
                 heading: objectHeading,
                 rows: objectRows
@@ -752,19 +752,19 @@ export default class IndividualView extends React.Component<Props, State> {
                 this.toggleCollapseState(collapseId);
             };
 
-            
+
             //if (this.props.nested) {
                 lists.push(
                     <List>
                         {propertyData.rows}
                     </List>
                 )
-                
+
             /* // no need anymore
-            } 
-            else 
+            }
+            else
             {
-               
+
                 lists.push(
                     <List>
                         <ListItem button onClick={handleCollapse}>
@@ -781,7 +781,7 @@ export default class IndividualView extends React.Component<Props, State> {
                     </List>
                 );
             }*/
-            
+
         }
 
         return lists;
@@ -793,7 +793,7 @@ export default class IndividualView extends React.Component<Props, State> {
         const propertyValues = [idLiteral];
 
         //console.log("getId:propVal",propertyValues,this.props.individual.id);
-        
+
         const onChange = (value) => {
             this.props.individual.id = value;
             this.forceUpdate();
@@ -803,7 +803,7 @@ export default class IndividualView extends React.Component<Props, State> {
         };
 
         return <IndividualProperty
-            nested={this.props.nested}            
+            nested={this.props.nested}
             isEditable={() => true}
             onIndividualUpdated={this.props.onIndividualUpdated}
             onLiteralChanged={onChange}
@@ -832,14 +832,14 @@ export default class IndividualView extends React.Component<Props, State> {
             }
         };
 
-        
+
         let onTapAdd = () => this.addProperty(labelProperty.IRI,labelProperty);
-        
+
         return (
             <List>
                 <IndividualProperty
                     nested={this.props.nested}
-                    isEditable={(propertyValue: any) => this.props.nested && this.props.isEditable } 
+                    isEditable={(propertyValue: any) => this.props.nested && this.props.isEditable }
                     onIndividualUpdated={this.props.onIndividualUpdated}
                     onLiteralChanged={onLiteralChanged}
                     onSelectedResource={this.props.onSelectedResource}
@@ -851,7 +851,7 @@ export default class IndividualView extends React.Component<Props, State> {
                     property={labelProperty}
                     propertyValues={labels}
                     title={"Label"}
-                    tooltip={"Labels"}                   
+                    tooltip={"Labels"}
                 />
             </List>
         )
@@ -862,9 +862,9 @@ export default class IndividualView extends React.Component<Props, State> {
       store.dispatch(ui.editingResourceInNewTab(this.props.individual.id))
    }
 
-         
+
     getNestedTitleList(): React.Element<*> | null {
-       
+
          if (!this.props.nested && !this.props.titleView) return null;
 
         let titleView = this.props.titleView;
@@ -872,63 +872,63 @@ export default class IndividualView extends React.Component<Props, State> {
             let title = '';
             let subtitle = '';
             let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
-            
+
             //console.log("labels",labels)
 
-            if (this.props.individual.types[0]) 
+            if (this.props.individual.types[0])
             {
                subtitle = formatIRI(this.props.individual.types[0]);
             }
-            
+
             if (labels && labels.length > 0) {
                 title = labels[0].value;
             } else if (this.props.individual.id) {
                if(!this.props.individual.hasGeneratedId) { title = formatIRI(this.props.individual.id); }
-               else 
-               { 
-                  title = formatIRI(this.props.individual.types[0]);  
-                  subtitle = formatIRI(this.props.propertyType); 
+               else
+               {
+                  title = formatIRI(this.props.individual.types[0]);
+                  subtitle = formatIRI(this.props.propertyType);
                }
             } else {
                 title = <i>&lt;no id&gt;</i>;
             }
 
-            
+
             if(this.props.propertyType && this.props.level >= 2)
-            {  
-                  subtitle = formatIRI(this.props.propertyType); 
+            {
+                  subtitle = formatIRI(this.props.propertyType);
             }
-            
-            
+
+
             titleView = [ <ListItemText
                   primary={title}
                   secondary={subtitle}
                /> ]
-               
-            
+
+
         }
         else { titleView = [ titleView ] }
-        
-        
+
+
 //          if(this.props.showLabel)
          {
             let pref = []
-            
+
             let lab = this.props.individual.getProperty("http://www.w3.org/2004/02/skos/core#prefLabel") ;
             //console.log("label",lab,this.props.individual)
-            
+
             if(lab != null && lab.length > 0)
             {
                for(var l of lab) {
-                  pref.push( 
+                  pref.push(
                   <LiteralView literal={l} isEditable={false} noPrefix={true} />
                            );
                }
-               
+
                titleView.push(<div className="prefLabel">{pref}</div>)
             }
          }
-    
+
         this._allowExpansion = this.props.isExpandable && (Object.keys(
                 this.props.individual.getProperties()
             ).length > 0
@@ -939,30 +939,30 @@ export default class IndividualView extends React.Component<Props, State> {
            listItem = []
             listItem.push( <ListItem {...this.props.isEditable ? {className:"noPad"}:{} } button onClick={() => this.toggleExpandedState()}>
                             {titleView}
-                            
+
                             {this.state.isExpanded ? <ExpandLess /> : <ExpandMore />}
-            
-                              
+
+
                        </ListItem>)
-                       
+
            if(this.props.nested && this.props.level == 0)
            {
                listItem.push(
-                              <ListItemSecondaryAction className="plusBut"> 
+                              <ListItemSecondaryAction className="plusBut">
                                  <IconButton
                                     onClick={this.onOpenNewTab.bind(this)}
                                  >
                                        <AddBoxIcon />
                                  </IconButton>
-                              </ListItemSecondaryAction> 
+                              </ListItemSecondaryAction>
                         )
-           
+
             }
-                              
+
         } else {
             listItem = <ListItem  button>
-                            {titleView} 
-                            
+                            {titleView}
+
                        </ListItem>
         }
         return(
@@ -973,16 +973,16 @@ export default class IndividualView extends React.Component<Props, State> {
     }
 
     render() {
-       
-       
-  
+
+
+
         // ID
         let idList = null;
         if (!this.props.nested) {
 //            console.log("idList")
             idList = this.getIdList();
         }
-        
+
         // COMM
 //         console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
 //         console.log(this.props);
@@ -1001,26 +1001,26 @@ export default class IndividualView extends React.Component<Props, State> {
         if(this._allowExpansion){
            classes.push("expan")
          } else {
-           classes.push("noExpan")       
+           classes.push("noExpan")
          }
          */
-        
+
         // COMM
-//         console.log("props",this.props);        
+//         console.log("props",this.props);
 //         console.group("getProp");
-        
+
         const propList = this.getPropertyLists();
-        
+
 //         console.groupEnd();
 //         console.group("getLab");
-        
+
         const labList = this.getLabelsList()
-        
+
 //         console.groupEnd();
-        
+
 //         console.log("labList",labList);
 //         console.log("propList",propList);
-        
+
         let ret = (
             <div className={classnames(...classes)} onClick={this.props.onClick}>
                 {this.getNestedTitleList()}
@@ -1028,14 +1028,14 @@ export default class IndividualView extends React.Component<Props, State> {
                     {idList}
                     {labList}
                     {propList}
-                </Collapse>                
+                </Collapse>
             </div>
         );
-        
+
 
 //         console.groupEnd()
-         
+
         return ret ;
-        
+
     }
 }
