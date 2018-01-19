@@ -12,7 +12,7 @@ export default class Graph {
     _ontology: Ontology;
     _store: rdf.IndexedFormula;
     static _current : string ;
-    static _individuAll : {} ; 
+    static _individuAll : {} ;
 
     static create(data: string, baseIRI: string, mimeType: string, ontology: Ontology): Promise<Graph> {
         return new Promise((resolve, reject) => {
@@ -27,7 +27,7 @@ export default class Graph {
             });
         });
     }
-    
+
     static get current()
     {
        return this._current;
@@ -37,7 +37,7 @@ export default class Graph {
        this._current = id ;
 //        console.log("set",id,this.individuAll)
     }
-    
+
     static get individuAll()
     {
        return this._individuAll;
@@ -58,7 +58,7 @@ export default class Graph {
             }
             onReady(this, error);
         });
-        
+
         this.setCurrent.bind(this);
         this.getIndividualWithId.bind(this);
     }
@@ -94,22 +94,22 @@ export default class Graph {
     }
 
     getIndividualWithId(id: string): Individual {
-       
-//         console.log("getIndiv",id,Graph.current);
-        
+
+        // console.log("getIndiv",id,Graph.current,this._store);
+
         let individual = new Individual(id);
-        
+
         Graph.individuAll[id] = individual;
-        
+
 //         console.log(Graph.individuAll);
-           
+
         this.getIndividualTypes(id).map(type => individual.addType(type));
         const node = rdf.sym(id);
         const statements = this._store.statementsMatching(node, undefined, undefined);
         for (let statement of statements) {
-           
-//            console.log("statement",statement);
-           
+
+           // console.log("statement",statement);
+
             const prop = statement.predicate;
             let value = statement.object.value;
             let individualRange;
@@ -140,21 +140,21 @@ export default class Graph {
             this._updateIndividual(individual, prop.value, individualRange, statement.object);
 
         }
-        
+
         return individual;
     }
 
     _updateIndividual(individual: Individual, property: string, propertyRange: string, object: Node) {
         if (this._ontology.isClass(propertyRange) && object instanceof NamedNode) {
-           
+
                if(object.value != Graph.current && !Graph.individuAll[object.value]) {
 //                let value = Graph.individuAll[object.value]
                   let value = this.getIndividualWithId(object.value);
 //                   console.log("recursive loop ?",individual.id,Graph.current,object.value)
                   value.addType(propertyRange);
-                  individual.addProperty(property, value);           
+                  individual.addProperty(property, value);
                }
-           
+
         } else if (object instanceof BlankNode) {
             let blankIndividual = new Individual();
             let blankTypes = this._store.statementsMatching(object, TYPE, undefined);

@@ -67,14 +67,34 @@ export default class API {
     getURLContents(url: string): Promise<string> {
         let text;
         return new Promise((resolve, reject) => {
-            this._fetch(url).then((response) => {
+            this._fetch(url
+/*
+               ,  {
+               method: 'GET',
+                // mode: 'no-cors',
+                // cors:'true',
+                headers: new Headers(
+                   {"Content-Type": "application/turtle",
+                    "Accept":"application/turtle"}
+                     )
+            }
+*/
+         ).then((response) => {
                 if (!response.ok) {
                     if (response.status == '404') {
                         throw new ResourceNotFound('The resource does not exist.');
                     }
+                    else {
+                       console.log("FETCH pb",response)
+                        throw new ResourceNotFound('Problem fetching the resource');
+                    }
                 }
+                console.log("FETCH ok",url,response)
                 response.text().then((reqText) => {
                     text = reqText;
+
+                    // console.log("text",reqText)
+
                     resolve(text);
                 });
             }).catch((e) => {
@@ -158,8 +178,15 @@ export default class API {
         const objectDir = checksum.substr(0, 2);
 
 
-        let url = [OBJECT_PATH, dir, objectDir, id].join('/') + '.ttl';
-        if(id.match(/^(([CR])|(PR(HD)?))[0-9]+/)) url = [OBJECT_PATH, dir, id].join('/') + '.ttl';
+
+         let url = [OBJECT_PATH, dir, objectDir, id].join('/') + '.ttl';
+         if(id.match(/^(([CR])|(PR(HD)?))[0-9]+/)) url = [OBJECT_PATH, dir, id].join('/') + '.ttl';
+
+
+
+         url = "http://buda1.bdrc.io:13280/lds-pdi/query/"+id;
+
+
 
 //         console.log([OBJECT_PATH, dir, objectDir, id, url])
 
