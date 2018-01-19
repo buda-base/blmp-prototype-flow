@@ -8,6 +8,7 @@ export default class RDFClass {
     _properties = {};
     _children: RDFClass[] = [];
     _values: string[] = [];
+    _subclasses: RDFClass[] = [];
 
 
     constructor(IRI: string) {
@@ -44,13 +45,13 @@ export default class RDFClass {
     }
 
 
-    hasAncestorclass(superclassIRI: string): boolean {
+    hasAncestorclass(superclassIRI: string, canSuper:boolean = true): boolean {
         return this._superclasses &&
                 this._superclasses
-                    .filter(superclass => superclass.IRI === superclassIRI || superclass.hasSuperclass(superclassIRI))
+                    .filter(superclass => (canSuper && superclass.IRI === superclassIRI) || superclass.hasSuperclass(superclassIRI))
                     .length > 0;
     }
-    
+
     addProperty(property: RDFProperty) {
         if (!this._properties[property.IRI]) {
             this._properties[property.IRI] = property;
@@ -66,7 +67,7 @@ export default class RDFClass {
             this._children.push(child);
         }
     }
-    
+
     get values(): RDFProperty[] {
         return this._values;
     }
@@ -77,4 +78,13 @@ export default class RDFClass {
         }
     }
 
+     get subclasses(): RDFProperty[] {
+         return this._subclasses;
+     }
+
+     addSubclass(subclass: RDFProperty) {
+         if (this._subclasses.indexOf(subclass) === -1) {
+             this._subclasses.push(subclass);
+         }
+     }
 }

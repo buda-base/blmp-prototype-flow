@@ -41,7 +41,7 @@ export default class Ontology {
     // store annotation properties as they are available for all classes
     _annotationProperties = {};
     _individuals = {}
-    
+
     static create(data: string, baseIRI: string, mimeType: string): Promise<Ontology> {
         return new Promise((resolve, reject) => {
             new Ontology(data, baseIRI, mimeType, (ontology, error) => {
@@ -68,9 +68,9 @@ export default class Ontology {
 
     init() {
          console.groupCollapsed("init ontology");
-       
+
         let dProps,oProps,aProps ;
-         
+
         const datatypeProps = this.addPropertyType(
             DATATYPE_PROPERTY.value,
             dProps = this.getProperties(DATATYPE_PROPERTY)
@@ -99,14 +99,14 @@ export default class Ontology {
         this.processInverseOf();
         this.extractClasses();
         this.extractIndividuals();
-        
+
 //          console.log(RDFComponents)
-        
-        
+
+
         console.log("dataP",datatypeProps);
         console.log("objP",objectProperties);
         console.log("annoP",annotationProperties);
-        
+
         console.groupEnd();
     }
 
@@ -128,14 +128,32 @@ export default class Ontology {
         classes = classes.reduce((result, cur) => {
             this.addClass(cur.subject.value);
         }, []);
+
+        console.log("classes",this._classes);
+        /*
+
+        classes = this._classes
+        for(let c in classes)
+        {
+           if(classes[c].hasAncestorclass("http://purl.bdrc.io/ontology/core/Facet",false))
+           {
+             // console.log("isok",c)
+             let sup  = classes[c].superclasses.filter(superclass => superclass.hasSuperclass("http://purl.bdrc.io/ontology/core/Facet"))
+             //console.log("sup",sup,classes[c],sup.addValue)
+             sup[0].addSubclass(classes[c])
+           }
+        }
+
+       console.log("newCl",classes)
+       */
     }
-    
-    extractIndividuals() {        
-        let indiv = this.getStatements(undefined, TYPE, INDIVIDUAL);  
-        
+
+    extractIndividuals() {
+        let indiv = this.getStatements(undefined, TYPE, INDIVIDUAL);
+
         indiv = indiv.reduce((result, cur) => {
-//            console.log("i=",cur.subject.value,cur)
-           let tmp = this.getStatements(cur.subject,TYPE);  
+
+           let tmp = this.getStatements(cur.subject,TYPE);
 //            console.log(tmp[1].object.value);
 //            console.log(this._classes[tmp[1].object.value])
            if(this._classes[tmp[1].object.value].hasSuperclass("http://purl.bdrc.io/ontology/core/Type"))
@@ -145,17 +163,17 @@ export default class Ontology {
            }
            /*
            else {
-              
+
             console.log("not a type",cur.subject.value,tmp[1].object.value);
-            
+
             }
             */
-            
+
             this._individuals[cur.subject.value] = cur.subject;
-            
+
         }, []);
-        
-        console.log("RDFcomps",RDFComponents)
+
+        // console.log("RDFcomps",RDFComponents)
 
     }
 
@@ -170,10 +188,10 @@ export default class Ontology {
     getClassProperties(iri: string): RDFProperty[] {
         let properties = [] ; //this._properties; //[];
         let rdfClass = this._classes[iri];
-        
+
 //         console.log("classes",this._classes);
 //         console.log("properties",this._properties);
-        
+
         if (!rdfClass) {
             return properties;
         }
@@ -197,19 +215,19 @@ export default class Ontology {
        for (let k of Object.keys(obj)) ret.push(obj[k]) ;
        return ret ;
     }
-    
+
     toPropertiesArray(obj: NamedNode): RDFProperty[] {
        let ret = []
        for (let k of Object.keys(obj)) ret.push(obj[k]) ;
        return ret ;
     }
-    
+
     getProperties(propertyType: NamedNode): {} {
         const propsStatements = this.getStatements(undefined, TYPE, propertyType);
         let props = {};
-        
+
 //         console.groupCollapsed("onto props",propertyType)
-        
+
         for (let property of propsStatements) {
             let prop = this._properties[property.subject.value];
             if (!prop) {
@@ -222,7 +240,7 @@ export default class Ontology {
                 prop.addComment(comment);
             }
 //             console.log("=>",prop.comments)
-            
+
             prop.label = this.getLabel(property.subject);
             this.getDomains(property.subject).map(domain => prop.addDomain(domain));
             let ranges = this.getRanges(property.subject);
@@ -241,10 +259,10 @@ export default class Ontology {
 
             props[property.subject.value] = prop;
         }
-        
+
 //         console.groupEnd();
 //         console.log("props:",props)
-         
+
         return props;
     }
 
@@ -446,13 +464,13 @@ export default class Ontology {
                 rdfClass.addProperty(annotationProp);
             }
         }
-        
-        
+
+
 //         console.log("class",classIRI,rdfClass);
 
         return rdfClass;
     }
-    
+
     addProperty(propertyIRI: string): ?RDFProperty {
         if (!propertyIRI.includes(':')) {
             return;
@@ -476,8 +494,8 @@ export default class Ontology {
             }
         }
 
-        console.log("add prop",propertyIRI,rdfProperty);
-        
+        // console.log("add prop ",propertyIRI,rdfProperty);
+
         return rdfProperty;
     }
 
