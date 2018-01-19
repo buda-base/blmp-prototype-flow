@@ -129,8 +129,31 @@ export default class Ontology {
             this.addClass(cur.subject.value);
         }, []);
 
-        console.log("classes",this._classes);
-        /*
+
+
+        // console.log("classes",this._classes);
+
+        for(let i in this._classes)
+        {
+           let c = this._classes[i]
+
+           let superC = []
+
+           for(let j in c.superclasses)
+           {
+             let s = c.superclasses[j]
+
+             // console.log("s",s)
+
+             if(this._classes[s.IRI]) superC.push(this._classes[s.IRI])
+             else superC.push(s)
+           }
+
+           c.superclasses = superC
+
+        }
+
+      console.log("classes",this._classes);
 
         classes = this._classes
         for(let c in classes)
@@ -144,8 +167,8 @@ export default class Ontology {
            }
         }
 
-       console.log("newCl",classes)
-       */
+       console.log("classes",classes)
+
     }
 
     extractIndividuals() {
@@ -437,16 +460,23 @@ export default class Ontology {
             this._classes[classIRI] = rdfClass;
         }
         if (!rdfClass.superclasses) {
+
             let superclasses = this.getSuperclasses(rdf.sym(classIRI));
+
+            // console.log("addClass super",classIRI,superclasses)
+
             if (superclasses) {
                 for (let superclassIRI of superclasses) {
                     let superclass = this._classes[superclassIRI];
                     if (!superclass) {
                         superclass = new RDFClass(superclassIRI);
                     }
+                    // console.log("add",superclass.IRI)
                     rdfClass.addSuperclass(superclass);
                 }
             }
+
+           // console.log("class",rdfClass)
         }
         for  (let annotationPropIRI in this._annotationProperties) {
             let annotationProp = this._annotationProperties[annotationPropIRI];

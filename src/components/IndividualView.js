@@ -137,23 +137,29 @@ constructor(props: Props) {
       }
       else if(onto._classes[t] && onto._classes[t].hasAncestorclass(facetIRI))
       {
-         console.log("sub",this.props.propertyValues)
+         // console.log("sub",this.props.propertyValues)
 
          let v = this.props.propertyValues[0]  //.ranges[i]
          if(!v || v._types.length == 0) return ;
-         v = v._types[0]
-         if(onto._classes[v] && onto._classes[v].hasAncestorclass(facetIRI,false))
-         {
-            console.log("sup/facet",t,onto._classes[t].children) //,onto._classes[t].subclasses)
+         for(i in v._types) {
+            let u = v._types[i]
 
-               this._list = onto._classes[t]._children.map((val) =>
-               {
-                   // console.log("val",val)
-                  return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val.IRI)}>{formatIRI(val.IRI)}</MenuItem> )
-               })
+            // console.log("u",u,onto._classes[u],onto._classes[u].hasAncestorclass(facetIRI,false))
 
-               console.log("list",this._list)
-            //
+            if(onto._classes[u] && onto._classes[u].hasAncestorclass(facetIRI,false))
+            {
+               // console.log("sup/facet",t,onto._classes[t].subclasses) //,onto._classes[t].subclasses)
+
+                  this._list = onto._classes[t]._subclasses.map((val) =>
+                  {
+                      // console.log("val",val)
+                     return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val.IRI)}>{formatIRI(val.IRI)}</MenuItem> )
+                  })
+
+                  // console.log("list",this._list)
+                  break ;
+               //
+            }
          }
 
       }
@@ -232,8 +238,8 @@ handleMenu = (event, value : string = "") => {
 render() {
 
    // COMM
-   console.groupCollapsed("indiProp.render",this.props.title)
-   console.log(this.props)
+   // console.groupCollapsed("indiProp.render",this.props.title)
+   // console.log(this.props)
 
    const greenColor = {
       fill: green[800]
@@ -328,7 +334,7 @@ render() {
          }
 
 
-         console.log("ranges",this.props.property.ranges)
+         // console.log("ranges",this.props.property.ranges)
          let classN = undefined
 
          for (let range of this.props.property.ranges) {
@@ -408,7 +414,7 @@ render() {
          //              this.props.isExpanded &&
       }
 
-      console.groupEnd();
+      // console.groupEnd();
 
       if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
       || this.props.propertyValues.length > 10)

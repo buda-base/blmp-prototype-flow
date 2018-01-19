@@ -27,6 +27,10 @@ export default class RDFClass {
         return this._superclasses;
     }
 
+     set superclasses(superC:RDFClass[]): RDFClass[] {
+         this._superclasses = superC ;
+     }
+
     addSuperclass(superclass: RDFClass) {
         if (!this._superclasses) {
             this._superclasses = [];
@@ -38,18 +42,31 @@ export default class RDFClass {
     }
 
     hasSuperclass(superclassIRI: string): boolean {
+
+         // console.log("superC!",superclassIRI,this._superclasses)
         return this._superclasses &&
                 this._superclasses
-                    .filter(superclass => superclass.IRI === superclassIRI)
+                    .filter(superclass => {
+                       // console.log("superC?",superclass.IRI)
+                        if(superclass.IRI === superclassIRI) {
+                           return superclass ;
+                        }
+                     })
                     .length > 0;
     }
 
 
     hasAncestorclass(superclassIRI: string, canSuper:boolean = true): boolean {
-        return this._superclasses &&
+
+
+        let ret =  this._superclasses &&
                 this._superclasses
                     .filter(superclass => (canSuper && superclass.IRI === superclassIRI) || superclass.hasSuperclass(superclassIRI))
                     .length > 0;
+
+        // console.log("superC=",ret,superclassIRI,canSuper,this)
+
+         return ret ;
     }
 
     addProperty(property: RDFProperty) {
