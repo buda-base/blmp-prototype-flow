@@ -434,7 +434,6 @@ render() {
             this.toggleCollapseState(collapseId);
          };
 
-
          const headingStyles = {
             fontSize: '12px',
             fontWeight: 'normal',
