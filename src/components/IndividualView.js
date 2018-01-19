@@ -139,29 +139,38 @@ constructor(props: Props) {
       {
          // console.log("sub",this.props.propertyValues)
 
-         let v = this.props.propertyValues[0]  //.ranges[i]
-         if(!v || v._types.length == 0) return ;
-         for(i in v._types) {
-            let u = v._types[i]
+         let found = false ;
 
-            // console.log("u",u,onto._classes[u],onto._classes[u].hasAncestorclass(facetIRI,false))
+         for(let k in this.props.propertyValues) {  //.ranges[i]
 
-            if(onto._classes[u] && onto._classes[u].hasAncestorclass(facetIRI,false))
-            {
-               // console.log("sup/facet",t,onto._classes[t].subclasses) //,onto._classes[t].subclasses)
+            // console.log("k",k)
 
-                  this._list = onto._classes[t]._subclasses.map((val) =>
-                  {
-                      // console.log("val",val)
-                     return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val.IRI)}>{formatIRI(val.IRI)}</MenuItem> )
-                  })
+            let v =  this.props.propertyValues[k]
+            if(!v || v._types.length == 0) continue ;
+            for(i in v._types) {
+               let u = v._types[i]
 
-                  // console.log("list",this._list)
-                  break ;
-               //
+               //console.log("u",u,onto._classes[u],onto._classes[u].hasAncestorclass(facetIRI,false))
+
+               if(onto._classes[u] && onto._classes[u].hasAncestorclass(facetIRI,false))
+               {
+                    // console.log("sup/facet",t,onto._classes[t].subclasses) //,onto._classes[t].subclasses)
+
+                     this._list = onto._classes[t]._subclasses.map((val) =>
+                     {
+                         // console.log("val",val)
+                        return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val.IRI)}>{formatIRI(val.IRI)}</MenuItem> )
+                     })
+
+                     found = true
+                     // console.log("list",this._list)
+                     break ;
+                  //
+               }
             }
-         }
 
+            if(found) break ;
+         }
       }
    }
 }
