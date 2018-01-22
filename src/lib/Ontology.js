@@ -126,7 +126,9 @@ export default class Ontology {
     extractClasses() {
         let classes = this.getStatements(undefined, TYPE, CLASS);
         classes = classes.reduce((result, cur) => {
-            this.addClass(cur.subject.value);
+           // console.log("cur",cur.subject.value,cur);
+
+            this.addClass(cur.subject.value,this.getLabel(cur.subject),this.getComments(cur.subject));
         }, []);
 
 
@@ -450,7 +452,7 @@ export default class Ontology {
         return values.map(node => node.object.value).join('; ');
     }
 
-    addClass(classIRI: string): ?RDFClass {
+    addClass(classIRI: string, label:string = '',comment:RDFComment[] = []): ?RDFClass {
         if (!classIRI.includes(':')) {
             return;
         }
@@ -458,6 +460,8 @@ export default class Ontology {
         if (!rdfClass) {
             rdfClass = new RDFClass(classIRI);
             this._classes[classIRI] = rdfClass;
+            rdfClass.label = label ;
+            rdfClass.comment = comment ;
         }
         if (!rdfClass.superclasses) {
 

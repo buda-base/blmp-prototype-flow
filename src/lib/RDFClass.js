@@ -9,6 +9,9 @@ export default class RDFClass {
     _children: RDFClass[] = [];
     _values: string[] = [];
     _subclasses: RDFClass[] = [];
+    _comments: RDFComment[] = [];
+    _label: string;
+
 
 
     constructor(IRI: string) {
@@ -104,4 +107,20 @@ export default class RDFClass {
              this._subclasses.push(subclass);
          }
      }
+
+      get comments(): RDFComment[] {
+          return this._comments;
+      }
+
+      addComment(comment: RDFComment) {
+          this._comments.push(comment);
+      }
+
+      get label(): string {
+          return this._label;
+      }
+
+      set label(newLabel: string) {
+          this._label = newLabel;
+      }
 }

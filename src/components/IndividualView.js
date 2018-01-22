@@ -972,6 +972,23 @@ onOpenNewTab(event)  {
    store.dispatch(ui.editingResourceInNewTab(this.props.individual.id))
 }
 
+getSubtitle(txt : string):string
+{
+
+   let subtitle = formatIRI(txt);
+   if(this.props.ontology._classes[txt])
+   {
+      let s = this.props.ontology._classes[txt].label ;
+      if(s && s != '') subtitle = s ;
+   }
+   else if(this.props.ontology._properties[txt])
+   {
+      let s = this.props.ontology._properties[txt].label ;
+      if(s && s != '') subtitle = s ;
+   }
+
+   return subtitle[0].toUpperCase() + subtitle.slice(1);
+}
 
 getNestedTitleList(): React.Element<*> | null {
 
@@ -987,7 +1004,7 @@ getNestedTitleList(): React.Element<*> | null {
 
       if (this.props.individual.types[0])
       {
-         subtitle = formatIRI(this.props.individual.types[0]);
+         subtitle = this.getSubtitle(this.props.individual.types[0]);
       }
 
       if (labels && labels.length > 0) {
@@ -996,8 +1013,11 @@ getNestedTitleList(): React.Element<*> | null {
          if(!this.props.individual.hasGeneratedId) { title = formatIRI(this.props.individual.id); }
          else
          {
-            title = formatIRI(this.props.individual.types[0]);
-            subtitle = formatIRI(this.props.propertyType);
+            let t = this.props.ontology._classes[this.props.individual.types[0]].label ;
+            if(t && t != '') title = t[0].toUpperCase() + t.slice(1);  
+            else title = formatIRI(this.props.individual.types[0]);
+
+            subtitle = this.getSubtitle(this.props.propertyType);
          }
       } else {
          title = <i>&lt;no id&gt;</i>;
@@ -1006,7 +1026,7 @@ getNestedTitleList(): React.Element<*> | null {
 
       if(this.props.propertyType && this.props.level >= 2)
       {
-         subtitle = formatIRI(this.props.propertyType);
+         subtitle = this.getSubtitle(this.props.propertyType);
       }
 
 
