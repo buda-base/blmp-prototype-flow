@@ -132,7 +132,7 @@ constructor(props: Props) {
          this._list = onto._classes[t]._values.map((val) =>
          {
 
-            return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{formatIRI(val)}</MenuItem> )
+            return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{onto.getMainLabel(val)}</MenuItem> )
          })
       }
       else if(onto._classes[t] && onto._classes[t].hasAncestorclass(facetIRI))
@@ -159,7 +159,7 @@ constructor(props: Props) {
                      this._list = onto._classes[t]._subclasses.map((val) =>
                      {
                          // console.log("val",val)
-                        return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val.IRI)}>{formatIRI(val.IRI)}</MenuItem> )
+                        return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val.IRI)}>{onto.getMainLabel(val.IRI)}</MenuItem> )
                      })
 
                      found = true
@@ -1014,7 +1014,7 @@ getNestedTitleList(): React.Element<*> | null {
          else
          {
             let t = this.props.ontology._classes[this.props.individual.types[0]].label ;
-            if(t && t != '') title = t[0].toUpperCase() + t.slice(1);  
+            if(t && t != '') title = t[0].toUpperCase() + t.slice(1);
             else title = formatIRI(this.props.individual.types[0]);
 
             subtitle = this.getSubtitle(this.props.propertyType);

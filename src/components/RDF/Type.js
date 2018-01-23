@@ -29,12 +29,12 @@ export default class Type extends RDFComponent {
       {
          let t = this.props.property.ranges[i] //.individual.types[i]
 //          console.log("t i",t,i)
-         if(onto._classes[t] && onto._classes[t].hasAncestorclass(IRI)) 
+         if(onto._classes[t] && onto._classes[t].hasAncestorclass(IRI))
          {
-//             console.log("thats'it boy")
+            // console.log("thats'it boy", onto._classes[t]._values)
             this._list = onto._classes[t]._values.map((val) =>
             {
-               return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{formatIRI(val)}</MenuItem> )
+               return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{onto.getMainLabel(val)}</MenuItem> )
             })
          }
       }
@@ -78,12 +78,15 @@ export default class Type extends RDFComponent {
 
     render() {
 
+      let onto = store.getState().data.ontology
+
          return (
+
 
            <div style={{flexGrow:1}} >
             <ListItemText
-                  primary={formatIRI(this.props.individual.id)}
-                  secondary={formatIRI(this.props.property.ranges[0])}
+                  primary={onto.getMainLabel(this.props.individual.id)}
+                  secondary={onto.getMainLabel(this.props.property.ranges[0])}
                   onClick={this.handleClick}
                />
 

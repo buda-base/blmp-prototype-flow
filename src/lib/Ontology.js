@@ -8,6 +8,8 @@ import type { RDFComment } from './RDFProperty';
 import RDFComponents from '../components/RDF/rdf_components';
 // import * as PlaceType from '../components/RDF/PlaceType';
 import * as Type from '../components/RDF/Type';
+import formatIRI from './formatIRI';
+import Individual from './Individual';
 
 const RDF  = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 const RDFS = Namespace('http://www.w3.org/2000/01/rdf-schema#');
@@ -123,6 +125,32 @@ export default class Ontology {
         return this._store.statementsMatching(subject, predicate, object);
     }
 
+    getMainLabel(txt : string):string
+    {
+
+       let str = formatIRI(txt);
+
+       if(this._classes[txt])
+       {
+          let s = this._classes[txt].label ;
+          if(s && s != '') str = s ;
+       }
+       else if(this._properties[txt])
+       {
+          let s = this._properties[txt].label ;
+          if(s && s != '') str = s ;
+       }
+       else if(this._individuals[txt])
+       {
+          let s = this._individuals[txt]._label ;
+          if(s && s != '') str = s ;
+       }
+
+       //console.log("mLab",txt,str,this,this._classes[txt],this._properties[txt],this._individuals[txt])
+
+       return str[0].toUpperCase() + str.slice(1);
+    }
+
     extractClasses() {
         let classes = this.getStatements(undefined, TYPE, CLASS);
         classes = classes.reduce((result, cur) => {
@@ -194,7 +222,7 @@ export default class Ontology {
             }
             */
 
-            this._individuals[cur.subject.value] = cur.subject;
+            this._individuals[cur.subject.value] = new Individual(cur.subject.value,this.getLabel(cur.subject),this.getComments(cur.subject))
 
         }, []);
 

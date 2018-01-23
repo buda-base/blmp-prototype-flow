@@ -13,15 +13,19 @@ export default class Individual {
     _properties: {};
     _uniqueId: string;
     _namespaces: {};
+    _label:string;
+    _comment:RDFComment[];
 
-    constructor(id: ?string) {
+    constructor(id: ?string, label:string = '',comm:RDFComment[] = []) {
         this._id = id;
         this._properties = {};
         this._types = [];
         this._uniqueId = 'INDIVIDUAL_' + UNIQUE_ID++;
         this._hasGeneratedId = false;
+        this._label = label ;
+        this._comment = comm ;
     }
-    
+
     get uniqueId(): string {
         if (this._id) {
             return this._id;
