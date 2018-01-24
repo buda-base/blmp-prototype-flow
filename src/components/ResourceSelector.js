@@ -45,7 +45,7 @@ type Props = {
 export default class ResourceSelector extends React.Component<Props> {
     _textfield = null;
     _isValid = false ;
-    
+
     selectedResource() {
         if (this.props.findingResource && this.props.individual && this.props.property) {
             const individual = this.props.individual;
@@ -58,8 +58,8 @@ export default class ResourceSelector extends React.Component<Props> {
         } else if (this.props.selectedResource && this.props.findingResource) {
             this.props.selectedResource(this.props.findingResource);
         }
-        
-      
+
+
     }
 
     findResource() {
@@ -76,19 +76,19 @@ export default class ResourceSelector extends React.Component<Props> {
 //        console.log("change")
        this._isValid = false ;
     }
-    
+
     handleKeypress(e)
     {
 //        console.log("keypress")
-       
-       if (e.key === 'Enter') 
+
+       if (e.key === 'Enter')
        {
           if(!this._isValid) { this.findResource(); }
           else { this.selectedResource(); }
        }
-      
+
     }
-    
+
     render() {
         let message;
         let isValid;
@@ -98,8 +98,8 @@ export default class ResourceSelector extends React.Component<Props> {
                 if (this.props.individual && this.props.property) {
                     isValid = validatePropertyValue(this.props.property, this.props.findingResource);
                 }
-                this._isValid = isValid 
-                
+                this._isValid = isValid
+
                 message = <div>
                     <Typography>Found:</Typography>
                     <IndividualView
@@ -115,7 +115,7 @@ export default class ResourceSelector extends React.Component<Props> {
                     />
                     {!isValid &&
                         <p>Error: this resource is not valid for this property.</p>
-                    }   
+                    }
                 </div>
             } else if (this.props.findingResourceError) {
                 message = <Typography>Error loading resource: {this.props.findingResourceError}</Typography>
@@ -124,25 +124,40 @@ export default class ResourceSelector extends React.Component<Props> {
             }
         }
 
+        /*
+        <div style={{display:"inline-block",width:"auto"}}>
+        // ...
+        <span style={{textAlign:"center",width:"60px",display:"inline-block"}}>or</span>
+        <TextField
+            label="Keyword"
+            id="keyword"
+            type="text"
+            onKeyPress={this.handleKeypress.bind(this)}
+            onChange={this.handleChange.bind(this)}
+        />
+        </div>
+        <br/>
+        */
+
         let view = <Card>
             <CardContent>
                 <Typography type="headline" component="h2">
                     Select a resource
                 </Typography>
-                <TextField 
+                <TextField
                     autoFocus
                     label="Resource ID"
                     id="resourceID"
                     type="text"
                     inputRef={(searchInput) => this._textfield = searchInput}
-                    onKeyPress={this.handleKeypress.bind(this)}            
-                    onChange={this.handleChange.bind(this)}                    
+                    onKeyPress={this.handleKeypress.bind(this)}
+                    onChange={this.handleChange.bind(this)}
                 />
-                <Button  onClick={this.findResource.bind(this)}>
+                <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
                     Search
                 </Button>
             </CardContent>
-            
+
             {this.props.findingResourceId &&
                 <CardContent>
                     {message}
@@ -181,7 +196,7 @@ export default class ResourceSelector extends React.Component<Props> {
                         <DialogContentText>
                             Please enter the ID of the resource you would like to use.
                         </DialogContentText>
-                        <TextField 
+                        <TextField
                             autoFocus
                             label="Resource ID"
                             id="resourceID"
@@ -198,7 +213,7 @@ export default class ResourceSelector extends React.Component<Props> {
                             {message}
                         </DialogContent>
                     }
-                    
+
                     <DialogActions>
                         <Button onClick={this.props.cancel}>
                             Cancel

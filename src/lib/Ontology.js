@@ -102,8 +102,6 @@ export default class Ontology {
         this.extractClasses();
         this.extractIndividuals();
 
-//          console.log(RDFComponents)
-
 
         console.log("dataP",datatypeProps);
         console.log("objP",objectProperties);
@@ -510,6 +508,7 @@ export default class Ontology {
 
            // console.log("class",rdfClass)
         }
+
         for  (let annotationPropIRI in this._annotationProperties) {
             let annotationProp = this._annotationProperties[annotationPropIRI];
             let addToClass = annotationProp.domains.length === 0;
@@ -523,9 +522,10 @@ export default class Ontology {
                 }
             }
             if (addToClass) {
-                rdfClass.addProperty(annotationProp);
+                //rdfClass.addProperty(annotationProp);
             }
         }
+
 
 
 //         console.log("class",classIRI,rdfClass);

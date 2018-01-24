@@ -62,6 +62,11 @@ const getListItemStyle = (level) => {
    };
 };
 
+
+const typeIRI = 'http://purl.bdrc.io/ontology/core/Type';
+const facetIRI = 'http://purl.bdrc.io/ontology/core/Facet';
+
+
 type IndividualPropertyProps = {
    isEditable: (propertyValue: ?any) => boolean,
    onIndividualUpdated?: () => void,
@@ -117,9 +122,6 @@ constructor(props: Props) {
       isExpanded: props.isExpanded,
       open: false,
    }
-
-   const typeIRI = 'http://purl.bdrc.io/ontology/core/Type';
-   const facetIRI = 'http://purl.bdrc.io/ontology/core/Facet';
 
    let onto = this.props.ontology ;
 
@@ -572,7 +574,7 @@ addProperty(propertyType: string, propy:RDFProperty, val:string = "") {
    if(propy) property = propy
 
 
-   //         console.log("add",this.props.individual,propertyType,property,);
+           console.log("add",this.props.individual,propertyType,property,type);
 
    if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
    {
@@ -587,14 +589,30 @@ addProperty(propertyType: string, propy:RDFProperty, val:string = "") {
 
       const propertyRange = property.ranges[0];
 
-      //          console.log(propertyRange)
+               console.log("range",propertyRange)
 
       if (ontology.isClass(propertyRange)) {
          const propertyIndividual = new Individual();
-         propertyIndividual.addType(propertyRange);
-         if(val && val != "") propertyIndividual.id = val
+
+         if(val && val != "") {
+            let v = ontology._classes[propertyRange] ;
+            if(v && !v.hasSuperclass(typeIRI)) { propertyIndividual.addType(val); }
+            else { propertyIndividual.id = val ; }
+         }
+         else { propertyIndividual.addType(propertyRange); }
          this._editableIndividuals.push(propertyIndividual);
          individual.addProperty(propertyType, propertyIndividual);
+
+         let c = ontology._classes[val]
+         // console.log(c,c._properties);
+         if(c) {
+            let props = [].concat(Object.keys(c._properties))
+            for(let s in c._superclasses){ props = props.concat(Object.keys(c._superclasses[s]._properties)) }
+            //console.log(props)
+            for(let p in props){ propertyIndividual.addProperty(props[p]); }
+         }
+
+
       } else {
          const ranges = ontology.getPropertyRanges(propertyType);
          const literal = new Literal(ranges[0], '');
@@ -735,7 +753,7 @@ listForProperty(property: RDFProperty, propertyValues: Array<mixed>, propertyTyp
    //         console.log("property.comments",property.comments);
 
    let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
-   let title = (property.label) ? capitalize(property.label) : formatIRI(property.IRI);
+   let title = ((property.label) ? capitalize(property.label) : formatIRI(property.IRI));
    const propIsEditable = this.props.isEditable;
    const isEditable = (propertyValue) => {
       let isEditable = propIsEditable;
@@ -971,7 +989,7 @@ onOpenNewTab(event)  {
    //       console.log("NEW",this)
    store.dispatch(ui.editingResourceInNewTab(this.props.individual.id))
 }
-
+/*
 getSubtitle(txt : string):string
 {
 
@@ -989,6 +1007,7 @@ getSubtitle(txt : string):string
 
    return subtitle[0].toUpperCase() + subtitle.slice(1);
 }
+*/
 
 getNestedTitleList(): React.Element<*> | null {
 
@@ -1004,20 +1023,27 @@ getNestedTitleList(): React.Element<*> | null {
 
       if (this.props.individual.types[0])
       {
-         subtitle = this.getSubtitle(this.props.individual.types[0]);
+         subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0]);
       }
 
       if (labels && labels.length > 0) {
          title = labels[0].value;
       } else if (this.props.individual.id) {
-         if(!this.props.individual.hasGeneratedId) { title = formatIRI(this.props.individual.id); }
+         if(!this.props.individual.hasGeneratedId)
+         {
+            title = this.props.ontology.getMainLabel(this.props.individual.id);
+         }
          else
          {
-            let t = this.props.ontology._classes[this.props.individual.types[0]].label ;
+            /*
+            let t = this.props.ontology._classes[].label ;
             if(t && t != '') title = t[0].toUpperCase() + t.slice(1);
             else title = formatIRI(this.props.individual.types[0]);
+               */
 
-            subtitle = this.getSubtitle(this.props.propertyType);
+            title = this.props.ontology.getMainLabel(this.props.individual.types[0])
+
+            subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
          }
       } else {
          title = <i>&lt;no id&gt;</i>;
@@ -1026,7 +1052,7 @@ getNestedTitleList(): React.Element<*> | null {
 
       if(this.props.propertyType && this.props.level >= 2)
       {
-         subtitle = this.getSubtitle(this.props.propertyType);
+         subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
       }
 
 
