@@ -36,7 +36,7 @@ export const editingResource = (tabId: number, resourceIRI: string): TabAction =
 }
 TYPES.editingResourceInNewTab = 'EDITING_RESOURCE_IN_NEW_TAB';
 export const editingResourceInNewTab = (resourceIRI: string): TabAction => {
-   
+
     return {
         type: TYPES.editingResourceInNewTab,
         payload: resourceIRI,
@@ -45,9 +45,9 @@ export const editingResourceInNewTab = (resourceIRI: string): TabAction => {
 
 TYPES.selectedResourceIRI = 'SELECT_RESOURCE_IRI';
 export const selectedResourceIRI = (tabId: number, IRI: string): TabAction => {
-   
+
    //console.log("action",tabId,IRI);
-   
+
     return {
         type: TYPES.selectedResourceIRI,
         payload: IRI,
@@ -95,6 +95,9 @@ export const cancelAddingResource = (tabId: number): TabAction => {
 TYPES.findResource = 'FIND_RESOURCE';
 // export const findResource = createAction(TYPES.findResource, id => id);
 export const findResource = (tabId: number, resourceId: string): TabAction => {
+
+// console.log("finding...")
+
     return {
         type: TYPES.findResource,
         payload: resourceId,

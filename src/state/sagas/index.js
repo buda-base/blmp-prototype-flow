@@ -16,7 +16,7 @@ function* initiateApp() {
         console.log('initiateApp error: %o', e);
         // TODO: add action for initiation failure
     }
-} 
+}
 
 function* watchInitiateApp() {
     yield takeLatest(INITIATE_APP, initiateApp);
@@ -27,17 +27,17 @@ function* watchEditingResource() {
 }
 
 export function* loadResource(IRI) {
-   
+
    console.log("watchLoad");
-   
+
     yield put(dataActions.loading(IRI, true));
     try {
         const individual = yield call([api, api.getResource], IRI);
         yield put(dataActions.loadedResource(IRI, individual));
-        // IRI might only be the resource ID so make sure the 
+        // IRI might only be the resource ID so make sure the
         // actual IRI is set as well.
         if (individual.id !== IRI) {
-            yield put(dataActions.loadedResource(individual.id, individual));    
+            yield put(dataActions.loadedResource(individual.id, individual));
         }
     } catch(e) {
         yield put(dataActions.resourceFailed(IRI, e.message));
@@ -46,11 +46,11 @@ export function* loadResource(IRI) {
 }
 
 export function* watchLoadResource() {
-   
+
    console.log("watchLoad*");
-   
+
     yield takeLatest(
-        dataActions.TYPES.loadResource, 
+        dataActions.TYPES.loadResource,
         (action) => loadResource(action.payload)
     );
 }

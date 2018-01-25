@@ -67,7 +67,21 @@ export default class API {
     getURLContents(url: string): Promise<string> {
         let text;
         return new Promise((resolve, reject) => {
-            this._fetch(url
+            var payload = {"searchType":"pdi_w_bibli","L_NAME":"rgyud+bla+ma"}
+            var data = new FormData();
+            data.append( "json", JSON.stringify( payload ) );
+
+
+            this._fetch( url
+
+                  /* // header pour accéder aux résultat en JSON !
+            "http://buda1.bdrc.io:13280/lds-pdi/query",
+            {
+              method: 'POST',
+              body:"searchType=pdi_w_bibli&L_NAME=rgyud+bla+ma",
+              headers:new Headers({"Content-Type": "application/x-www-form-urlencoded"})
+           }
+
 /*
                ,  {
                method: 'GET',
@@ -80,6 +94,7 @@ export default class API {
             }
 */
          ).then((response) => {
+
                 if (!response.ok) {
                     if (response.status == '404') {
                         throw new ResourceNotFound('The resource does not exist.');
@@ -93,10 +108,13 @@ export default class API {
                 response.text().then((reqText) => {
                     text = reqText;
 
-                    // console.log("text",reqText)
+                     console.log("text",reqText.length)
+                     if(reqText.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
 
                     resolve(text);
-                });
+                }).catch((e) => {
+                   reject(e);
+               });
             }).catch((e) => {
                 reject(e);
             });

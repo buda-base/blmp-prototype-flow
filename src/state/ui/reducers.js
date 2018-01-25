@@ -54,19 +54,19 @@ function getNewTabId(): number {
 }
 
 function updateTabState(tabId: number, state: UIState, key: string, value: any):UIState {
-   
-    
+
+
     let tabState = state.editingResources[tabId];
-    
-    //console.log("updating",tabState);
-    
+
+    // console.log("updating",key,value,tabState);
+
     tabState = {
         ...tabState,
         [key]: value
     }
-    
-    //console.log("updated:",tabState);
-    
+
+    // console.log("updated:",tabState);
+
     return {
         ...state,
         editingResources: {
@@ -99,7 +99,7 @@ export const newTab = (state: UIState, action: Action) => {
 reducers[actions.TYPES.newTab] = newTab;
 
 export const editingResourceInNewTab = (state: UIState, action: Action) => {
-   
+
     const tabId = getNewTabId();
     let newState =  {
         ...state,
@@ -116,10 +116,10 @@ export const editingResourceInNewTab = (state: UIState, action: Action) => {
             tabId
         ]
     }
-    
+
     newState = updateTabState(tabId, newState, 'findResource', null);
     newState = updateTabState(tabId, newState, 'resourceId', action.payload);
-    
+
     return newState ;
 }
 reducers[actions.TYPES.editingResourceInNewTab] = editingResourceInNewTab;
@@ -169,7 +169,7 @@ reducers[actions.TYPES.selectedResourceIRI] = selectedResourceIRI;
 
 export const addingResource = (state: UIState, action: actions.AddingResourceAction): UIState => {
     return updateTabState(action.meta.tabId, state, 'addingResource', action.payload);
-    
+
 }
 reducers[actions.TYPES.addingResource] = addingResource;
 
@@ -179,6 +179,8 @@ export const cancelAddingResource = (state: UIState, action: TabAction): UIState
 reducers[actions.TYPES.cancelAddingResource] = cancelAddingResource;
 
 export const findResource = (state: UIState, action: TabAction): UIState => {
+   // console.log("found?", action.payload);
+
     return updateTabState(action.meta.tabId, state, 'findResource', action.payload);
 }
 reducers[actions.TYPES.findResource] = findResource;
@@ -226,11 +228,11 @@ reducers[actions.TYPES.resizePreviewPanel] = resizePreviewPanel;
 
 export const togglePreviewPanel = (state: UIState, action: Action) => {
     const tabId = action.payload ;
-    let off = !state.editingResources[tabId].hidePreview ;    
-    
-    // interesting way of conditionnaly adding attributes    
+    let off = !state.editingResources[tabId].hidePreview ;
+
+    // interesting way of conditionnaly adding attributes
     // ...(off && { subSplitWidth : "100%" })
-    
+
     return {
         ...state,
         editingResources: {

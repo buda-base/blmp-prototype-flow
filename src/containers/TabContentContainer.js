@@ -24,11 +24,11 @@ const mapStateToProps = (state, ownProps) => {
 
     let addingResource;
     let selectedResourceIRI;
-    
+
     let widthInfo ;
     let graphText ;
-    
-    //console.log("mapstate2prop?",state,ownProps);
+
+    // console.log("mapstate2prop?",state,ownProps);
 
     if (tabId) {
         editingResourceIRI = selectors.getEditingResourceIRI(state, tabId);
@@ -37,11 +37,11 @@ const mapStateToProps = (state, ownProps) => {
             individual = editingResource;
             editingResourceIsLoading = selectors.isResourceLoading(state, editingResourceIRI);
             editingResourceError = selectors.getResourceError(state, editingResourceIRI);
-            
+
         }
 
         findingResourceId = selectors.getFindResource(state, tabId);
-        
+
         if (findingResourceId) {
             findingResource = selectors.getResource(state, findingResourceId);
             findingResourceError = selectors.getResourceError(state, findingResourceId);
@@ -49,19 +49,19 @@ const mapStateToProps = (state, ownProps) => {
 
         addingResource = selectors.getAddingResource(state, tabId);
         selectedResourceIRI = selectors.getSelectedResourceIRI(state, tabId);
-        
+
         widthInfo = selectors.getWidthInfo(state,tabId);
-        
-        
+
+
         /*
         splitWidth,
         subSplitWidth,
         hidePreview
         */
     }
-    
+
 //     console.log("state=",state,ownProps);
-    
+
     return {
         ontology,
         editingResourceIRI,
@@ -77,7 +77,7 @@ const mapStateToProps = (state, ownProps) => {
         ...widthInfo,
     }
         //graphText
-        
+
         /*
         splitWidth,
         subSplitWidth,
@@ -98,15 +98,19 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(ui.selectedResourceIRI(tabId, IRI));
         },
         onAddResource: (indvidual: Individual, property: RDFProperty) => {
-           
+
 //            console.log("addR",indvidual,property);
-           
+
             dispatch(ui.addingResource(tabId, indvidual, property));
         },
         onCancelAddingResource: () => dispatch(ui.cancelAddingResource(tabId)),
-        onFindResource: (id) => dispatch(ui.findResource(tabId, id)),
+        onFindResource: (id) => {
+           // console.log("lets find",id)
+            dispatch(ui.findResource(tabId, id))
+            // console.log("wefound",id)
+        },
         onAddedProperty: () => dispatch(ui.addedFoundResource(tabId)),
-        
+
         onResizeCentralPanel: (w) => dispatch(ui.resizeCentralPanel(tabId,w)),
         onResizePreviewPanel: (w) => dispatch(ui.resizePreviewPanel(tabId,w)),
         onTogglePreviewPanel: () => dispatch(ui.togglePreviewPanel(tabId))

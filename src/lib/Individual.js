@@ -90,7 +90,7 @@ export default class Individual {
         }
         if(value && value != {}) this._properties[name].push(value);
 
-        console.log("addI",name,value)
+        // console.log("addI",name,value)
     }
 
     removeProperty(name: string, value: {}) {
