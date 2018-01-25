@@ -45,6 +45,7 @@ type Props = {
 export default class ResourceSelector extends React.Component<Props> {
     _textfield = null;
     _isValid = false ;
+    _notFound = false ;
 
     selectedResource() {
         if (this.props.findingResource && this.props.individual && this.props.property) {
@@ -92,6 +93,7 @@ export default class ResourceSelector extends React.Component<Props> {
     render() {
         let message;
         let isValid;
+        let notFound
         if (this.props.findingResourceId) {
             if (this.props.findingResource) {
                 isValid = true;
@@ -125,25 +127,17 @@ export default class ResourceSelector extends React.Component<Props> {
         }
 
         /*
-        <div style={{display:"inline-block",width:"auto"}}>
         // ...
-        <span style={{textAlign:"center",width:"60px",display:"inline-block"}}>or</span>
-        <TextField
-            label="Keyword"
-            id="keyword"
-            type="text"
-            onKeyPress={this.handleKeypress.bind(this)}
-            onChange={this.handleChange.bind(this)}
-        />
-        </div>
-        <br/>
         */
+
+        console.log("props",this.props)
 
         let view = <Card>
             <CardContent>
                 <Typography type="headline" component="h2">
                     Select a resource
                 </Typography>
+                <div style={{display:"inline-block",width:"auto"}}>
                 <TextField
                     autoFocus
                     label="Resource ID"
@@ -153,6 +147,16 @@ export default class ResourceSelector extends React.Component<Props> {
                     onKeyPress={this.handleKeypress.bind(this)}
                     onChange={this.handleChange.bind(this)}
                 />
+                <span style={{textAlign:"center",width:"60px",display:"inline-block"}}>or</span>
+                <TextField
+                label="Keyword(s)"
+                id="keyword"
+                type="text"
+                onKeyPress={this.handleKeypress.bind(this)}
+                onChange={this.handleChange.bind(this)}
+                />
+                </div>
+                <br/>
                 <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
                     Search
                 </Button>
@@ -164,7 +168,7 @@ export default class ResourceSelector extends React.Component<Props> {
                 </CardContent>
             }
 
-            <CardActions>
+            <CardContent>
                 {this.props.isDialog &&
                     <Button onClick={this.props.cancel}>
                         Cancel
@@ -175,7 +179,12 @@ export default class ResourceSelector extends React.Component<Props> {
                         Select
                     </Button>
                 }
-            </CardActions>
+                {this.props.findingResourceError && !this.props.findingResourceError.match(/valid characters.$/) &&
+                    <Button onClick={this.selectedResource.bind(this)}>
+                        Create
+                    </Button>
+                }
+                </CardContent>
         </Card>
 
         if (this.props.isDialog) {

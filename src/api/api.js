@@ -184,12 +184,12 @@ export default class API {
         try {
             firstChars = id.match(/^([A-Z]{0,2})/)[0];
         } catch(e) {
-            throw new InvalidResource('The resource does not start with a valid character.');
+            throw new InvalidResource('The resource does not start with valid characters.');
         }
 
         let dir = directoryPrefixes[firstChars];
-        if (!dir) {
-            throw new InvalidResource('The resource does not start with a valid character.');
+        if (!dir || !id.match(/^([A-Z]{0,2}[0-9]+)/)) {
+            throw new InvalidResource('The resource does not start with valid characters.');
         }
 
         const checksum = md5(id);
