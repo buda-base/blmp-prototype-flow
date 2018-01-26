@@ -1,4 +1,6 @@
 // @flow
+import * as data from 'state/data/actions';
+import store from 'index';
 import React from 'react';
 import Dialog, {
     DialogActions,
@@ -62,6 +64,12 @@ export default class ResourceSelector extends React.Component<Props> {
 
 
     }
+
+     createdResource() {
+        // console.log("create",this.props)
+
+        store.dispatch(data.createResource(this.props.findingResourceId))
+     }
 
     findResource() {
         if (this._textfield) {
@@ -179,8 +187,8 @@ export default class ResourceSelector extends React.Component<Props> {
                         Select
                     </Button>
                 }
-                {this.props.findingResourceError && !this.props.findingResourceError.match(/valid characters.$/) &&
-                    <Button onClick={this.selectedResource.bind(this)}>
+                {!isValid && this.props.findingResourceError && !this.props.findingResourceError.match(/valid characters.$/) &&
+                    <Button onClick={this.createdResource.bind(this)}>
                         Create
                     </Button>
                 }

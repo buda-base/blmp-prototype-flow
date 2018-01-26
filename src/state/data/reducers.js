@@ -40,7 +40,7 @@ reducers[actions.TYPES.loading] = loading;
 
 export const loadedResource = (state: DataState, action: actions.LoadedResourceAction) => {
     state = loading(state, actions.loading(action.payload.IRI, false));
-    
+
     /*
     // no need to do anything more in actions finally
     //(cf TabContent.graphTextIRI)
@@ -50,18 +50,18 @@ export const loadedResource = (state: DataState, action: actions.LoadedResourceA
     let graphT ;
     let txt = serializer.serialize(indiv, baseURI, indiv.namespaces)
     .then((str) => { return str; })
-     */ 
-    
+     */
+
       return {
       ...state,
-      
+
       /*
       graph:{
          ...state.graph,
          [action.payload.IRI]:txt
       },
       */
-      
+
       resources: {
             ...state.resources,
             [action.payload.IRI]: action.payload.individual
@@ -69,6 +69,23 @@ export const loadedResource = (state: DataState, action: actions.LoadedResourceA
    }
 }
 reducers[actions.TYPES.loadedResource] = loadedResource;
+
+export const createResource = (state: DataState, action: actions.LoadedResourceAction) => {
+
+         let indiv = new Individual("http://purl.bdrc.io/resource/"+action.payload) ;
+
+      return {
+      ...state,
+
+      resources: {
+            ...state.resources,
+            [action.payload]: indiv,
+            ["http://purl.bdrc.io/resource/"+action.payload]: indiv,
+      }
+   }
+}
+reducers[actions.TYPES.createResource] = createResource;
+
 
 export const resourceFailed = (state: DataState, action: actions.ResourceFailedAction) => {
     state = loading(state, actions.loading(action.payload.IRI, false));

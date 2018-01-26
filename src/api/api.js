@@ -188,9 +188,20 @@ export default class API {
         }
 
         let dir = directoryPrefixes[firstChars];
-        if (!dir || !id.match(/^([A-Z]{0,2}[0-9]+)/)) {
-            throw new InvalidResource('The resource does not start with valid characters.');
+        if (!dir) // || !id.match(/^([a-zA-Z0-9]{2,})+$/))
+        {
+            throw new InvalidResource('The resource does not contain only valid characters.')
+            //else throw new InvalidResource('The resource does not contain enough valid characters.');
         }
+        else if(id.match(/^([a-zA-Z])$/))
+        {
+            throw new InvalidResource('The resource has not enough valid characters.')
+        }
+        else if(!id.match(/^([a-zA-Z0-9]{2,})+$/))
+        {
+             throw new InvalidResource('The resource does not contain only valid characters.')
+        }
+
 
         const checksum = md5(id);
         const objectDir = checksum.substr(0, 2);
