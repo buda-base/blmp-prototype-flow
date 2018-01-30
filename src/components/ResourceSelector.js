@@ -58,6 +58,11 @@ export default class ResourceSelector extends React.Component<Props> {
    _notFound = false ;
    _search = false ;
 
+   selectResult(e:Event, IRI:string)
+   {
+      store.dispatch(data.loadResult(IRI.replace(/^.*\/([^\/]+)$/,"$1")))
+
+   }
    selectedResource() {
       if (this.props.findingResource && this.props.individual && this.props.property) {
          const individual = this.props.individual;
@@ -168,18 +173,17 @@ export default class ResourceSelector extends React.Component<Props> {
                indiv.addProperty("http://www.w3.org/2004/02/skos/core#prefLabel",new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", r.lit.value, "bo-x-ewts"))
 
                let p = r.s.value.replace(/^http([^\/]*\/)+([A-Z]+)[0-9].*?$/,"$2")
-               console.log("p",p);
 
                if(directoryPrefixes[p])
                {
                   indiv.types.push("http://purl.bdrc.io/ontology/core/"+directoryPrefixes[p].replace(/s$/,""))
                }
-               else { indiv.types.push("?") } 
+               else { indiv.types.push("?") }
 
                console.log("indiv",indiv)
 
                res.push(<IndividualView
-                  onClick={this.selectedResource.bind(this)}
+                  onClick={(e) => this.selectResult(e,r.s.value)}
                   individual={indiv}
                   isEditable={false}
                   isExpanded={false}

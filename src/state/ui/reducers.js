@@ -204,6 +204,14 @@ export const addedFoundResource = (state: UIState, action: TabAction): UIState =
 }
 reducers[actions.TYPES.addedFoundResource] = addedFoundResource;
 
+/*
+export const foundResults = (state: UIState, action: TabAction): UIState => {
+    state = updateTabState(action.meta.tabId, state, 'addingResource', null);
+    state = updateTabState(action.meta.tabId, state, 'findResource', null);
+    return state;
+}
+reducers[actions.TYPES.foundResults] = foundResults;
+*/
 
 
 

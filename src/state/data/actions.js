@@ -33,6 +33,14 @@ export const loadResource = (IRI: string): Action => {
     }
 }
 
+TYPES.loadResult = 'LOAD_RESULT';
+export const loadResult = (IRI: string): Action => {
+    return {
+        type: TYPES.loadResult,
+        payload: IRI
+    }
+}
+
 TYPES.createResource = 'CREATE_RESOURCE';
 export const createResource = (IRI: string): Action => {
     return {
