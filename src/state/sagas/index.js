@@ -28,7 +28,7 @@ function* watchEditingResource() {
 
 export function* loadResource(IRI) {
 
-   console.log("watchLoad");
+   console.log("load");
 
     yield put(dataActions.loading(IRI, true));
     try {
@@ -44,6 +44,7 @@ export function* loadResource(IRI) {
         yield put(dataActions.loading(IRI, false));
     }
 }
+
 
 export function* watchLoadResource() {
 
@@ -75,6 +76,30 @@ export function* watchFindResource() {
     );
 }
 
+
+export function* searchResource(key) {
+
+   console.log("search",key);
+
+     yield put(dataActions.loading(key, true));
+    try {
+        const result = yield call([api, api.getResults], key);
+        yield put(dataActions.foundResults(key, result));
+
+    } catch(e) {
+        yield put(dataActions.resourceFailed(key, e.message));
+        yield put(dataActions.loading(key, false));
+    }
+}
+
+export function* watchSearchResource() {
+
+    yield takeLatest(
+        uiActions.TYPES.searchResource,
+        (action) => searchResource(action.payload)
+    );
+}
+
 /** Root **/
 
 export default function* rootSaga() {
@@ -83,6 +108,7 @@ export default function* rootSaga() {
         watchLoadResource(),
         watchSelectedResource(),
         watchFindResource(),
+        watchSearchResource(),
         watchEditingResource()
     ])
 }

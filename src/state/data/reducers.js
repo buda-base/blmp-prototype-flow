@@ -87,6 +87,21 @@ export const createResource = (state: DataState, action: actions.LoadedResourceA
 reducers[actions.TYPES.createResource] = createResource;
 
 
+export const foundResults = (state: DataState, action: actions.FoundResultsAction) => {
+
+      return {
+      ...state,
+
+      resources: {
+            ...state.resources,
+            [action.payload.key]: action.payload.results
+            }
+   }
+}
+reducers[actions.TYPES.foundResults] = foundResults;
+
+
+
 export const resourceFailed = (state: DataState, action: actions.ResourceFailedAction) => {
     state = loading(state, actions.loading(action.payload.IRI, false));
     return {

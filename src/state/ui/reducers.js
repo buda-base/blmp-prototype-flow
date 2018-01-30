@@ -14,6 +14,7 @@ export type TabState = {
     selectedResourceIRI: string | null,
     addingResource: AddingResource | null,
     findResource: string | null,
+    searchResource: string | null,
 
     splitWidth:number,
     subSplitWidth:string | number,
@@ -38,6 +39,7 @@ const DEFAULT_TAB_STATE: TabState = {
     selectedResourceIRI: null,
     addingResource: null,
     findResource: null,
+    searchResource: null,
     splitWidth:"50%",
     subSplitWidth:350,
     hidePreview:true,
@@ -181,9 +183,19 @@ reducers[actions.TYPES.cancelAddingResource] = cancelAddingResource;
 export const findResource = (state: UIState, action: TabAction): UIState => {
    // console.log("found?", action.payload);
 
-    return updateTabState(action.meta.tabId, state, 'findResource', action.payload);
+
+       let newState = updateTabState(action.meta.tabId, state, 'findResource', action.payload);
+       return updateTabState(action.meta.tabId, newState, 'searchResource', null);
 }
 reducers[actions.TYPES.findResource] = findResource;
+
+export const searchResource = (state: UIState, action: TabAction): UIState => {
+   // console.log("found?", action.payload);
+
+    let newState = updateTabState(action.meta.tabId, state, 'searchResource', action.payload);
+    return updateTabState(action.meta.tabId, newState, 'findResource', null);
+}
+reducers[actions.TYPES.searchResource] = searchResource;
 
 export const addedFoundResource = (state: UIState, action: TabAction): UIState => {
     state = updateTabState(action.meta.tabId, state, 'addingResource', null);

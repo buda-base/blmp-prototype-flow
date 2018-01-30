@@ -10,7 +10,7 @@ export const getWidthInfo = (state: UIState, tabId: number): number | null => {
         ssw = tab.subSplitWidth ;
         hide = tab.hidePreview ;
     }
-    return { splitWidth : sw, subSplitWidth : ssw, hidePreview : hide } 
+    return { splitWidth : sw, subSplitWidth : ssw, hidePreview : hide }
 }
 
 export const getSelectedTabId = (state: UIState): number | null => {
@@ -34,9 +34,9 @@ export const getSelectedResourceIRI = (state: UIState, tabId: number): string | 
     if (state.editingResources[tabId]) {
         selectedResourceIRI = state.editingResources[tabId].selectedResourceIRI;
     }
-    
+
    //console.log("selected IRI",state,tabId,selectedResourceIRI)
-   
+
     return selectedResourceIRI ;
 }
 
@@ -54,4 +54,12 @@ export const getFindResource = (state: UIState, tabId: number): string | null =>
         findResource = state.editingResources[tabId].findResource;
     }
     return findResource;
+}
+
+export const getSearchResource = (state: UIState, tabId: number): string | null => {
+    let searchResource = null;
+    if (state.editingResources[tabId]) {
+        searchResource = state.editingResources[tabId].searchResource;
+    }
+    return searchResource;
 }

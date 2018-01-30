@@ -12,6 +12,8 @@ const mapStateToProps = (state, ownProps) => {
     const ontology = selectors.getOntology(state);
     const tabId = ownProps.tabId;
 
+
+
     let editingResourceIRI;
     let editingResource;
     let individual;
@@ -22,13 +24,16 @@ const mapStateToProps = (state, ownProps) => {
     let findingResourceError;
     let findingResourceId;
 
+    let searchingResource;
+    let results ;
+
     let addingResource;
     let selectedResourceIRI;
 
     let widthInfo ;
     let graphText ;
 
-    // console.log("mapstate2prop?",state,ownProps);
+    console.log("mapstate2prop?",state,ownProps);
 
     if (tabId) {
         editingResourceIRI = selectors.getEditingResourceIRI(state, tabId);
@@ -46,6 +51,12 @@ const mapStateToProps = (state, ownProps) => {
             findingResource = selectors.getResource(state, findingResourceId);
             findingResourceError = selectors.getResourceError(state, findingResourceId);
         }
+        searchingResource = selectors.getSearchResource(state,tabId);
+        if(searchingResource)
+        {
+            findingResourceError = selectors.getResourceError(state, searchingResource);
+            results = selectors.getResults(state, searchingResource);
+        }
 
         addingResource = selectors.getAddingResource(state, tabId);
         selectedResourceIRI = selectors.getSelectedResourceIRI(state, tabId);
@@ -62,7 +73,7 @@ const mapStateToProps = (state, ownProps) => {
 
 //     console.log("state=",state,ownProps);
 
-    return {
+    const props = {
         ontology,
         editingResourceIRI,
         editingResource,
@@ -74,8 +85,14 @@ const mapStateToProps = (state, ownProps) => {
         findingResourceId,
         findingResource,
         findingResourceError,
+        searchingResource,
+        results,
         ...widthInfo,
     }
+
+    console.log("props",props)
+
+    return props ;
         //graphText
 
         /*
@@ -108,6 +125,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
            // console.log("lets find",id)
             dispatch(ui.findResource(tabId, id))
             // console.log("wefound",id)
+        },
+        onSearchResource: (id) => {
+           console.log("lets search",id)
+            dispatch(ui.searchResource(tabId, id))
         },
         onAddedProperty: () => dispatch(ui.addedFoundResource(tabId)),
 

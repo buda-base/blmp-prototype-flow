@@ -88,3 +88,22 @@ export const loadedOntology = (ontology: Ontology): OntologyAction => {
         payload: ontology
     }
 }
+
+
+export type FoundResultsAction = {
+    type: string,
+    payload: {
+        key: string,
+        results: []
+    }
+}
+TYPES.foundResults = 'FOUND_RESULTS';
+export const foundResults = (key: string, results: []): FoundResultsAction => {
+    return {
+        type: TYPES.foundResults,
+        payload: {
+            key,
+            results
+        }
+    }
+}

@@ -4,7 +4,7 @@ import Graph from '../lib/Graph';
 import Ontology from '../lib/Ontology';
 import Individual from '../lib/Individual';
 
-const directoryPrefixes = {
+export const directoryPrefixes = {
     'C': 'corporations', //
     'UT': 'etexts',
     'I': 'items',
@@ -64,25 +64,54 @@ export default class API {
         }
     }
 
-    getURLContents(url: string): Promise<string> {
+    getSearchContents(url: string, key:string, param:string="L_LANG=@bo-x-ewts&I_LIM=10&"): Promise<[]> {
         let text;
         return new Promise((resolve, reject) => {
-            var payload = {"searchType":"pdi_w_bibli","L_NAME":"rgyud+bla+ma"}
-            var data = new FormData();
-            data.append( "json", JSON.stringify( payload ) );
 
+            this._fetch( url,
+            {// header pour accéder aux résultat en JSON !
+              method: 'POST',
+              body:"searchType=Res_byName&"+param+"L_NAME=\""+key+"\"",
+              headers:new Headers({"Content-Type": "application/x-www-form-urlencoded"})
+           }).then((response) => {
+
+                if (!response.ok) {
+                    if (response.status == '404') {
+                        throw new ResourceNotFound('The search server '+url+' seem to have moved...');
+                    }
+                    else {
+                       console.log("FETCH pb",response)
+                        throw new ResourceNotFound('Problem fetching the results ['+response.message+']');
+                    }
+                }
+                console.log("FETCH ok",url,response)
+
+                response.text().then((req) => {
+                    text = JSON.parse(req).results.bindings ;
+
+                    console.log("text",text)
+
+                    if(text.length == 0) {
+                       throw new InvalidResource('No results found');
+                    }
+
+                    resolve(text);
+                }).catch((e) => {
+                   reject(e);
+               });
+            }).catch((e) => {
+                reject(e);
+            });
+        });
+    }
+
+
+    getURLContents(url: string, key:string): Promise<string> {
+        let text;
+        return new Promise((resolve, reject) => {
 
             this._fetch( url
-
-                  /* // header pour accéder aux résultat en JSON !
-            "http://buda1.bdrc.io:13280/lds-pdi/query",
-            {
-              method: 'POST',
-              body:"searchType=pdi_w_bibli&L_NAME=rgyud+bla+ma",
-              headers:new Headers({"Content-Type": "application/x-www-form-urlencoded"})
-           }
-
-/*
+                  /*
                ,  {
                method: 'GET',
                 // mode: 'no-cors',
@@ -213,7 +242,7 @@ export default class API {
 
 
 
-         url = "http://buda1.bdrc.io:13280/lds-pdi/query/"+id;
+         url = "http://buda1.bdrc.io:13280/resource/"+id ;
 
 
 
@@ -224,6 +253,36 @@ export default class API {
         }
         return url;
     }
+
+
+
+   async _getResultsData(key: string): Promise<[] | null> {
+     try {
+          let url = "http://buda1.bdrc.io:13280/resource/templates" ; //this._getResourceURL(id);
+          let data = this.getSearchContents(url, key);
+
+         // console.log("_reData");
+
+          // return resourceData;
+
+          return data ;
+     } catch(e) {
+          throw e;
+     }
+ }
+    async getResults(id: string): Promise<[] | null> {
+        let data: [];
+
+        // console.log("reData");
+
+        try {
+            data = await this._getResultsData(id)
+
+            return data ;
+        } catch(e) {
+            throw e;
+        }
+     }
 
     async _getResourceData(id: string): Promise<string | null> {
         try {

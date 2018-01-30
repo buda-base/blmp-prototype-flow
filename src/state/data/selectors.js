@@ -17,3 +17,7 @@ export const isResourceLoading = (state: DataState, IRI: string): boolean => {
 export const getOntology = (state: DataState): Ontology => {
     return state.ontology;
 }
+
+export const getResults = (state: DataState, IRI: string): [] => {
+    return state.resources[IRI];
+}

@@ -31,11 +31,14 @@ type Props = {
     findingResourceId: string,
     findingResource: Individual,
     findingResourceError: string,
+    searchingResource: string,
+    results:[],
     onOpenedResource: (resource: Individual) => void,
     onSelectedResource: (IRI: string) => void,
     onAddResource: (indvidual: Individual, property: RDFProperty) => void,
     onCancelAddingResource: () => void,
     onFindResource: (id: string) => void,
+    onSearchResource: (id: string) => void,
     onAddedProperty: () => void,
     onResizeCentralPanel: (tabId: number) => void,
     onResizePreviewPanel: (tabId: number) => void
@@ -54,12 +57,12 @@ class TabContent extends Component<Props, State> {
     _secondarySplitPane = null;
     _secondarySplitPaneWidth = 350;
     _graphTextIRI = null ;
-    
+
     // cancellers for timeouts
     updaSpli = 0 ;
     updaSuSpli = 0 ;
-    
-    
+
+
     constructor(props: Props) {
         super(props);
 
@@ -69,31 +72,31 @@ class TabContent extends Component<Props, State> {
             splitWidth: this._mainSplitPaneWidth,
             subSplitWidth: this._secondarySplitPaneWidth,
         };
-        
+
     }
-    
-    
-    componentDidUpdate(prevProps, prevState) 
-    {    
+
+
+    componentDidUpdate(prevProps, prevState)
+    {
        if(this._graphTextIRI != this.props.editingResourceIRI)
        {
          this.updateGraphText();
          this._graphTextIRI = this.props.editingResourceIRI ;
-         
+
        }
     }
-    
-    
-    updateSplitWidth(width : number) 
-    { 
+
+
+    updateSplitWidth(width : number)
+    {
       if(this.updaSpli != 0) clearTimeout(this.updaSpli);
-      this.updaSpli = setTimeout((function(that,wid) 
-      { 
+      this.updaSpli = setTimeout((function(that,wid)
+      {
          return function() {
             //console.log("timeo",that,wid);
-            
+
             that.props.onResizeCentralPanel(wid)
-            
+
             /*// react state version
             that.setState((prevState: State, props: Props) => {
                   return {
@@ -101,21 +104,21 @@ class TabContent extends Component<Props, State> {
                      splitWidth:wid
                   }
             })}
-            
+
             */
-         
+
          }})(this,width), 500) ;
     }
-    
-    updateSubSplitWidth(width : number) {  
+
+    updateSubSplitWidth(width : number) {
       if(this.updaSuSpli != 0) clearTimeout(this.updaSuSpli);
-      this.updaSuSpli = setTimeout((function(that,wid) 
-      { 
+      this.updaSuSpli = setTimeout((function(that,wid)
+      {
          return function() {
             //console.log("timeo",that,wid);
-            
+
             that.props.onResizePreviewPanel(wid)
-            
+
             /* // react state version
             that.setState((prevState: State, props: Props) => {
                   return {
@@ -123,32 +126,32 @@ class TabContent extends Component<Props, State> {
                      subSplitWidth:wid
                   }
             })}
-            
+
             */
          }})(this,width), 500) ;
     }
-    
-    
+
+
     updateGraphText() {
-       
+
         if (!this.props.individual) {
             return;
         }
-        
+
         //console.log("updateGraph",this.props.individual)
-        
+
         let serializer = new Serializer();
         const baseURI = 'http://purl.bdrc.io/ontology/core/';
         serializer.serialize(this.props.individual, baseURI, this.props.individual.namespaces)
             .then((str) => {
                 this.setState((prevState, props) => {
-                   
+
                     return {
                         ...prevState,
                         graphText: str
                     }
                 });
-            });   
+            });
     }
 
     render() {
@@ -156,10 +159,10 @@ class TabContent extends Component<Props, State> {
             this.updateGraphText();
         }
 
-        let onIndividualUpdated = () => 
+        let onIndividualUpdated = () =>
         {
 //            console.log("updated!!!");
-           
+
             this.updateGraphText();
         };
 
@@ -170,11 +173,11 @@ class TabContent extends Component<Props, State> {
         };
 
         const toggleShowPreview = () => {
-           
-            this.props.onTogglePreviewPanel(); 
-            
+
+            this.props.onTogglePreviewPanel();
+
             //if(this.props.hidePreview)
-            
+
            /*
             this.setState((prevState: State, props: Props) => {
                 let visibleWidth = this._secondarySplitPaneWidth;
@@ -197,22 +200,25 @@ class TabContent extends Component<Props, State> {
 
 //         console.log("render/state",this.state);
 //         console.log("render/props",this.props);
-        
+
          // first react state version :
-         //    onChange={ console.log("resize",this.state.splitWidth) } 
-         //    onChange={ this.updateSplitWidth.bind(this) } 
+         //    onChange={ console.log("resize",this.state.splitWidth) }
+         //    onChange={ this.updateSplitWidth.bind(this) }
          // first redux version :
-         //    onChange={ width => this.props.onResizeCentralPanel(width) } 
-        
-        
+         //    onChange={ width => this.props.onResizeCentralPanel(width) }
+
+
         return (
             <div className="TabContent">
                 {!this.props.editingResource &&
                     <div className="tabResourceSelector">
-                        <ResourceSelector 
+                        <ResourceSelector
                             isDialog={false}
                             selectedResource={this.props.onOpenedResource}
                             findResource={this.props.onFindResource}
+                            searchResource={this.props.onSearchResource}
+                            searchingResource={this.props.searchingResource}
+                            results={this.props.results}
                             cancel={this.props.onCancelAddingResource}
                             findingResourceId={this.props.findingResourceId}
                             findingResource={this.props.findingResource}
@@ -225,9 +231,9 @@ class TabContent extends Component<Props, State> {
                     <SplitPane
                     split="vertical"
                     minSize={350}
-                    onChange={ this.updateSplitWidth.bind(this) } 
+                    onChange={ this.updateSplitWidth.bind(this) }
                     size={ this.props.splitWidth }
-                    allowResize={true}                    
+                    allowResize={true}
                     ref={(split) => this._mainSplitPane = split}
                     >
                         <SplitPane split="horizontal" size={90} allowResize={false}
@@ -241,9 +247,9 @@ class TabContent extends Component<Props, State> {
                                     ontology={this.props.ontology}
                                     onIndividualUpdated={onIndividualUpdated}
                                     onAddResource={this.props.onAddResource}
-                                /> 
+                                />
                                 {this.props.addingResource &&
-                                    <ResourceSelector 
+                                    <ResourceSelector
                                         isDialog={true}
                                         individual={this.props.addingResource.individual}
                                         property={this.props.addingResource.property}
@@ -253,6 +259,9 @@ class TabContent extends Component<Props, State> {
                                         findingResource={this.props.findingResource}
                                         findingResourceError={this.props.findingResourceError}
                                         ontology={this.props.ontology}
+                                        searchResource={this.props.onSearchResource}
+                                        searchingResource={this.props.searchingResource}
+                                        results={this.props.results}
                                         addedProperty={() => {
                                             this.props.onAddedProperty();
                                             this.updateGraphText();
@@ -263,7 +272,7 @@ class TabContent extends Component<Props, State> {
                         </SplitPane>
                         <SplitPane
                             minSize={350}
-                           onChange={ this.updateSubSplitWidth.bind(this) }  
+                           onChange={ this.updateSubSplitWidth.bind(this) }
                            size={ this.props.hidePreview?"100%":this.props.subSplitWidth  }
                             allowResize={true}
                             ref={(split) => this._secondarySplitPane = split} >
@@ -271,7 +280,7 @@ class TabContent extends Component<Props, State> {
                                 <div>
                                     <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.props.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
                                 </div>
-                                <ResourceViewContainer 
+                                <ResourceViewContainer
                                     ontology={this.props.ontology}
                                 />
                             </SplitPane>

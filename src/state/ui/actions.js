@@ -107,6 +107,20 @@ export const findResource = (tabId: number, resourceId: string): TabAction => {
     }
 }
 
+TYPES.searchResource = 'SEARCH_RESOURCE';
+export const searchResource = (tabId: number, resourceId: string): TabAction => {
+
+console.log("searching...")
+
+    return {
+        type: TYPES.searchResource,
+        payload: resourceId,
+        meta: {
+            tabId
+        }
+    }
+}
+
 TYPES.addedFoundResource = 'ADDED_FOUND_RESOURCE';
 // export const addedFoundResource = createAction(TYPES.addedFoundResource);
 export const addedFoundResource = (tabId: number): TabAction => {
