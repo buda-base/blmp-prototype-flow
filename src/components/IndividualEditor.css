@@ -18,7 +18,7 @@
 
 
 /* .individualView { flex:none !important; } */
-.individualView ul ul li { flex-grow:1; } 
+.individualView ul ul li { flex-grow:1; }
 .individualView ul ul > div { display:flex; }
 li.noPad { padding-right:0; }
 
@@ -27,10 +27,11 @@ li.noPad { padding-right:0; }
 .literalView > div:first-child:last-child { width:calc(100% - 20px); }
 
 
-.plusBut,.remoBut { position:relative !important; margin-top:10px !important;display:flex;align-items:top;right:0 !important;} 
+.plusBut,.remoBut { position:relative !important; margin-top:10px !important;display:flex;align-items:top;right:0 !important;}
 /* .remoBut.ind { margin-right:24px; } */
 
-.Pane2 .individualView > ul, .inCollapse > div > div > div { display:flex; }
+.Pane2 .individualView > ul, .inCollapse > div > div > div,
+.individualView ul li { display:flex; }
 .Pane2 .individualView > ul > li, .inCollapse > div  { flex-grow:1; }
 
 

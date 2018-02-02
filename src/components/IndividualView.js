@@ -58,6 +58,7 @@ const getListItemStyle = (level) => {
       display: 'flex',
       alignItems: 'flex-end',
       marginLeft: 30 + 'px',
+      //width:"calc(100% - 30px)"
       //              paddingRight:"50px"
    };
 };
