@@ -71,7 +71,7 @@ export default class API {
             this._fetch( url,
             {// header pour accéder aux résultat en JSON !
               method: 'POST',
-              body:"searchType=Res_byName&"+param+"L_NAME=\""+key+"\"",
+              body:"searchType=BLMP&"+param+"L_NAME=\""+key+"\"",
               headers:new Headers({"Content-Type": "application/x-www-form-urlencoded"})
            }).then((response) => {
 
@@ -87,7 +87,10 @@ export default class API {
                 console.log("FETCH ok",url,response)
 
                 response.text().then((req) => {
-                    text = JSON.parse(req).results.bindings ;
+
+                     console.log("req",req)
+
+                    text = JSON.parse(req) //.results.bindings ;
 
                     console.log("text",text)
 
@@ -243,7 +246,7 @@ export default class API {
 
 
          url = "http://buda1.bdrc.io:13280/resource/"+id ;
-
+         // url = "http://localhost:8080/resource/"+id ;
 
 
 //         console.log([OBJECT_PATH, dir, objectDir, id, url])

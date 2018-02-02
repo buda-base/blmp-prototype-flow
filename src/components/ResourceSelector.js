@@ -161,29 +161,38 @@ export default class ResourceSelector extends React.Component<Props> {
       }
       else if(this.props.searchingResource)
       {
-         if(this.props.results && this.props.results.length > 0)
+         if(this.props.results && this.props.results.numResults > 0)
          {
             let res = [] ;
 
-            for(let i in this.props.results)
+            for(let i in this.props.results.rows)
             {
-               let r = this.props.results[i]
+               let r = this.props.results.rows[i].dataRow
 
-               let indiv = new Individual(r.s.value)
-               indiv.addProperty("http://www.w3.org/2004/02/skos/core#prefLabel",new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", r.lit.value, "bo-x-ewts"))
+               let id = r.s.replace(/^.*> *(.*)<.*$/,"$1")
+               let lab = r.lit.replace(/@.*/,"")
+               let lang = r.lit.replace(/.*@/,"@")
+               let p = id[0]
+               let indiv ;
 
-               let p = r.s.value.replace(/^http([^\/]*\/)+([A-Z]+)[0-9].*?$/,"$2")
+              console.log("dbg",lab,lang,id,p,directoryPrefixes[p])
 
                if(directoryPrefixes[p])
                {
+                  indiv = new Individual(id)
                   indiv.types.push("http://purl.bdrc.io/ontology/core/"+directoryPrefixes[p].replace(/s$/,""))
                }
-               else { indiv.types.push("?") }
+               else {
+                  indiv = new Individual("?")
+                  indiv.types.push("Blank Node")
+               }
+
+               indiv.addProperty("http://www.w3.org/2004/02/skos/core#prefLabel",new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", lab, lang))
 
                console.log("indiv",indiv)
 
                res.push(<IndividualView
-                  onClick={(e) => this.selectResult(e,r.s.value)}
+                  onClick={(e) => this.selectResult(e,id)}
                   individual={indiv}
                   isEditable={false}
                   isExpanded={false}
