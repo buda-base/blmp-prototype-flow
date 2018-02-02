@@ -189,7 +189,7 @@ export default class Ontology {
            if(classes[c].hasAncestorclass("http://purl.bdrc.io/ontology/core/Facet",false))
            {
              // console.log("isok",c)
-             let sup  = classes[c].superclasses.filter(superclass => superclass.hasSuperclass("http://purl.bdrc.io/ontology/core/Facet"))
+             let sup  = classes[c].superclasses.filter(superclass => superclass.hasAncestorclass("http://purl.bdrc.io/ontology/core/Facet"))
              //console.log("sup",sup,classes[c],sup.addValue)
              sup[0].addSubclass(classes[c])
            }

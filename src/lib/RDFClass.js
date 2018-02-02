@@ -64,7 +64,7 @@ export default class RDFClass {
 
         let ret =  this._superclasses &&
                 this._superclasses
-                    .filter(superclass => (canSuper && superclass.IRI === superclassIRI) || superclass.hasSuperclass(superclassIRI))
+                    .filter(superclass => (canSuper && superclass.IRI === superclassIRI) || superclass.hasAncestorclass(superclassIRI))
                     .length > 0;
 
         // console.log("superC=",ret,superclassIRI,canSuper,this)

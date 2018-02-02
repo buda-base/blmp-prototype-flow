@@ -229,7 +229,7 @@ export default class API {
         {
             throw new InvalidResource('The resource has not enough valid characters.')
         }
-        else if(!id.match(/^([a-zA-Z0-9]{2,})+$/))
+        else if(!id.match(/^([a-zA-Z_0-9]{2,})+$/))
         {
              throw new InvalidResource('The resource does not contain only valid characters.')
         }

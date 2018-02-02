@@ -140,13 +140,13 @@ constructor(props: Props) {
       }
       else if(onto._classes[t] && onto._classes[t].hasAncestorclass(facetIRI))
       {
-         // console.log("sub",this.props.propertyValues)
+         //console.log("sub",this.props.propertyValues)
 
          let found = false ;
 
          for(let k in this.props.propertyValues) {  //.ranges[i]
 
-            // console.log("k",k)
+             //console.log("k",k)
 
             let v =  this.props.propertyValues[k]
             if(!v || v._types.length == 0) continue ;
@@ -157,11 +157,11 @@ constructor(props: Props) {
 
                if(onto._classes[u] && onto._classes[u].hasAncestorclass(facetIRI,false))
                {
-                    // console.log("sup/facet",t,onto._classes[t].subclasses) //,onto._classes[t].subclasses)
+                     //console.log("sup/facet",t,onto._classes[t].subclasses) //,onto._classes[t].subclasses)
 
                      this._list = onto._classes[t]._subclasses.map((val) =>
                      {
-                         // console.log("val",val)
+                        //console.log("val",val)
                         return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val.IRI)}>{onto.getMainLabel(val.IRI)}</MenuItem> )
                      })
 
@@ -575,7 +575,7 @@ addProperty(propertyType: string, propy:RDFProperty, val:string = "") {
    if(propy) property = propy
 
 
-           console.log("add",this.props.individual,propertyType,property,type);
+   //console.log("add",this.props.individual,propertyType,property,type);
 
    if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
    {
@@ -590,7 +590,7 @@ addProperty(propertyType: string, propy:RDFProperty, val:string = "") {
 
       const propertyRange = property.ranges[0];
 
-               console.log("range",propertyRange)
+      //console.log("range",propertyRange)
 
       if (ontology.isClass(propertyRange)) {
          const propertyIndividual = new Individual();
@@ -607,8 +607,13 @@ addProperty(propertyType: string, propy:RDFProperty, val:string = "") {
          let c = ontology._classes[val]
          // console.log(c,c._properties);
          if(c) {
+            let sup = [].concat(c._superclasses)
+            for(let s in c._superclasses) { sup = sup.concat(c._superclasses[s]._superclasses) ; }
+
+            //console.log("sup",sup)
+
             let props = [].concat(Object.keys(c._properties))
-            for(let s in c._superclasses){ props = props.concat(Object.keys(c._superclasses[s]._properties)) }
+            for(let s in sup){ props = props.concat(Object.keys(sup[s]._properties)) }
             //console.log(props)
             for(let p in props){ propertyIndividual.addProperty(props[p]); }
          }

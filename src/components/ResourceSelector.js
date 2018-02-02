@@ -224,7 +224,7 @@ export default class ResourceSelector extends React.Component<Props> {
       // ...
       */
 
-      console.log("render.props",this.props)
+      //console.log("render.props",this.props)
 
       let view = <Card>
       <CardContent>

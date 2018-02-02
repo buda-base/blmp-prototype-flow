@@ -33,7 +33,7 @@ const mapStateToProps = (state, ownProps) => {
     let widthInfo ;
     let graphText ;
 
-    console.log("mapstate2prop?",state,ownProps);
+    //console.log("mapstate2prop?",state,ownProps);
 
     if (tabId) {
         editingResourceIRI = selectors.getEditingResourceIRI(state, tabId);
@@ -90,7 +90,7 @@ const mapStateToProps = (state, ownProps) => {
         ...widthInfo,
     }
 
-    console.log("props",props)
+    //console.log("props",props)
 
     return props ;
         //graphText
