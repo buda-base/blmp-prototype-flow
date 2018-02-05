@@ -37,7 +37,7 @@ export const REMOTE_ENTITIES = [
     "http://purl.bdrc.io/ontology/core/Work"
 ]
 
-let LDSPDI_HOST ;
+export let LDSPDI_HOST ;
 
 export interface APIResponse {
     text(): Promise<string>
@@ -78,7 +78,7 @@ export default class API {
            }).then((response) => {
 
                 if (!response.ok) {
-                    if (response.status == '404') {
+                    if (response.status === '404') {
                         throw new ResourceNotFound('The search server '+url+' seem to have moved...');
                     }
                     else {
@@ -96,7 +96,7 @@ export default class API {
 
                     console.log("text",text)
 
-                    if(text.length == 0) {
+                    if(text.length === 0) {
                        throw new InvalidResource('No results found');
                     }
 
@@ -167,7 +167,7 @@ export default class API {
          ).then((response) => {
 
                 if (!response.ok) {
-                    if (response.status == '404') {
+                    if (response.status === '404') {
                         throw new ResourceNotFound('The resource does not exist.');
                     }
                     else {

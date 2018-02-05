@@ -1,5 +1,5 @@
 // @flow
-import {directoryPrefixes} from 'api/api';
+import {directoryPrefixes,LDSPDI_HOST} from 'api/api';
 import Literal from 'lib/Literal';
 import * as data from 'state/data/actions';
 import * as ui from 'state/ui/actions';
@@ -60,7 +60,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
    selectResult(e:Event, IRI:string)
    {
-      store.dispatch(data.loadResult(IRI.replace(/^.*\/([^\/]+)$/,"$1")))
+      store.dispatch(data.loadResult(IRI.replace(/^.*\/([^/]+)$/,"$1")))
 
    }
    selectedResource() {
@@ -106,14 +106,14 @@ export default class ResourceSelector extends React.Component<Props> {
    {
       this._isValid = false ;
 
-      if(txt == 'key') this._search = true ;
-      else if(txt == 'res') this._search = false ;
+      if(txt === 'key') this._search = true ;
+      else if(txt === 'res') this._search = false ;
    }
 
    handleKeypress(e,txt : string = '')
    {
-      if(txt == 'key') this._search = true ;
-      else if(txt == 'res') this._search = false ;
+      if(txt === 'key') this._search = true ;
+      else if(txt === 'res') this._search = false ;
 
       if (e.key === 'Enter')
       {
@@ -127,7 +127,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
       let message;
       let isValid;
-      let notFound
+      let notFound;
       if (this.props.findingResourceId) {
          if (this.props.findingResource) {
             isValid = true;
@@ -137,21 +137,21 @@ export default class ResourceSelector extends React.Component<Props> {
             this._isValid = isValid
 
             message = <div>
-            <Typography>Found:</Typography>
-            <IndividualView
-               onClick={this.selectedResource.bind(this)}
-               individual={this.props.findingResource}
-               isEditable={false}
-               isExpanded={false}
-               isExpandable={false}
-               nested={true}
-               level={0}
-               showLabel={true}
-               ontology={this.props.ontology}
-            />
-            {!isValid &&
-               <p>Error: this resource is not valid for this property.</p>
-            }
+               <Typography>{"Found (" + LDSPDI_HOST+ "):"}</Typography>
+               <IndividualView
+                  onClick={this.selectedResource.bind(this)}
+                  individual={this.props.findingResource}
+                  isEditable={false}
+                  isExpanded={false}
+                  isExpandable={false}
+                  nested={true}
+                  level={0}
+                  showLabel={true}
+                  ontology={this.props.ontology}
+               />
+               {!isValid &&
+                  <p>Error: this resource is not valid for this property.</p>
+               }
             </div>
          } else if (this.props.findingResourceError) {
             message = <Typography>Error loading resource: {this.props.findingResourceError}</Typography>
@@ -161,6 +161,7 @@ export default class ResourceSelector extends React.Component<Props> {
       }
       else if(this.props.searchingResource)
       {
+         console.log("results",this.props.results)
          if(this.props.results && this.props.results.numResults > 0)
          {
             let res = [] ;
@@ -175,7 +176,7 @@ export default class ResourceSelector extends React.Component<Props> {
                let p = id[0]
                let indiv ;
 
-              console.log("dbg",lab,lang,id,p,directoryPrefixes[p])
+               console.log("dbg",lab,lang,id,p,directoryPrefixes[p])
 
                if(directoryPrefixes[p])
                {
@@ -206,15 +207,20 @@ export default class ResourceSelector extends React.Component<Props> {
 
             message =
             <div>
-               <Typography>Found:</Typography>
-                  <List style={{maxHeight: 320, overflow: 'auto'}}>
-                     {res}
-                  </List>
-               </div>
+               <Typography>{"Found (" + LDSPDI_HOST+'):'}</Typography>
+               <List style={{maxHeight: 320, overflow: 'auto'}}>
+                  {res}
+               </List>
+            </div>
          }
-         else if (this.props.findingResourceError) {
+         else if(this.props.results && this.props.results.numResults == 0)
+         {
+            message = <Typography>No results found.</Typography>
+         }
+        else if (this.props.findingResourceError) {
             message = <Typography>Error loading resource: {this.props.findingResourceError}</Typography>
-         } else {
+         }
+         else {
             message = <Loader loaded={false} />
          }
 
@@ -227,59 +233,59 @@ export default class ResourceSelector extends React.Component<Props> {
       //console.log("render.props",this.props)
 
       let view = <Card>
-      <CardContent>
-      <Typography type="headline" component="h2">
-      Select a resource
-      </Typography>
-      <div style={{display:"inline-block",width:"auto"}}>
-         <TextField
-            autoFocus
-            label="Resource ID"
-            id="resourceID"
-            type="text"
-            inputRef={(searchInput) => this._textfield = searchInput } //; this._focus = false ;  console.log("ref");} }
-            onKeyPress={(e) => this.handleKeypress(e,"res")}
-            onChange={ (e) => this.handleChange(e,"res")}
-         />
-         <span style={{textAlign:"center",width:"60px",display:"inline-block"}}>or</span>
-         <TextField
-            inputRef={(searchInput) => this._textfieldS = searchInput } //; this._focus = true ; console.log("refS"); } }
-            label="Keyword(s)"
-            id="keyword"
-            type="text"
-            onKeyPress={(e) => this.handleKeypress(e,"key")}
-            onChange={ (e) => this.handleChange(e,"key")}
-         />
-      </div>
-      <br/>
-      <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
-      Search
-      </Button>
-      </CardContent>
-
-      { (this.props.findingResourceId || this.props.searchingResource) &&
          <CardContent>
-         {message}
+            <Typography type="headline" component="h2">
+               Select a resource
+            </Typography>
+            <div style={{display:"inline-block",width:"auto"}}>
+               <TextField
+                  autoFocus
+                  label="Resource ID"
+                  id="resourceID"
+                  type="text"
+                  inputRef={(searchInput) => this._textfield = searchInput } //; this._focus = false ;  console.log("ref");} }
+                  onKeyPress={(e) => this.handleKeypress(e,"res")}
+                  onChange={ (e) => this.handleChange(e,"res")}
+               />
+               <span style={{textAlign:"center",width:"60px",display:"inline-block"}}>or</span>
+               <TextField
+                  inputRef={(searchInput) => this._textfieldS = searchInput } //; this._focus = true ; console.log("refS"); } }
+                  label="Keyword(s)"
+                  id="keyword"
+                  type="text"
+                  onKeyPress={(e) => this.handleKeypress(e,"key")}
+                  onChange={ (e) => this.handleChange(e,"key")}
+               />
+            </div>
+            <br/>
+            <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
+               Search
+            </Button>
          </CardContent>
-      }
 
-      <CardContent>
-      {this.props.isDialog &&
-         <Button onClick={this.props.cancel}>
-         Cancel
-         </Button>
-      }
-      {isValid &&
-         <Button onClick={this.selectedResource.bind(this)}>
-         Select
-         </Button>
-      }
-      {!isValid && !this._search && this.props.findingResourceError && this.props.findingResourceError.match(/The resource does not exist.$/) &&
-         <Button onClick={this.createdResource.bind(this)}>
-         Create
-         </Button>
-      }
-      </CardContent>
+         { (this.props.findingResourceId || this.props.searchingResource) &&
+            <CardContent>
+               {message}
+            </CardContent>
+         }
+
+         <CardContent>
+            {this.props.isDialog &&
+               <Button onClick={this.props.cancel}>
+                  Cancel
+               </Button>
+            }
+            {isValid &&
+               <Button onClick={this.selectedResource.bind(this)}>
+                  Select
+               </Button>
+            }
+            {!isValid && !this._search && this.props.findingResourceError && this.props.findingResourceError.match(/The resource does not exist.$/) &&
+               <Button onClick={this.createdResource.bind(this)}>
+                  Create
+               </Button>
+            }
+         </CardContent>
       </Card>
 
       if (this.props.isDialog) {
@@ -299,33 +305,33 @@ export default class ResourceSelector extends React.Component<Props> {
       <DialogContent>
       <DialogContentText>
       Please enter the ID of the resource you would like to use.
-      </DialogContentText>
-      <TextField
-      autoFocus
-      label="Resource ID"
-      id="resourceID"
-      type="text"
-      inputRef={(searchInput) => this._textfield = searchInput}
-      />
-      <Button onClick={this.findResource.bind(this)}>
-      Search
-      </Button>
-      </DialogContent>
+   </DialogContentText>
+   <TextField
+   autoFocus
+   label="Resource ID"
+   id="resourceID"
+   type="text"
+   inputRef={(searchInput) => this._textfield = searchInput}
+/>
+<Button onClick={this.findResource.bind(this)}>
+Search
+</Button>
+</DialogContent>
 
-      {this.props.findingResourceId &&
-      <DialogContent>
-      {message}
-      </DialogContent>
-   }
+{this.props.findingResourceId &&
+<DialogContent>
+{message}
+</DialogContent>
+}
 
-   <DialogActions>
-   <Button onClick={this.props.cancel}>
-   Cancel
-   </Button>
-   {isValid &&
-   <Button onClick={this.selectedResource.bind(this)}>
-   Select
-   </Button>
+<DialogActions>
+<Button onClick={this.props.cancel}>
+Cancel
+</Button>
+{isValid &&
+<Button onClick={this.selectedResource.bind(this)}>
+Select
+</Button>
 }
 </DialogActions>
 </Dialog>

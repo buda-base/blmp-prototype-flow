@@ -15,7 +15,7 @@ After yarn is installed, clone the repo, then simply run
 To start the test server:
 
     yarn start
-    
+
 It should automatically open the test page in Chrome. Otherwise, visit <http://localhost:3000>
 
 ### Copy .ttl files
@@ -30,7 +30,7 @@ Currently, in order to load resources, you will also need to copy a directory of
 
 ### Config
 
-The project was created using [create-react-app](https://github.com/facebookincubator/create-react-app). 
+The project was created using [create-react-app](https://github.com/facebookincubator/create-react-app).
 
 However, it needed to be 'ejected' in order to change some settings required for rdflib, which is rdf library we use. As such, any updates to the create-react-app scripts will need to be applied manually. This should not be required but there may be some feature additions in future which would make an upgrade worth it.
 
@@ -73,7 +73,7 @@ Located in `src/lib`
 *  `Ontology.js`
 
     Allows parsing an owl file and selecting properties for RDF classes. See `Ontology.test.js` for an example of how to use it.
- 
+
 * `Graph.js`
 
     Parses an RDF graph and extracts individual resources along with their properties and values.
@@ -92,3 +92,10 @@ These subclass `RDFComponent` and must export an IRI variable for the property i
 
 
 
+## Settings
+
+### URL to lds-pdi
+
+By default, the app will test on startup where lds-pdi is reachable. The first candidate url is `http://localhost:8080`, then it tries `http://localhost:13280` and finally `http://buda1.bdrc.io`.
+
+This automatic setting can be bypassed using a `GET` parameter if needed: `?lds-pdi=...`. For example, `http://localhost:13280?ldspdi=bdrc1.bdrc.io:13280` will use the online `fuseki` server instead of the default `http://localhost:13280`.

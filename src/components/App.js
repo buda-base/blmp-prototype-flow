@@ -11,11 +11,11 @@ class App extends Component<Props> {
 
     render() {
        let tabs=<TabsContainer /> ;
-       
+
         return (
             <div className="App">
                 {tabs}
-                <TabContentContainer 
+                <TabContentContainer
                     tabId={this.props.selectedTabId}
                 />
             </div>
