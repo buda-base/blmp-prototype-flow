@@ -9,6 +9,8 @@ const api = new bdrcApi();
 
 function* initiateApp() {
    try {
+      const host = yield call([api, api.findLDSPDIhost]);
+      console.log("LDSPDI_HOST",host)
       const ontology = yield call([api, api.getOntology]);
       yield put(dataActions.loadedOntology(ontology));
       yield put(uiActions.newTab());

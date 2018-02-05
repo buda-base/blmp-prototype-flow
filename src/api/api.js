@@ -37,6 +37,8 @@ export const REMOTE_ENTITIES = [
     "http://purl.bdrc.io/ontology/core/Work"
 ]
 
+let LDSPDI_HOST ;
+
 export interface APIResponse {
     text(): Promise<string>
 }
@@ -108,6 +110,43 @@ export default class API {
         });
     }
 
+
+    findLDSPDIhost(): Promise<string>
+    {
+      let url = new URLSearchParams(document.location.search).get("ldspdi")
+      if(url)
+      {
+          if(!url.match(/^http:\/\//)) url = url.replace(/^[^A-Za-z.-]*/,"http://")
+          LDSPDI_HOST = url ;
+          return url ; //urls.push(url)
+      }
+      else return new Promise((resolve, reject) =>
+      {
+         let urls = ["http://localhost:8080", "http://localhost:13280","http://buda1.bdrc.io:13280" ]
+         // console.log(urls)
+         for(let u of urls)
+         {
+            // console.log("testing",u)
+            try
+            {
+                this._fetch(u+"/resource/P1").then((response) =>
+                {
+                     if (response.ok)
+                     {
+                        console.log("response ok",u,response)
+                        LDSPDI_HOST = u ;
+                        resolve(u);
+                     }
+
+                 })
+            }
+            catch(e)
+            {
+               console.log("failed access",u,e)
+            }
+         }
+      })
+   }
 
     getURLContents(url: string, key:string): Promise<string> {
         let text;
@@ -245,8 +284,9 @@ export default class API {
 
 
 
-         url = "http://buda1.bdrc.io:13280/resource/"+id ;
+         // url = "http://buda1.bdrc.io:13280/resource/"+id ;
          // url = "http://localhost:8080/resource/"+id ;
+         url = LDSPDI_HOST+"/resource/"+id ;
 
 
 //         console.log([OBJECT_PATH, dir, objectDir, id, url])
@@ -261,7 +301,9 @@ export default class API {
 
    async _getResultsData(key: string): Promise<[] | null> {
      try {
-          let url = "http://buda1.bdrc.io:13280/resource/templates" ; //this._getResourceURL(id);
+          // let url = "http://buda1.bdrc.io:13280/resource/templates" ; //this._getResourceURL(id);
+          // let url = "http://localhost:8080/resource/templates" ; //this._getResourceURL(id);
+          let url = LDSPDI_HOST+"/resource/templates" ;
           let data = this.getSearchContents(url, key);
 
          // console.log("_reData");
