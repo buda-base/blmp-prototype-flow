@@ -1,5 +1,5 @@
 // @flow
-import {directoryPrefixes,LDSPDI_HOST} from 'api/api';
+import {directoryPrefixes} from 'api/api';
 import Literal from 'lib/Literal';
 import * as data from 'state/data/actions';
 import * as ui from 'state/ui/actions';
@@ -15,6 +15,8 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
+import Popover from 'material-ui/Popover';
+import {MenuItem} from 'material-ui/Menu';
 import IndividualView from 'components/IndividualView';
 import Loader from 'react-loader';
 
@@ -48,7 +50,9 @@ type Props = {
    searchResource: (search: string) => void,
    searchingResource?: string,
    ontology: Ontology,
-   results:[]
+   results:[],
+   config:{},
+   hostError:string|null
 }
 
 export default class ResourceSelector extends React.Component<Props> {
@@ -57,6 +61,44 @@ export default class ResourceSelector extends React.Component<Props> {
    _isValid = false ;
    _notFound = false ;
    _search = false ;
+
+   constructor(props) {
+      super(props);
+
+      this.state = {
+         open: false,
+      };
+   }
+
+   handleClick = (event) => {
+      // This prevents ghost click.
+      event.preventDefault();
+
+      this.setState({
+         open: true,
+         anchorEl: event.currentTarget,
+      });
+   };
+
+   handleRequestClose = () => {
+      this.setState({
+         open: false,
+      });
+   };
+
+
+   handleMenu = (event, value : string = "") => {
+      // This prevents ghost click.
+      event.preventDefault();
+
+      // console.log("value",value,this.props);
+      store.dispatch(data.choosingHost(value))
+
+      this.setState({
+         open: false,
+      })
+   };
+
 
    selectResult(e:Event, IRI:string)
    {
@@ -127,8 +169,18 @@ export default class ResourceSelector extends React.Component<Props> {
 
       let message;
       let isValid;
-      let notFound;
-      if (this.props.findingResourceId) {
+
+      let host,menu ;
+      if(this.props.config)
+      {
+         host = this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
+         menu = this.props.config.ldspdi.endpoints.map((e) => <MenuItem onClick={(ev) => this.handleMenu(ev,e)}>{e}</MenuItem> )
+      }
+
+      if (this.props.hostError) {
+         message = <Typography>Error reaching {host} : {this.props.hostError}</Typography>
+      }
+      else if (this.props.findingResourceId) {
          if (this.props.findingResource) {
             isValid = true;
             if (this.props.individual && this.props.property) {
@@ -137,7 +189,7 @@ export default class ResourceSelector extends React.Component<Props> {
             this._isValid = isValid
 
             message = <div>
-               <Typography>{"Found (" + LDSPDI_HOST+ "):"}</Typography>
+               <Typography>{"Found:"}</Typography>
                <IndividualView
                   onClick={this.selectedResource.bind(this)}
                   individual={this.props.findingResource}
@@ -207,7 +259,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
             message =
             <div>
-               <Typography>{"Found (" + LDSPDI_HOST+'):'}</Typography>
+               <Typography>{"Found:"}</Typography>
                <List style={{maxHeight: 320, overflow: 'auto'}}>
                   {res}
                </List>
@@ -226,11 +278,13 @@ export default class ResourceSelector extends React.Component<Props> {
 
       }
 
+
       /*
       // ...
       */
 
       //console.log("render.props",this.props)
+
 
       let view = <Card>
          <CardContent>
@@ -258,12 +312,32 @@ export default class ResourceSelector extends React.Component<Props> {
                />
             </div>
             <br/>
-            <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
-               Search
-            </Button>
+            <div style={{display:"flex"}}>
+               <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
+                  Search
+               </Button>
+               <Button
+                  style={{textTransform:"none",marginTop:"15px"}}
+                  onClick={this.handleClick}
+                  >
+                     {host}
+                  </Button>
+
+                  <Popover
+                     open={this.state.open}
+                     anchorEl={this.state.anchorEl}
+                     anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                     //targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                     onRequestClose={this.handleRequestClose}
+                  >
+                     <List>{menu}</List>
+                  </Popover>
+
+            </div>
+
          </CardContent>
 
-         { (this.props.findingResourceId || this.props.searchingResource) &&
+         { (this.props.findingResourceId || this.props.hostError || this.props.searchingResource) &&
             <CardContent>
                {message}
             </CardContent>

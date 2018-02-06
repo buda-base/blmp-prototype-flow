@@ -33,6 +33,30 @@ export const loadResource = (IRI: string): Action => {
     }
 }
 
+TYPES.loadedConfig = 'LOADED_CONFIG';
+export const loadedConfig = (config: {}): Action => {
+    return {
+        type: TYPES.loadedConfig,
+        payload: config
+    }
+}
+
+TYPES.choosingHost = 'CHOOSING_HOST';
+export const choosingHost = (host: string): Action => {
+    return {
+        type: TYPES.choosingHost,
+        payload: host
+    }
+}
+
+TYPES.chosenHost = 'CHOSEN_HOST';
+export const chosenHost = (host: string): Action => {
+    return {
+        type: TYPES.chosenHost,
+        payload: host
+    }
+}
+
 TYPES.loadResult = 'LOAD_RESULT';
 export const loadResult = (IRI: string): Action => {
     return {
@@ -78,6 +102,16 @@ TYPES.resourceFailed = 'RESOURCE_FAILED';
 export const resourceFailed = (IRI: string, error: string): ResourceFailedAction => {
     return {
         type: TYPES.resourceFailed,
+        payload: {
+            IRI,
+            error
+        }
+    }
+}
+TYPES.hostError = 'HOST_ERROR';
+export const hostError = (IRI: string, error: string): ResourceFailedAction => {
+    return {
+        type: TYPES.hostError,
         payload: {
             IRI,
             error

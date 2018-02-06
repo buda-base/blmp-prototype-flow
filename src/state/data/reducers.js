@@ -114,6 +114,17 @@ export const resourceFailed = (state: DataState, action: actions.ResourceFailedA
 }
 reducers[actions.TYPES.resourceFailed] = resourceFailed;
 
+export const hostError = (state: DataState, action: actions.ResourceFailedAction) => {
+    return {
+        ...state,
+        failures: {
+            ...state.failures,
+            host: action.payload.error 
+        }
+    }
+}
+reducers[actions.TYPES.hostError] = hostError;
+
 export const loadedOntology = (state: DataState, action: OntologyAction) => {
     return {
         ...state,
@@ -121,6 +132,36 @@ export const loadedOntology = (state: DataState, action: OntologyAction) => {
     }
 }
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
+
+export const loadedConfig = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        config: action.payload
+    }
+}
+reducers[actions.TYPES.loadedConfig] = loadedConfig;
+
+export const chosenHost = (state: DataState, action: Action) => {
+    state = {
+        ...state,
+        config:
+        {
+           ...state.config,
+           ldspdi:
+           {
+             ...state.config.ldspdi,
+             index:state.config.ldspdi.endpoints.indexOf(action.payload)
+           }
+        },
+        failures: {
+            ...state.failures,
+            host: null
+        }
+    }
+    console.log("state",state)
+    return state ;
+}
+reducers[actions.TYPES.chosenHost] = chosenHost;
 
 // Data Reducer
 const reducer = createReducer(DEFAULT_STATE, reducers);

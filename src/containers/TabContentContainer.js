@@ -26,6 +26,8 @@ const mapStateToProps = (state, ownProps) => {
 
     let searchingResource;
     let results ;
+    let config ;
+    let hostError ;
 
     let addingResource;
     let selectedResourceIRI;
@@ -33,7 +35,6 @@ const mapStateToProps = (state, ownProps) => {
     let widthInfo ;
     let graphText ;
 
-    //console.log("mapstate2prop?",state,ownProps);
 
     if (tabId) {
         editingResourceIRI = selectors.getEditingResourceIRI(state, tabId);
@@ -71,6 +72,9 @@ const mapStateToProps = (state, ownProps) => {
         */
     }
 
+    config = selectors.getConfig(state);
+    hostError = selectors.getResourceError(state, "host");
+
 //     console.log("state=",state,ownProps);
 
     const props = {
@@ -87,10 +91,13 @@ const mapStateToProps = (state, ownProps) => {
         findingResourceError,
         searchingResource,
         results,
+        config,
+        hostError,
         ...widthInfo,
     }
 
     //console.log("props",props)
+    console.log("mapstate2prop?",state,ownProps,props);
 
     return props ;
         //graphText
@@ -104,6 +111,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     const tabId = ownProps.tabId;
+
     return {
         onEditingResourceInNewTab: (resourceIRI: string) => {
             dispatch(ui.editingResourceInNewTab(resourceIRI));

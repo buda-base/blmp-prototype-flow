@@ -4,13 +4,16 @@ import * as dataActions from 'state/data/actions';
 import * as uiActions from 'state/ui/actions';
 import selectors from 'state/selectors';
 import bdrcApi from 'api/api';
+import store from 'index';
 
 const api = new bdrcApi();
 
 function* initiateApp() {
    try {
-      const host = yield call([api, api.findLDSPDIhost]);
-      console.log("LDSPDI_HOST",host)
+      const config = yield call([api, api.loadConfig]);
+      yield put(dataActions.loadedConfig(config));
+      yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
+      //console.log("LDSPDI_HOST",host)
       const ontology = yield call([api, api.getOntology]);
       yield put(dataActions.loadedOntology(ontology));
       yield put(uiActions.newTab());
@@ -44,6 +47,19 @@ export function* loadResource(IRI) {
    } catch(e) {
       yield put(dataActions.resourceFailed(IRI, e.message));
       yield put(dataActions.loading(IRI, false));
+   }
+}
+
+export function* chooseHost(host:string) {
+   try
+   {
+      yield call([api, api.testHost], host);
+      yield put(dataActions.chosenHost(host));
+   }
+   catch(e)
+   {
+      yield put(dataActions.chosenHost(host));
+      yield put(dataActions.hostError(host,e.message));
    }
 }
 
@@ -127,6 +143,14 @@ export function* watchSearchResource() {
    );
 }
 
+export function* watchChoosingHost() {
+
+   yield takeLatest(
+      dataActions.TYPES.choosingHost,
+      (action) => chooseHost(action.payload)
+   );
+}
+
 /** Root **/
 
 export default function* rootSaga() {
@@ -137,6 +161,7 @@ export default function* rootSaga() {
       watchSelectedResource(),
       watchFindResource(),
       watchSearchResource(),
-      watchEditingResource()
+      watchEditingResource(),
+      watchChoosingHost()
    ])
 }

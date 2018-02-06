@@ -21,3 +21,7 @@ export const getOntology = (state: DataState): Ontology => {
 export const getResults = (state: DataState, IRI: string): [] => {
     return state.resources[IRI];
 }
+
+export const getConfig = (state: DataState): [] => {
+    return state.config;
+}

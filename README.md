@@ -96,6 +96,10 @@ These subclass `RDFComponent` and must export an IRI variable for the property i
 
 ### URL to lds-pdi
 
-By default, the app will test on startup where lds-pdi is reachable. The first candidate url is `http://localhost:8080`, then it tries `http://localhost:13280` and finally `http://buda1.bdrc.io`.
+<!--By default, the app will test on startup where lds-pdi is reachable. The first candidate url is `http://localhost:8080`, then it tries `http://localhost:13280` and finally `http://buda1.bdrc.io`.
 
-This automatic setting can be bypassed using a `GET` parameter if needed: `?lds-pdi=...`. For example, `http://localhost:13280?ldspdi=bdrc1.bdrc.io:13280` will use the online `fuseki` server instead of the default `http://localhost:13280`.
+This automatic setting can be bypassed using a `GET` parameter if needed: `?lds-pdi=...`. For example, `http://localhost:13280?ldspdi=bdrc1.bdrc.io:13280` will use the online `fuseki` server instead of the default `http://localhost:13280`.-->
+
+There is a `config.json` located in `/public` directory. It contains:
+* a list of candidate urls to `lds-pdi`
+* an index in the list to use on startup.

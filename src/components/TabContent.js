@@ -33,6 +33,8 @@ type Props = {
     findingResourceError: string,
     searchingResource: string,
     results:[],
+    config:{},
+    hostError:string|null,
     onOpenedResource: (resource: Individual) => void,
     onSelectedResource: (IRI: string) => void,
     onAddResource: (indvidual: Individual, property: RDFProperty) => void,
@@ -40,6 +42,7 @@ type Props = {
     onFindResource: (id: string) => void,
     onSearchResource: (id: string) => void,
     onAddedProperty: () => void,
+    onLoadedConfig: (config: {}) => void,
     onResizeCentralPanel: (tabId: number) => void,
     onResizePreviewPanel: (tabId: number) => void
 }
@@ -219,10 +222,12 @@ class TabContent extends Component<Props, State> {
                             searchResource={this.props.onSearchResource}
                             searchingResource={this.props.searchingResource}
                             results={this.props.results}
+                            config={this.props.config}
                             cancel={this.props.onCancelAddingResource}
                             findingResourceId={this.props.findingResourceId}
                             findingResource={this.props.findingResource}
                             findingResourceError={this.props.findingResourceError}
+                            hostError={this.props.hostError}
                             ontology={this.props.ontology}
                         />
                     </div>
@@ -262,6 +267,8 @@ class TabContent extends Component<Props, State> {
                                         searchResource={this.props.onSearchResource}
                                         searchingResource={this.props.searchingResource}
                                         results={this.props.results}
+                                        config={this.props.config}
+                                        hostError={this.props.hostError}
                                         addedProperty={() => {
                                             this.props.onAddedProperty();
                                             this.updateGraphText();

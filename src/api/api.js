@@ -3,6 +3,7 @@ import md5 from 'md5';
 import Graph from '../lib/Graph';
 import Ontology from '../lib/Ontology';
 import Individual from '../lib/Individual';
+import store from '../index';
 
 export const directoryPrefixes = {
     'C': 'corporations', //
@@ -19,6 +20,7 @@ export const directoryPrefixes = {
 
 const OBJECT_PATH = '/objects';
 const ONTOLOGY_PATH = '/bdrc.owl'
+const CONFIG_PATH = '/config.json'
 const ONTOLOGY_BASE_IRI = 'http://purl.bdrc.io/ontology/core/';
 const BASE_IRI = 'http://purl.bdrc.io/resource/';
 const TURTLE_MIME_TYPE = 'text/turtle';
@@ -36,8 +38,6 @@ export const REMOTE_ENTITIES = [
     "http://purl.bdrc.io/ontology/core/Topic",
     "http://purl.bdrc.io/ontology/core/Work"
 ]
-
-export let LDSPDI_HOST ;
 
 export interface APIResponse {
     text(): Promise<string>
@@ -111,12 +111,44 @@ export default class API {
     }
 
 
+    async loadConfig(): Promise<string>
+    {
+      let config =  JSON.parse(await this.getURLContents(this._configPath,false));
+      // console.log("config",config)
+      return config ;
+   }
+
+    testHost(host : string): Promise<string>
+    {
+      return new Promise((resolve, reject) =>
+      {
+         this._fetch(host+"/resource/P1").then((response) =>
+         {
+            if (response.ok)
+            {
+               console.log("response ok",host,response)
+               resolve(true);
+            }
+            else
+            {
+               throw new Error("Connection to " +host+ " failed")
+            }
+
+         }).catch((e) =>
+         {
+            reject(e)
+         })
+      })
+    }
+
+   /*
     findLDSPDIhost(): Promise<string>
     {
+
       let url = new URLSearchParams(document.location.search).get("ldspdi")
       if(url)
       {
-          if(!url.match(/^http:\/\//)) url = url.replace(/^[^A-Za-z.-]*/,"http://")
+          if(!url.match(/^http:\/\//)) url = url.replace(/^([^A-Za-z.-]*)/,"http://")
           LDSPDI_HOST = url ;
           return url ; //urls.push(url)
       }
@@ -146,9 +178,10 @@ export default class API {
             }
          }
       })
-   }
+      */
 
-    getURLContents(url: string, key:string): Promise<string> {
+
+    getURLContents(url: string, minSize : boolean = true): Promise<string> {
         let text;
         return new Promise((resolve, reject) => {
 
@@ -180,7 +213,7 @@ export default class API {
                     text = reqText;
 
                      console.log("text",reqText.length)
-                     if(reqText.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
+                     if(minSize && reqText.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
 
                     resolve(text);
                 }).catch((e) => {
@@ -205,6 +238,15 @@ export default class API {
         let path = ONTOLOGY_PATH;
         if (this._server) {
             path = this._server + '/' + ONTOLOGY_PATH;
+        }
+
+        return path;
+    }
+
+    get _configPath(): string {
+        let path = CONFIG_PATH;
+        if (this._server) {
+            path = this._server + '/' + CONFIG_PATH;
         }
 
         return path;
@@ -286,7 +328,8 @@ export default class API {
 
          // url = "http://buda1.bdrc.io:13280/resource/"+id ;
          // url = "http://localhost:8080/resource/"+id ;
-         url = LDSPDI_HOST+"/resource/"+id ;
+         let config = store.getState().data.config.ldspdi
+         url = config.endpoints[config.index]+"/resource/"+id ;
 
 
 //         console.log([OBJECT_PATH, dir, objectDir, id, url])
@@ -303,7 +346,9 @@ export default class API {
      try {
           // let url = "http://buda1.bdrc.io:13280/resource/templates" ; //this._getResourceURL(id);
           // let url = "http://localhost:8080/resource/templates" ; //this._getResourceURL(id);
-          let url = LDSPDI_HOST+"/resource/templates" ;
+
+          let config = store.getState().data.config.ldspdi
+          let url = config.endpoints[config.index]+"/resource/templates" ;
           let data = this.getSearchContents(url, key);
 
          // console.log("_reData");
