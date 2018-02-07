@@ -97,7 +97,7 @@ const mapStateToProps = (state, ownProps) => {
     }
 
     //console.log("props",props)
-    console.log("mapstate2prop?",state,ownProps,props);
+    // console.log("mapstate2prop?",state,ownProps,props);
 
     return props ;
         //graphText

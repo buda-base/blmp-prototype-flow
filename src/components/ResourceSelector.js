@@ -18,6 +18,9 @@ import TextField from 'material-ui/TextField';
 import Popover from 'material-ui/Popover';
 import {MenuItem} from 'material-ui/Menu';
 import IndividualView from 'components/IndividualView';
+import {ListItem, ListItemText, ListItemIcon} from 'material-ui/List';
+import CloudOffIcon from 'material-ui-icons/CloudOff';
+import CloudDoneIcon from 'material-ui-icons/CloudDone';
 import Loader from 'react-loader';
 
 import List from 'material-ui/List';
@@ -283,15 +286,18 @@ export default class ResourceSelector extends React.Component<Props> {
       // ...
       */
 
-      //console.log("render.props",this.props)
 
+      console.log("render.props",this.props)
+
+      let col = (this.props.hostError ? "red":"green")
+      let icon = (this.props.hostError ? <CloudOffIcon/>:<CloudDoneIcon/>)
 
       let view = <Card>
          <CardContent>
             <Typography type="headline" component="h2">
                Select a resource
             </Typography>
-            <div style={{display:"inline-block",width:"auto"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
                <TextField
                   autoFocus
                   label="Resource ID"
@@ -312,16 +318,20 @@ export default class ResourceSelector extends React.Component<Props> {
                />
             </div>
             <br/>
-            <div style={{display:"flex"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
                   Search
                </Button>
-               <Button
-                  style={{textTransform:"none",marginTop:"15px"}}
-                  onClick={this.handleClick}
-                  >
-                     {host}
-                  </Button>
+               <Button style={{marginTop:"15px",padding:"0"}} onClick={this.handleClick}>
+               <ListItem style={{display:"flex",justifyContent:"space-between"}}>
+                  <ListItemText
+                     style={{textTransform:"none",textAlign:"left",paddingRight:"0"}}
+                     primary={host}
+                     secondary="Endpoint"
+                  />
+                  <ListItemIcon style={{marginRight:"0",marginLeft:"15px",color:col}}>{icon}</ListItemIcon>
+               </ListItem>
+               </Button>
 
                   <Popover
                      open={this.state.open}

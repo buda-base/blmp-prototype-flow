@@ -119,7 +119,7 @@ export const hostError = (state: DataState, action: actions.ResourceFailedAction
         ...state,
         failures: {
             ...state.failures,
-            host: action.payload.error 
+            host: action.payload.error
         }
     }
 }
@@ -158,7 +158,7 @@ export const chosenHost = (state: DataState, action: Action) => {
             host: null
         }
     }
-    console.log("state",state)
+    // console.log("state",state)
     return state ;
 }
 reducers[actions.TYPES.chosenHost] = chosenHost;

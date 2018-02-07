@@ -90,11 +90,11 @@ export default class API {
 
                 response.text().then((req) => {
 
-                     console.log("req",req)
+                     // console.log("req",req)
 
                     text = JSON.parse(req) //.results.bindings ;
 
-                    console.log("text",text)
+                    // console.log("text",text)
 
                     if(text.length === 0) {
                        throw new InvalidResource('No results found');
@@ -212,7 +212,7 @@ export default class API {
                 response.text().then((reqText) => {
                     text = reqText;
 
-                     console.log("text",reqText.length)
+                     // console.log("text",reqText.length)
                      if(minSize && reqText.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
 
                     resolve(text);
