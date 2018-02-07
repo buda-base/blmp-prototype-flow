@@ -287,7 +287,7 @@ export default class ResourceSelector extends React.Component<Props> {
       */
 
 
-      console.log("render.props",this.props)
+      // console.log("render.props",this.props)
 
       let col = (this.props.hostError ? "red":"green")
       let icon = (this.props.hostError ? <CloudOffIcon/>:<CloudDoneIcon/>)

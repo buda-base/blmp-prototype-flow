@@ -36,19 +36,21 @@ const logger = store => next => action => {
 
 const sagaMiddleware = createSagaMiddleware();
 let store;
-if (process.env.NODE_ENV === 'development') {
+//if (process.env.NODE_ENV === 'development') {
     store = createStore(
         rootReducer,
         composeWithDevTools(
             applyMiddleware(sagaMiddleware,logger)
         )
     );
+/*
 } else {
     store = createStore(
         rootReducer,
         applyMiddleware(sagaMiddleware)
     );
 }
+*/
 
 export default store ;
 

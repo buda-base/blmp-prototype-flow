@@ -21,6 +21,7 @@ export const directoryPrefixes = {
 const OBJECT_PATH = '/objects';
 const ONTOLOGY_PATH = '/bdrc.owl'
 const CONFIG_PATH = '/config.json'
+const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_BASE_IRI = 'http://purl.bdrc.io/ontology/core/';
 const BASE_IRI = 'http://purl.bdrc.io/resource/';
 const TURTLE_MIME_TYPE = 'text/turtle';
@@ -113,9 +114,16 @@ export default class API {
 
     async loadConfig(): Promise<string>
     {
-      let config =  JSON.parse(await this.getURLContents(this._configPath,false));
-      // console.log("config",config)
-      return config ;
+      try {
+         let config =  JSON.parse(await this.getURLContents(this._configPath,false));
+         console.log("config",config)
+         return config ;
+      }
+      catch(e) {
+         let config =  JSON.parse(await this.getURLContents(this._configDefaultsPath,false));
+         console.log("config-defaults",config)
+         return config ;
+      }
    }
 
     testHost(host : string): Promise<string>
@@ -247,6 +255,14 @@ export default class API {
         let path = CONFIG_PATH;
         if (this._server) {
             path = this._server + '/' + CONFIG_PATH;
+        }
+
+        return path;
+    }
+    get _configDefaultsPath(): string {
+        let path = CONFIGDEFAULTS_PATH;
+        if (this._server) {
+            path = this._server + '/' + CONFIGDEFAULTS_PATH;
         }
 
         return path;
