@@ -100,6 +100,8 @@ These subclass `RDFComponent` and must export an IRI variable for the property i
 
 This automatic setting can be bypassed using a `GET` parameter if needed: `?lds-pdi=...`. For example, `http://localhost:13280?ldspdi=bdrc1.bdrc.io:13280` will use the online `fuseki` server instead of the default `http://localhost:13280`.-->
 
-There is a `config.json` located in `/public` directory. It contains:
+There is a `config-defauls.json` located in `/public` directory. It contains:
 * a list of candidate urls to `lds-pdi`
 * an index in the list to use on startup.
+
+Default settings can be overridden using a separate `/public/config.json`.
