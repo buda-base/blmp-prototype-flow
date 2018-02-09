@@ -10,10 +10,16 @@ const api = new bdrcApi();
 
 function* initiateApp() {
    try {
-      const config = yield call([api, api.loadConfig]);
-      yield put(dataActions.loadedConfig(config));
-      yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
-      //console.log("LDSPDI_HOST",host)
+      let cookies = store.getState().data.cookies ;
+      if(cookies) {
+         let config = cookies.get("config")
+         if(!config) config = yield call([api, api.loadConfig]);
+         else console.log("has cookie config",config)
+
+         yield put(dataActions.loadedConfig(config));
+         yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
+
+      }
       const ontology = yield call([api, api.getOntology]);
       yield put(dataActions.loadedOntology(ontology));
       yield put(uiActions.newTab());

@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { initiateApp } from 'state/actions';
 import * as ui from 'state/ui/actions';
 import * as data from 'state/data/actions';
 import AppContainer from './containers/AppContainer';
 import './index.css';
+import { CookiesProvider } from 'react-cookie';
 
 // Material-UI
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
@@ -56,7 +56,6 @@ export default store ;
 
 sagaMiddleware.run(rootSaga);
 
-store.dispatch(initiateApp());
 
 const theme = createMuiTheme({
     palette: {
@@ -68,9 +67,11 @@ const theme = createMuiTheme({
 ReactDOM.render(
     // setup redux store
     <Provider store={store}>
+      <CookiesProvider>
         <MuiThemeProvider theme={theme}>
             <AppContainer />
-        </MuiThemeProvider>
+        </MuiThemeProvider>}>
+     </CookiesProvider>
     </Provider>,
     document.getElementById('root')
 );

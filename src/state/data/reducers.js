@@ -9,6 +9,7 @@ import Serializer from '../../lib/Serializer';
 
 
 export type DataState = {
+    cookies?: {},
     loading: {[string]: boolean},
     failures: {[string]: string},
     resources: {[IRI:string]: Individual},
@@ -133,6 +134,14 @@ export const loadedOntology = (state: DataState, action: OntologyAction) => {
 }
 reducers[actions.TYPES.loadedOntology] = loadedOntology;
 
+export const weHaveCookies = (state: DataState, action: Action) => {
+    return {
+        ...state,
+        cookies: action.payload
+    }
+}
+reducers[actions.TYPES.weHaveCookies] = weHaveCookies;
+
 export const loadedConfig = (state: DataState, action: Action) => {
     return {
         ...state,
@@ -142,22 +151,26 @@ export const loadedConfig = (state: DataState, action: Action) => {
 reducers[actions.TYPES.loadedConfig] = loadedConfig;
 
 export const chosenHost = (state: DataState, action: Action) => {
+   let config = {
+      ...state.config,
+      ldspdi:
+      {
+        ...state.config.ldspdi,
+        index:state.config.ldspdi.endpoints.indexOf(action.payload)
+      }
+   };
+
     state = {
         ...state,
-        config:
-        {
-           ...state.config,
-           ldspdi:
-           {
-             ...state.config.ldspdi,
-             index:state.config.ldspdi.endpoints.indexOf(action.payload)
-           }
-        },
+        config,
         failures: {
             ...state.failures,
             host: null
         }
     }
+
+    state.cookies.set("config",config)
+
     // console.log("state",state)
     return state ;
 }

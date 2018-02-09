@@ -41,6 +41,14 @@ export const loadedConfig = (config: {}): Action => {
     }
 }
 
+TYPES.weHaveCookies = 'WE_HAVE_COOKIES';
+export const weHaveCookies = (cookies: {}): Action => {
+    return {
+        type: TYPES.weHaveCookies,
+        payload: cookies
+    }
+}
+
 TYPES.choosingHost = 'CHOOSING_HOST';
 export const choosingHost = (host: string): Action => {
     return {
