@@ -139,11 +139,13 @@ export default class API {
             }
             else
             {
+               console.log("response",response)
                throw new Error("Connection to " +host+ " failed")
             }
 
          }).catch((e) =>
          {
+            console.log("error",e)
             reject(e)
          })
       })

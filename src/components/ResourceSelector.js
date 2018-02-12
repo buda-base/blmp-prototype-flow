@@ -61,6 +61,7 @@ type Props = {
 export default class ResourceSelector extends React.Component<Props> {
    _textfield = null;
    _textfieldS = null;
+   _textfieldUrl = null;
    _isValid = false ;
    _notFound = false ;
    _search = false ;
@@ -94,7 +95,7 @@ export default class ResourceSelector extends React.Component<Props> {
       // This prevents ghost click.
       event.preventDefault();
 
-      // console.log("value",value,this.props);
+      console.log("value",value,this.props);
       store.dispatch(data.choosingHost(value))
 
       this.setState({
@@ -168,6 +169,16 @@ export default class ResourceSelector extends React.Component<Props> {
 
    }
 
+   handleEndpoint(e)
+   {
+      if (e.key === 'Enter')
+      {
+         this.handleMenu(e,this._textfieldUrl.value)
+         this._textfieldUrl.value = "" ;
+      }
+   }
+
+
    render() {
 
       let message;
@@ -178,6 +189,19 @@ export default class ResourceSelector extends React.Component<Props> {
       {
          host = this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
          menu = this.props.config.ldspdi.endpoints.map((e) => <MenuItem onClick={(ev) => this.handleMenu(ev,e)}>{e}</MenuItem> )
+         menu.push(<TextField
+            style={{marginLeft:"15px",marginBottom:"10px"}}
+            label="New URL"
+            id="url"
+            type="text"
+            inputRef={(url) => this._textfieldUrl = url } //; this._focus = false ;  console.log("ref");} }
+            onKeyPress={(e) => this.handleEndpoint(e)}
+         />)
+         /*
+            inputRef={(searchInput) => this._textfield = searchInput } //; this._focus = false ;  console.log("ref");} }
+            onKeyPress={(e) => this.handleKeypress(e,"res")}
+            onChange={ (e) => this.handleChange(e,"res")}
+   */
       }
 
       if (this.props.hostError) {

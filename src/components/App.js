@@ -28,11 +28,6 @@ class App extends Component<Props> {
 
    render() {
 
-
-/*
-    let cookies = instanceOf(Cookies)
-   cookies.set("ldspdi",config,{ path: '/' })
-*/
        let tabs=<TabsContainer /> ;
 
         return (
