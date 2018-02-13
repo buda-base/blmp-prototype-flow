@@ -70,7 +70,7 @@ ReactDOM.render(
       <CookiesProvider>
         <MuiThemeProvider theme={theme}>
             <AppContainer />
-        </MuiThemeProvider>}>
+        </MuiThemeProvider>
      </CookiesProvider>
     </Provider>,
     document.getElementById('root')

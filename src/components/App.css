@@ -2,6 +2,8 @@
 /* debug mode - everything visible */
 /* * { background-color:rgba(255,0,128,0.1); }  */
 
+/* .inCollapse:not(.true) > * { display:none ; } */
+
 .App {
     display: flex;
     flex-direction: column;

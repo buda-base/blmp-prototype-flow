@@ -297,7 +297,7 @@ render() {
       anchorEl={this.state.anchorEl}
       anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
       //targetOrigin={{horizontal: 'left', vertical: 'top'}}
-      onRequestClose={this.handleRequestClose}
+      onClose={this.handleRequestClose}
    >
       <List>{this._list}</List>
    </Popover>
@@ -460,7 +460,10 @@ render() {
             />
             {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
-            <Collapse className="inCollapse" in={this.state.collapseState[collapseId]} style={dataRowStyle} >
+            <Collapse
+               className={"inCollapse " + this.state.collapseState[collapseId] }
+               in={this.state.collapseState[collapseId]}
+               style={dataRowStyle} >
             {valueRows}
             </Collapse>
             </List>
@@ -1186,7 +1189,10 @@ const labList = this.getLabelsList()
 let ret = (
    <div className={classnames(...classes)} onClick={this.props.onClick}>
    {this.getNestedTitleList()}
-   <Collapse in={this.state.isExpanded} >
+   <Collapse
+      in={this.state.isExpanded}
+      className={"inCollapse " + this.state.isExpanded }
+      >
    {idList}
    {labList}
    {propList}

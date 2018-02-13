@@ -97,7 +97,7 @@ export default class Type extends RDFComponent {
                   anchorEl={this.state.anchorEl}
                   anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
                   //targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                  onRequestClose={this.handleRequestClose}
+                  onClose={this.handleRequestClose}
                >
                   <List>{this._list}</List>
                </Popover>
