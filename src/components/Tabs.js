@@ -38,7 +38,7 @@ export default class Tabs extends Component<Props> {
         if(i == this.props.selectedTabIndex)
         {
            //this.props.onSelectTab(this.props.tabData[this.props.tabData.length-1].tabId);
-           
+
             let tab = store.getState().ui.tabsOrder
             store.dispatch(ui.selectTab(tab[tab.length-1]));
         }
@@ -66,12 +66,12 @@ export default class Tabs extends Component<Props> {
                     value={this.props.selectedTabIndex}
                 >
                     {this.props.tabData.map((data,i) => {
-                        return <Tab
+                        return <Tab key={i}
                             style={{
                                 width: 200
                             }}
                             label={
-                                <div> 
+                                <div>
                                     <IconButton
                                         onClick={this._onCloseTab.bind(this,i)}
                                         style={{
@@ -98,8 +98,8 @@ export default class Tabs extends Component<Props> {
                         <AddBoxIcon />
                     </IconButton>
                 </TabsList>
-                
-                
+
+
             </div>
         );
     }

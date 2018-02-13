@@ -63,19 +63,23 @@ export default class IndividualHeading extends React.Component {
          let lab = this.props.individual.getProperty("http://www.w3.org/2004/02/skos/core#prefLabel") ;
          //console.log("label",lab[0])
 
+         let i = 0
          if(lab) for(var l of lab) {
+
             pref.push(
-            <LiteralView literal={l} isEditable={false} noPrefix={true} />
+            <LiteralView key={i} literal={l} isEditable={false} noPrefix={true} />
                         );
+
+            i ++ ;
          }
 
 
         return (
-            [ <div className="IndividualHeading">
+            [ <div key={0} className="IndividualHeading">
                 <h1>{this.title}</h1>
                 <h2>{this.subtitle}</h2>
             </div>,
-                  <div><div className="prefLabel">{pref}</div></div>
+                  <div  key={1} ><div className="prefLabel">{pref}</div></div>
             ]
         );
     }

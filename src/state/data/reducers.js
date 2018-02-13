@@ -152,7 +152,7 @@ reducers[actions.TYPES.loadedConfig] = loadedConfig;
 
 export const chosenHost = (state: DataState, action: Action) => {
 
-   console.log("ol'state",state)
+   //console.log("ol'state",state)
 
    let endpoints = state.config.ldspdi.endpoints
    let idx = endpoints.indexOf(action.payload) ;

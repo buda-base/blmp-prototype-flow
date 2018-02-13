@@ -224,6 +224,7 @@ class TabContent extends Component<Props, State> {
                             results={this.props.results}
                             config={this.props.config}
                             cancel={this.props.onCancelAddingResource}
+                            editingResourceIRI={this.props.editingResourceIRI}
                             findingResourceId={this.props.findingResourceId}
                             findingResource={this.props.findingResource}
                             findingResourceError={this.props.findingResourceError}
@@ -260,6 +261,7 @@ class TabContent extends Component<Props, State> {
                                         property={this.props.addingResource.property}
                                         findResource={this.props.onFindResource}
                                         cancel={this.props.onCancelAddingResource}
+                                        editingResourceIRI={this.props.editingResourceIRI}
                                         findingResourceId={this.props.findingResourceId}
                                         findingResource={this.props.findingResource}
                                         findingResourceError={this.props.findingResourceError}

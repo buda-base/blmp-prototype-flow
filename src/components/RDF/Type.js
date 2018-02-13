@@ -24,7 +24,7 @@ export default class Type extends RDFComponent {
 //       console.log(this.props.individual.types[0],onto._classes[this.props.individual.types[0]]._values);
 
 //       console.log(this.props.individual.types[0],props)
-
+      let n = -1
       if(this.props.isEditable) for(let i in this.props.property.ranges)//this.props.individual.types)
       {
          let t = this.props.property.ranges[i] //.individual.types[i]
@@ -34,7 +34,8 @@ export default class Type extends RDFComponent {
             // console.log("thats'it boy", onto._classes[t]._values)
             this._list = onto._classes[t]._values.map((val) =>
             {
-               return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{onto.getMainLabel(val)}</MenuItem> )
+               n++;
+               return ( <MenuItem key={n} onClick={(ev) => this.handleMenu(ev,val)}>{onto.getMainLabel(val)}</MenuItem> )
             })
          }
       }

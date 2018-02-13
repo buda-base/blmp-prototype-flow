@@ -75,7 +75,7 @@ const mapStateToProps = (state, ownProps) => {
     config = selectors.getConfig(state);
     hostError = selectors.getResourceError(state, "host");
 
-//     console.log("state=",state,ownProps);
+    console.log("state=",state,ownProps);
 
     const props = {
         ontology,

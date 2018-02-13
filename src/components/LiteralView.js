@@ -26,26 +26,26 @@ const styles = {
 const langs = {
     'bo': 'Tibetan',
     'bo-x-ewts': 'Tibetan (Wylie)',
-    
+
     'en': 'English',
     "en-x-mixed":'English (mixed)',
-    
+
     'fr': 'French',
-    
+
     'pi': 'Pali',
     'pi-Sinh': 'Pali (Sinhalese)',
     'pi-Thai': 'Pali (Thai)',
     'pi-x-iast': 'Pali (IAST)',
-    
+
     'sa':'Sanskrit',
     'sa-x-ndia':'Sanskrit (IAST without diacritics)',
-    
+
     'zh': 'Chinese',
     'zh-Hans' : 'Chinese (simplified)',
     'zh-Hant' : 'Chinese (traditional)',
     'zh-Latn-pinyin' : 'Chinese (Pinyin)',
     'zh-x-wade':'Chinese (Wade-Giles)'
-}; 
+};
 
 // some structure like that
 const langTree = {
@@ -82,24 +82,24 @@ export default class LiteralView extends Component<Props, State> {
 
     constructor(props: Props) {
         super(props);
-        
-        let language = (props.literal.language !== undefined) ? props.literal.language : 'en';        
+
+        let language = (props.literal.language !== undefined) ? props.literal.language : 'en';
         for(let l in langs) { if(l.toLowerCase() == language.toLowerCase()) { language = l ; } }
         this.props.literal.language = language ;
-        
+
 //         console.log("lang",language)
-        
+
         this.state = {
             language: language,
             value: props.literal.value,
             collapseState: {}
         }
         this._literal = this.props.literal ;
-        
+
         //console.log("LiteralView.state",this.state)
     }
-    
-    
+
+
     setCollapseState(id: string, open: boolean) {
         const collapseState = {
             ...this.state.collapseState,
@@ -132,26 +132,26 @@ export default class LiteralView extends Component<Props, State> {
             }
         })
     }
-    
-    
+
+
    /*
    componentWillReceiveProps(newProps)
    {
-        console.log("will receiveprops literalView",this.props.literal) 
+        console.log("will receiveprops literalView",this.props.literal)
    }
-    
+
    componentWillUpdate()
    {
-        console.log("will update literalView",this.props.literal) 
+        console.log("will update literalView",this.props.literal)
     }
    componentDidUpdate()
    {
-        console.log("did update literalView",this.props.literal) 
+        console.log("did update literalView",this.props.literal)
     }
     */
-   
+
     valueChanged(event: {}) {
-              
+
         let value = event.target.value;
         if (this.props.literal.isDate && (value instanceof String)) {
             value = new Date(value);
@@ -192,13 +192,13 @@ export default class LiteralView extends Component<Props, State> {
     }
 
     render() {
-              
+
         let value = this.props.literal.value;
         if (this.props.isEditable) {
             if (this.props.literal.isDate) {
                 value = <TextField
                     type="datetime-local"
-                    value={this.props.literal.value.replace(/:[.0-9]+Z$/,"")} 
+                    value={this.props.literal.value.replace(/:[.0-9]+Z$/,"")}
                     onChange={this.valueChanged.bind(this)}
                 />
             } else {
@@ -209,58 +209,58 @@ export default class LiteralView extends Component<Props, State> {
                     value={this.props.literal.value}
                     ref={(textField) => this._valueControl = textField}
                     onChange={this.valueChanged.bind(this)}
-                    { ... this.props.literal.hasLanguage && this.props.isEditable ? 
+                    { ... this.props.literal.hasLanguage && this.props.isEditable ?
                         {style: styles.valueField } : {}}
                     id={this.generateId('TextField')}
                 />
             }
         }
-   
-/*   
+
+/*
          let handleCollapse = (e,collapseId) => {
-                  e.preventDefault(); 
+                  e.preventDefault();
                this.toggleCollapseState(collapseId);
-                  return false; 
+                  return false;
          };
 
          let langItems = [ ];
         let list = ['zh'].concat(langTree['zh'])
-        
 
-            
+
+
         for (let lang in list) {
             langItems.push(
                <MenuItem
-                        
+
                   key={list[lang]}
                   value={list[lang]}
                >
                   {langs[list[lang]]}
-               </MenuItem>               
+               </MenuItem>
             );
         }
-        
-        
+
+
         langItems = [ <ListItem onClick={(e) => handleCollapse(e,'zh')}> { langs['zh'] } <ExpandMore/></ListItem>,<Collapse in={this.state.collapseState['zh']}> {langItems} </Collapse>,
-               <ListItem onClick={(e) => handleCollapse(e,'pi')}> { langs['pi'] } <ExpandMore /></ListItem>,<Collapse in={this.state.collapseState['pi']}> {langItems} </Collapse> 
+               <ListItem onClick={(e) => handleCollapse(e,'pi')}> { langs['pi'] } <ExpandMore /></ListItem>,<Collapse in={this.state.collapseState['pi']}> {langItems} </Collapse>
       ];
          */
 
 
 
-         let langItems = [ ];            
+         let langItems = [ ];
         for (let lang in langs) {
             langItems.push(
                <MenuItem
-                        
+
                   key={lang}
                   value={lang}
                >
                   {langs[lang]}
-               </MenuItem>               
+               </MenuItem>
             );
         }
-   
+
         const selectId = this.generateId(this.props.literal.uniqueId);
 
             //</Collapse>
@@ -275,7 +275,7 @@ export default class LiteralView extends Component<Props, State> {
                     <InputLabel htmlFor={selectId}>language</InputLabel>
                      <Select
                         disabled={true}
-                        value={ this.props.literal.language }                        
+                        value={ this.props.literal.language }
                         style={ styles.inlineSelect }
                         onInputChange={ function(e) { e.preventDefault(); console.log("youpi"); return false; } }
                      >
@@ -283,7 +283,7 @@ export default class LiteralView extends Component<Props, State> {
                      </Select>
                 </FormControl>
                  */
-                
+
                      <FormControl>
                         <InputLabel htmlFor={selectId}>language</InputLabel>
                            <Select

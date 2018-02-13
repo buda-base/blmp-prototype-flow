@@ -55,7 +55,8 @@ type Props = {
    ontology: Ontology,
    results:[],
    config:{},
-   hostError:string|null
+   hostError:string|null,
+   editingResourceIRI?:string
 }
 
 export default class ResourceSelector extends React.Component<Props> {
@@ -71,6 +72,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
       this.state = {
          open: false,
+         isOpening : false
       };
    }
 
@@ -106,11 +108,16 @@ export default class ResourceSelector extends React.Component<Props> {
 
    selectResult(e:Event, IRI:string)
    {
+
+      console.log("opening")
+      this.setState({isOpening:true})
+
       store.dispatch(data.loadResult(IRI.replace(/^.*\/([^/]+)$/,"$1")))
 
    }
    selectedResource() {
       if (this.props.findingResource && this.props.individual && this.props.property) {
+
          const individual = this.props.individual;
          const property = this.props.property;
          individual.addProperty(property.IRI, this.props.findingResource);
@@ -119,7 +126,13 @@ export default class ResourceSelector extends React.Component<Props> {
             this.props.addedProperty();
          }
       } else if (this.props.selectedResource && this.props.findingResource) {
-         this.props.selectedResource(this.props.findingResource);
+
+         console.log("opening")
+         this.setState({isOpening:true})
+
+         setTimeout((function(that) {
+            return function() { that.selectedResource(that.findingResource); }
+         })(this.props), 200);
       }
    }
 
@@ -181,6 +194,8 @@ export default class ResourceSelector extends React.Component<Props> {
 
    render() {
 
+      console.log("props", this.props)
+
       let message;
       let isValid;
 
@@ -228,6 +243,7 @@ export default class ResourceSelector extends React.Component<Props> {
                   showLabel={true}
                   ontology={this.props.ontology}
                />
+               {this.state.isOpening && <Loader loaded={false} /> }
                {!isValid &&
                   <p>Error: this resource is not valid for this property.</p>
                }
@@ -244,7 +260,7 @@ export default class ResourceSelector extends React.Component<Props> {
          if(this.props.results && this.props.results.numResults > 0)
          {
             let res = [] ;
-
+            let n = 0 ;
             for(let i in this.props.results.rows)
             {
                let r = this.props.results.rows[i].dataRow
@@ -271,7 +287,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
                console.log("indiv",indiv)
 
-               res.push(<IndividualView
+               res.push(<IndividualView key={n}
                   onClick={(e) => this.selectResult(e,id)}
                   individual={indiv}
                   isEditable={false}
@@ -282,10 +298,13 @@ export default class ResourceSelector extends React.Component<Props> {
                   showLabel={true}
                   ontology={this.props.ontology}
                />)
+
+               n++;
             }
 
             message =
             <div>
+               {this.state.isOpening && <Loader loaded={false} /> }
                <Typography>{"Found:"}</Typography>
                <List style={{maxHeight: 320, overflow: 'auto'}}>
                   {res}
