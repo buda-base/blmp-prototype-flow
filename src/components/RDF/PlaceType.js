@@ -66,10 +66,11 @@ export default class PlaceType extends RDFComponent {
 
 
     render() {
+      const flexStyle = {flexGrow:1}
 
          return (
 
-           <div style={{flexGrow:1}} >
+           <div style={flexStyle} >
             <ListItemText
                   primary={formatIRI(this.props.individual.id)}
                   secondary={formatIRI(this.props.individual.types[0])}

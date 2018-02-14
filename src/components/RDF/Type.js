@@ -81,10 +81,13 @@ export default class Type extends RDFComponent {
 
       let onto = store.getState().data.ontology
 
+        const flexStyle = {flexGrow:1}
+        const popStyle = {horizontal: 'left', vertical: 'bottom'}
+
          return (
 
 
-           <div style={{flexGrow:1}} >
+           <div style={flexStyle} >
             <ListItemText
                   primary={onto.getMainLabel(this.props.individual.id)}
                   secondary={onto.getMainLabel(this.props.property.ranges[0])}
@@ -96,7 +99,7 @@ export default class Type extends RDFComponent {
                <Popover
                   open={this.state.open}
                   anchorEl={this.state.anchorEl}
-                  anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                  anchorOrigin={popStyle}
                   //targetOrigin={{horizontal: 'left', vertical: 'top'}}
                   onClose={this.handleRequestClose}
                >

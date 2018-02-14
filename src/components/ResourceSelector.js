@@ -202,10 +202,11 @@ export default class ResourceSelector extends React.Component<Props> {
       let host,menu ;
       if(this.props.config)
       {
+         const textStyle = {marginLeft:"15px",marginBottom:"10px"}
          host = this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
          menu = this.props.config.ldspdi.endpoints.map((e) => <MenuItem onClick={(ev) => this.handleMenu(ev,e)}>{e}</MenuItem> )
          menu.push(<TextField
-            style={{marginLeft:"15px",marginBottom:"10px"}}
+            style={textStyle}
             label="New URL"
             id="url"
             type="text"
@@ -302,11 +303,12 @@ export default class ResourceSelector extends React.Component<Props> {
                n++;
             }
 
+            const listStyle = {maxHeight: 320, overflow: 'auto'} ;
             message =
             <div>
                {this.state.isOpening && <Loader loaded={false} /> }
                <Typography>{"Found:"}</Typography>
-               <List style={{maxHeight: 320, overflow: 'auto'}}>
+               <List style={listStyle}>
                   {res}
                </List>
             </div>

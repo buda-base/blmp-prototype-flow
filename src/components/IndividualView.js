@@ -278,14 +278,17 @@ render() {
 
 
    // Header
+   const iconStyle = {marginRight: 0} ;
+   const circleStyle = {...greenColor, ...iconSizes.small} ;
+   const popStyle = {horizontal: 'left', vertical: 'bottom'} ;
    const propertySubheader = <div><ListItem>
    {this.props.isEditable() &&  //!this.props.nested && this.props.level < 1 &&
       <ListItemIcon>
       <IconButton
          onClick={this._list ? this.handleClick : onTapAdd}
-         style={{marginRight: 0}}
+         style={iconStyle}
       >
-         <AddCircleIcon style={{...greenColor, ...iconSizes.small}}/>
+         <AddCircleIcon style={circleStyle}/>
       </IconButton>
       </ListItemIcon>
    }
@@ -295,7 +298,7 @@ render() {
    <Popover
       open={this.state.open}
       anchorEl={this.state.anchorEl}
-      anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+      anchorOrigin={popStyle}
       //targetOrigin={{horizontal: 'left', vertical: 'top'}}
       onClose={this.handleRequestClose}
    >
@@ -346,864 +349,875 @@ render() {
          }
 
 
-         // console.log("ranges",this.props.property.ranges)
-         let classN = undefined
+      // console.log("ranges",this.props.property.ranges)
+      let classN = undefined
 
-         for (let range of this.props.property.ranges) {
-            if (range in RDFComponents) {
-               const rdfComponent = RDFComponents[range];
-               classN = "RDFCompo";
-               titleView = React.createElement(rdfComponent, {
-                  onSelectedResource: this.props.onSelectedResource,
-                  onClick: onClick,
-                  individual: propertyValue,
-                  isEditable: this.props.isEditable(propertyValue), //isEditable,
-                  isExpandable: true,
-                  isExpanded: false,
-                  level: this.props.level + 1,
-                  nested: true,
-                  ontology: this.props.ontology,
-                  property: this.props.property,
-                  onChange:this.props.onLiteralChanged
-               }, null);
-               //                         console.log("propView",titleView);
+      for (let range of this.props.property.ranges) {
+         if (range in RDFComponents) {
+            const rdfComponent = RDFComponents[range];
+            classN = "RDFCompo";
+            titleView = React.createElement(rdfComponent, {
+               onSelectedResource: this.props.onSelectedResource,
+               onClick: onClick,
+               individual: propertyValue,
+               isEditable: this.props.isEditable(propertyValue), //isEditable,
+               isExpandable: true,
+               isExpanded: false,
+               level: this.props.level + 1,
+               nested: true,
+               ontology: this.props.ontology,
+               property: this.props.property,
+               onChange:this.props.onLiteralChanged
+            }, null);
+            //                         console.log("propView",titleView);
 
-               break;
-            }
-         }
-         view = <IndividualView
-         onSelectedResource={this.props.onSelectedResource}
-         onIndividualUpdated={this.props.onIndividualUpdated}
-         onClick={onClick}
-         individual={propertyValue}
-         isEditable={isEditable}
-         isExpandable={true}
-         isExpanded={false}
-         level={this.props.level + 1}
-         nested={true}
-         ontology={this.props.ontology}
-         titleView={titleView}
-         className={classN}
-         showLabel={true}
-         propertyType={this.props.propertyType}
-         onTapAdd={onTapAdd}
-         onAddResource={this.props.onAddResource}
-
-         />;
-
-
-         //                 console.log("view2",view)
-
-
-         key += propertyValue.id + '_' + propertyValue.uniqueId;
-      }
-
-      const onTapRemove = (event) => {
-         this.props.individual.removeProperty(this.props.property.IRI, propertyValue);
-         if (this.props.onIndividualUpdated) {
-            this.props.onIndividualUpdated();
-         }
-      };
-      let removeButton = "";
-      if (isEditable && this.props.title != "ID") {
-         removeButton = <IconButton
-         onClick={onTapRemove}
-         className="removeButton"
-         >
-         <RemoveCircleIcon style={{...redColor, ...iconSizes.small}}/>
-         </IconButton>;
-      }
-
-      valueRows.push(<ListItem
-         style={listItemStyle}
-         >
-         {view}
-         <ListItemSecondaryAction
-         className={"remoBut "+sty}
-         >{removeButton}</ListItemSecondaryAction>
-         </ListItem>);
-
-         //              this.props.isExpanded &&
-      }
-
-      // console.groupEnd();
-
-      if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
-      || this.props.propertyValues.length > 10)
-      {
-         let collapseId = [this.props.individual.id, 'level', this.props.level, 0, 'collapsed'].join('_');
-
-         let handleCollapse = () => {
-            this.toggleCollapseState(collapseId);
-         };
-
-         const headingStyles = {
-            fontSize: '12px',
-            fontWeight: 'normal',
-            padding: '0px 0px 0px 30px',
-            margin: '0',
-            textTransform:"uppercase"
-         };
-
-         const dataRowStyle = {
-            marginLeft: ((this.props.level + 1) * 20) + 'px'
-         };
-
-         return ( <List>
-            <List>
-            {propertySubheader}
-            <ListItem button onClick={handleCollapse}>
-            <ListItemText
-            disableTypography
-            primary={(this.state.collapseState[collapseId] ? "hide":"show")+" ("+this.props.propertyValues.length+")"}
-            style={headingStyles}
-            />
-            {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse
-               className={"inCollapse " + this.state.collapseState[collapseId] }
-               in={this.state.collapseState[collapseId]}
-               style={dataRowStyle} >
-            {valueRows}
-            </Collapse>
-            </List>
-            </List> );
-         }
-         else
-         {
-            return (<List>
-               {propertySubheader}
-               {valueRows}
-               </List>);
-            }
+            break;
          }
       }
+      view = <IndividualView
+      onSelectedResource={this.props.onSelectedResource}
+      onIndividualUpdated={this.props.onIndividualUpdated}
+      onClick={onClick}
+      individual={propertyValue}
+      isEditable={isEditable}
+      isExpandable={true}
+      isExpanded={false}
+      level={this.props.level + 1}
+      nested={true}
+      ontology={this.props.ontology}
+      titleView={titleView}
+      className={classN}
+      showLabel={true}
+      propertyType={this.props.propertyType}
+      onTapAdd={onTapAdd}
+      onAddResource={this.props.onAddResource}
 
-      type Props = {
-         onSelectedResource: (id: string) => void,
-         onIndividualUpdated?: () => void,
-         onTapAdd?: (individual: Individual, property: RDFProperty) => void,
-         onAddResource?: (individual: Individual, property: RDFProperty) => void,
-         onClick?: () => void,
-         individual: Individual,
-         isEditable: boolean,
-         isExpandable?: boolean,
-         isExpanded: boolean,
-         level: number,
-         nested: boolean,
-         ontology: Ontology,
-         titleView?: React.Element<*>,
-         propertyType: any,
-      }
+      />;
 
-      type State = {
-         collapseState: {},
-         isExpanded: boolean
-      }
 
-      export default class IndividualView extends React.Component<Props, State> {
-         _editableIndividuals = [];
-         _allowExpansion = false ;
+      //                 console.log("view2",view)
 
-         constructor(props: Props) {
-            super(props);
 
-            this.state = {
-               collapseState: {},
-               isExpanded: props.isExpanded
-            }
-         }
-
-         /*
-
-         componentWillMount()
-         {
-         console.log("will mount indiView",this.props.individual.id)
-      }
-      componentDidMount()
-      {
-      console.log("did mount indiView",this.props.individual.id)
+      key += propertyValue.id + '_' + propertyValue.uniqueId;
    }
 
-   componentWillUpdate()
-   {
-   console.log("will update indiView",this.props.individual.id)
-}
-componentDidUpdate()
-{
-console.log("did update indiView",this.props.individual.id)
-}
-*/
-
-setCollapseState(id: string, open: boolean) {
-   const collapseState = {
-      ...this.state.collapseState,
-      [id]: open
-   };
-   this.setState((prevState, props) => {
-      return {
-         ...prevState,
-         collapseState
-      }
-   })
-}
-
-toggleCollapseState(id: string) {
-   let open;
-   if (this.state.collapseState[id] === undefined) {
-      open = true;
-   } else {
-      open = !this.state.collapseState[id];
-   }
-
-   this.setCollapseState(id, open);
-}
-
-toggleExpandedState() {
-   this.setState((prevState, props) => {
-      return {
-         ...prevState,
-         isExpanded: !prevState.isExpanded
-      }
-   })
-}
-
-addProperty(propertyType: string, propy:RDFProperty, val:string = "") {
-   const ontology = this.props.ontology;
-   const individual = this.props.individual;
-   const type = individual.types[0];
-   const properties = ontology._properties //getClassProperties(type);
-
-   let property = properties[propertyType] //properties.find((prop: RDFProperty) => prop.IRI === propertyType);
-   if(propy) property = propy
-
-
-   //console.log("add",this.props.individual,propertyType,property,type);
-
-   if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
-   {
-      const literal = new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", '');
-      individual.addProperty(propertyType, literal);
-   }
-   else
-   {
-      if (!property || property.ranges.length === 0 ) {
-         return;
-      }
-
-      const propertyRange = property.ranges[0];
-
-      //console.log("range",propertyRange)
-
-      if (ontology.isClass(propertyRange)) {
-         const propertyIndividual = new Individual();
-
-         if(val && val != "") {
-            let v = ontology._classes[propertyRange] ;
-            if(v && !v.hasSuperclass(typeIRI)) { propertyIndividual.addType(val); }
-            else { propertyIndividual.id = val ; }
-         }
-         else { propertyIndividual.addType(propertyRange); }
-         this._editableIndividuals.push(propertyIndividual);
-         individual.addProperty(propertyType, propertyIndividual);
-
-         let c = ontology._classes[val]
-         // console.log(c,c._properties);
-         if(c) {
-            let sup = [].concat(c._superclasses)
-            for(let s in c._superclasses) { sup = sup.concat(c._superclasses[s]._superclasses) ; }
-
-            //console.log("sup",sup)
-
-            let props = [].concat(Object.keys(c._properties))
-            for(let s in sup){ props = props.concat(Object.keys(sup[s]._properties)) }
-            //console.log(props)
-            for(let p in props){ propertyIndividual.addProperty(props[p]); }
-         }
-
-
-      } else {
-         const ranges = ontology.getPropertyRanges(propertyType);
-         const literal = new Literal(ranges[0], '');
-         individual.addProperty(propertyType, literal);
-      }
-   }
-
-   this.forceUpdate();
-   if (this.props.onIndividualUpdated) {
-      this.props.onIndividualUpdated();
-   }
-
-}
-
-removeProperty(propertyType: string, value: any) {
-   this.props.individual.removeProperty(propertyType, value);
-   this.forceUpdate();
-   if (this.props.onIndividualUpdated) {
-      this.props.onIndividualUpdated();
-   }
-}
-
-getAvailableProperties(): {} {
-   const ontology = this.props.ontology;
-   const individual = this.props.individual;
-   const type = individual.types[0];
-
-   /*
-   console.log("ontology",ontology);
-
-   console.log("type",type);
-
-   const properties = ontology.getClassProperties(type);
-
-   console.log("availableProperties",properties);
-
-   const groupedProps = this.getGroupedProperties(properties);
-
-   console.log("grouProps",groupedProps);
-
-   const groupedProps = {
-   [DATATYPE_PROPERTY.value]: ontology.getPropertiesArray(DATATYPE_PROPERTY),
-   [OBJECT_PROPERTY.value]: ontology.getPropertiesArray(OBJECT_PROPERTY),
-   [ANNOTATION_PROPERTY.value]: ontology.getPropertiesArray(ANNOTATION_PROPERTY)
-};
-*/
-
-//         console.log("grouProps",groupedProps);
-
-
-
-return ontology._propertiesArray ;
-}
-
-getGroupedProperties(properties: RDFProperty[]): {} {
-   let dataTypeProps = properties.filter(prop => prop.propertyType === DATATYPE_PROPERTY.value);
-   let objectTypeProps = properties.filter(prop => prop.propertyType === OBJECT_PROPERTY.value);
-   let annotationTypeProps = properties.filter(prop => prop.propertyType === ANNOTATION_PROPERTY.value);
-   const groupedProps = {
-      [DATATYPE_PROPERTY.value]: dataTypeProps,
-      [OBJECT_PROPERTY.value]: objectTypeProps,
-      [ANNOTATION_PROPERTY.value]: annotationTypeProps
-   };
-
-   return groupedProps;
-}
-
-propertyGroupRows(availableProps: RDFProperty[], setProps: {}, removeUnsetProps:boolean=false): Array<mixed> {
-
-
-   //         console.log("availProp",availableProps)
-
-   let rows = [];
-   let props = {};
-   const availablePropsIRIs = availableProps.map(prop => {
-      props[prop.IRI] = prop;
-      return prop.IRI;
-   });
-
-   //         console.log("availPropIRI",availablePropsIRIs)
-
-   //         console.log("propertyList",setProps)
-
-   let existingProps = {};
-   for (let propKey in setProps) {
-
-      if(availablePropsIRIs.indexOf(propKey) === -1)
-      {
-         //if (propKey != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-         //&& propKey != "http://purl.bdrc.io/ontology/admin/status"  )
-         {
-            //                   console.log("skipping",propKey)
-            continue;
-
-         }
-      }
-
-      existingProps[propKey] = setProps[propKey];
-
-   }
-
-   //         console.log("existProps",existingProps)
-
-   if (!removeUnsetProps) {
-      for (let availableProp of availableProps) {
-         if (!existingProps[availableProp.IRI] && availableProp.ranges.length > 0) {
-            existingProps[availableProp.IRI] = [];
-         }
-      }
-   }
-
-   let propertyLists = [];
-   for (let propertyType in existingProps) {
-      let propertyValues = existingProps[propertyType];
-      propertyLists.push(this.listForProperty(props[propertyType], propertyValues, propertyType));
-   }
-
-
-   //       console.log("return",propertyLists)
-   //        console.groupEnd()
-
-
-   return propertyLists;
-}
-
-listForProperty(property: RDFProperty, propertyValues: Array<mixed>, propertyType:mixed): {} {
-
-   //         console.log("RDFprop",property);
-   //         console.log("propValues",propertyValues);
-   //         console.log("propType",propertyType);
-
-   const onLiteralChanged = (event) => {
+   const onTapRemove = (event) => {
+      this.props.individual.removeProperty(this.props.property.IRI, propertyValue);
       if (this.props.onIndividualUpdated) {
          this.props.onIndividualUpdated();
       }
    };
+   let removeButton = "";
+   if (isEditable && this.props.title != "ID") {
+      const style = {...redColor, ...iconSizes.small} ;
+      removeButton = <IconButton
+      onClick={onTapRemove}
+      className="removeButton"
+      >
+      <RemoveCircleIcon style={style}/>
+      </IconButton>;
+   }
 
-   //         console.log("property.comments",property.comments);
+   valueRows.push(<ListItem
+      style={listItemStyle}
+      >
+      {view}
+      <ListItemSecondaryAction
+      className={"remoBut "+sty}
+      >{removeButton}</ListItemSecondaryAction>
+      </ListItem>);
 
-   let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
-   let title = ((property.label) ? capitalize(property.label) : formatIRI(property.IRI));
-   const propIsEditable = this.props.isEditable;
-   const isEditable = (propertyValue) => {
-      let isEditable = propIsEditable;
-      /*
-      if (propertyValue && propertyValue instanceof Individual) {
-      if (this._editableIndividuals.indexOf(propertyValue) !== -1) {
-      isEditable = true;
-   } else {
-   isEditable = false;
-}
-}
-*/
-return isEditable;
-};
+      //              this.props.isExpanded &&
+   }
 
-let onTapAdd = (id,prop,val) => {
-   this.addProperty(property.IRI,null,val);
-}
+   // console.groupEnd();
 
-//         console.log("tapAdd1",onTapAdd)
-
-for (let range of property.ranges) {
-   if (REMOTE_ENTITIES.indexOf(range) !== -1)
+   if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
+   || this.props.propertyValues.length > 10)
    {
-      onTapAdd = this.props.onAddResource;
-      break;
-   }
-}
-
-//         console.log("tapAdd2",property.IRI,property,onTapAdd)
-
-const propertyView = <IndividualProperty
-nested={this.props.nested}
-isEditable={isEditable}
-onIndividualUpdated={this.props.onIndividualUpdated}
-onLiteralChanged={onLiteralChanged}
-onSelectedResource={this.props.onSelectedResource}
-onTapAdd={onTapAdd}
-onAddResource={this.props.onAddResource}
-individual={this.props.individual}
-level={this.props.level}
-ontology={this.props.ontology}
-property={property}
-propertyValues={propertyValues}
-propertyType={propertyType}
-title={title}
-tooltip={tooltip}
-{...this.props.individual.id.match(/([_A-Z]+[0-9]+)+$/) ? { showLabel : true }:{} }
-/>;
-
-//         console.log("propView",propertyView.props.title,propertyView)
-
-return propertyView ;
-}
-
-getPropertyLists(): (?React.Element<*>)[] {
-   let removeUnsetProperties = true;
-   if (this.props.isEditable) {
-      removeUnsetProperties = true; //false;
-   }
-
-
-
-   let availableProperties = this.getAvailableProperties();
-   let dataTypeProps = availableProperties[DATATYPE_PROPERTY.value];
-   let objectProps = availableProperties[OBJECT_PROPERTY.value];
-   let annotationProps = availableProperties[ANNOTATION_PROPERTY.value];
-   let properties = this.props.individual.getProperties();
-
-   const objectHeading = '' //(!this.props.nested) ? 'Object Properties' : '';
-   let objectRows = this.propertyGroupRows(objectProps, properties, removeUnsetProperties);
-
-   const datatypeHeading = '' // (!this.props.nested) ? 'Datatype Properties' : '';
-   const datatypeRows = this.propertyGroupRows(dataTypeProps, properties, removeUnsetProperties);
-
-   const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : '';
-   let annotationRows = this.propertyGroupRows(annotationProps, properties,  removeUnsetProperties);
-
-
-   for(let a in annotationRows)
-   {
-      //             console.log("a",annotationRows[a]);
-      if(annotationRows[a].props.propertyType == "http://www.w3.org/2004/02/skos/core#prefLabel")
-      {
-         objectRows.unshift(annotationRows[a])
-         delete annotationRows[a]
-      }
-   }
-
-
-
-   const propertyTypes = [
-
-      {
-         heading: objectHeading,
-         rows: objectRows
-      },
-      {
-         heading: datatypeHeading,
-         rows: datatypeRows
-      },
-      {
-         heading: annotationHeading,
-         rows: annotationRows
-      }
-   ];
-
-   const headingStyles = {
-      fontSize: '21px',
-      fontWeight: 'bold',
-      padding: '10px 0 10px 0',
-      margin: '0'
-   };
-
-   const dataRowStyle = {
-      marginLeft: ((this.props.level + 1) * 20) + 'px'
-   };
-
-   let lists: (?React.Element<*>)[] = [];
-   for (let [index, propertyData] of propertyTypes.entries()) {
-      let collapseId = [this.props.individual.id, 'level', this.props.level, index, 'collapsed'].join('_');
+      let collapseId = [this.props.individual.id, 'level', this.props.level, 0, 'collapsed'].join('_');
 
       let handleCollapse = () => {
          this.toggleCollapseState(collapseId);
       };
 
+      const headingStyles = {
+         fontSize: '12px',
+         fontWeight: 'normal',
+         padding: '0px 0px 0px 30px',
+         margin: '0',
+         textTransform:"uppercase"
+      };
 
-      //if (this.props.nested) {
-      lists.push(
+      const dataRowStyle = {
+         marginLeft: ((this.props.level + 1) * 20) + 'px'
+      };
+
+      return ( <List>
          <List>
-         {propertyData.rows}
+         {propertySubheader}
+         <ListItem button onClick={handleCollapse}>
+         <ListItemText
+         disableTypography
+         primary={(this.state.collapseState[collapseId] ? "hide":"show")+" ("+this.props.propertyValues.length+")"}
+         style={headingStyles}
+         />
+         {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
+         </ListItem>
+         <Collapse
+            className={"inCollapse " + this.state.collapseState[collapseId] }
+            in={this.state.collapseState[collapseId]}
+            style={dataRowStyle} >
+         {valueRows}
+         </Collapse>
          </List>
-      )
-
-      /* // no need anymore
+         </List> );
+      }
+      else
+      {
+         return (<List>
+            {propertySubheader}
+            {valueRows}
+            </List>);
+         }
+      }
    }
-   else
+
+type Props = {
+   onSelectedResource: (id: string) => void,
+   onIndividualUpdated?: () => void,
+   onTapAdd?: (individual: Individual, property: RDFProperty) => void,
+   onAddResource?: (individual: Individual, property: RDFProperty) => void,
+   onClick?: () => void,
+   individual: Individual,
+   isEditable: boolean,
+   isExpandable?: boolean,
+   isExpanded: boolean,
+   level: number,
+   nested: boolean,
+   ontology: Ontology,
+   titleView?: React.Element<*>,
+   propertyType: any,
+}
+
+type State = {
+   collapseState: {},
+   isExpanded: boolean
+}
+
+export default class IndividualView extends React.Component<Props, State> {
+   _editableIndividuals = [];
+   _allowExpansion = false ;
+   _propList = null ;
+   _labList = null ;
+   _idList = null ;
+
+   constructor(props: Props) {
+      super(props);
+
+      this.state = {
+         collapseState: {},
+         isExpanded: props.isExpanded
+      }
+   }
+
+
+   componentWillMount()
    {
+      console.log("will mount indiView",this.props.individual.id)
+   }
+   componentDidMount()
+   {
+      console.log("did mount indiView",this.props.individual.id)
+   }
 
-   lists.push(
-   <List>
-   <ListItem button onClick={handleCollapse}>
-   <ListItemText
-   disableTypography
-   primary={propertyData.heading}
-   style={headingStyles}
-   />
-   {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
-   </ListItem>
-   <Collapse in={this.state.collapseState[collapseId]} style={dataRowStyle} >
-   {propertyData.rows}
-   </Collapse>
-   </List>
-);
-}*/
+   componentWillUpdate()
+   {
+      console.log("will update indiView",this.props.individual.id)
+   }
 
-}
+   componentDidUpdate()
+   {
+      console.log("did update indiView",this.props.individual.id)
+   }
 
-return lists;
-}
 
-getIdList(): React.Element<*> {
-   const idProperty = new RDFProperty('ID');
-   const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
-   const propertyValues = [idLiteral];
+   setCollapseState(id: string, open: boolean) {
+      const collapseState = {
+         ...this.state.collapseState,
+         [id]: open
+      };
+      this.setState((prevState, props) => {
+         return {
+            ...prevState,
+            collapseState
+         }
+      })
+   }
 
-   //console.log("getId:propVal",propertyValues,this.props.individual.id);
+   toggleCollapseState(id: string) {
+      let open;
+      if (this.state.collapseState[id] === undefined) {
+         open = true;
+      } else {
+         open = !this.state.collapseState[id];
+      }
 
-   const onChange = (value) => {
-      this.props.individual.id = value;
+      this.setCollapseState(id, open);
+   }
+
+   toggleExpandedState() {
+      this.setState((prevState, props) => {
+         return {
+            ...prevState,
+            isExpanded: !prevState.isExpanded
+         }
+      })
+   }
+
+   addProperty(propertyType: string, propy:RDFProperty, val:string = "") {
+      const ontology = this.props.ontology;
+      const individual = this.props.individual;
+      const type = individual.types[0];
+      const properties = ontology._properties //getClassProperties(type);
+
+      let property = properties[propertyType] //properties.find((prop: RDFProperty) => prop.IRI === propertyType);
+      if(propy) property = propy
+
+
+      //console.log("add",this.props.individual,propertyType,property,type);
+
+      if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
+      {
+         const literal = new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", '');
+         individual.addProperty(propertyType, literal);
+      }
+      else
+      {
+         if (!property || property.ranges.length === 0 ) {
+            return;
+         }
+
+         const propertyRange = property.ranges[0];
+
+         //console.log("range",propertyRange)
+
+         if (ontology.isClass(propertyRange)) {
+            const propertyIndividual = new Individual();
+
+            if(val && val != "") {
+               let v = ontology._classes[propertyRange] ;
+               if(v && !v.hasSuperclass(typeIRI)) { propertyIndividual.addType(val); }
+               else { propertyIndividual.id = val ; }
+            }
+            else { propertyIndividual.addType(propertyRange); }
+            this._editableIndividuals.push(propertyIndividual);
+            individual.addProperty(propertyType, propertyIndividual);
+
+            let c = ontology._classes[val]
+            // console.log(c,c._properties);
+            if(c) {
+               let sup = [].concat(c._superclasses)
+               for(let s in c._superclasses) { sup = sup.concat(c._superclasses[s]._superclasses) ; }
+
+               //console.log("sup",sup)
+
+               let props = [].concat(Object.keys(c._properties))
+               for(let s in sup){ props = props.concat(Object.keys(sup[s]._properties)) }
+               //console.log(props)
+               for(let p in props){ propertyIndividual.addProperty(props[p]); }
+            }
+
+
+         } else {
+            const ranges = ontology.getPropertyRanges(propertyType);
+            const literal = new Literal(ranges[0], '');
+            individual.addProperty(propertyType, literal);
+         }
+      }
+
       this.forceUpdate();
       if (this.props.onIndividualUpdated) {
          this.props.onIndividualUpdated();
       }
+
+   }
+
+   removeProperty(propertyType: string, value: any) {
+      this.props.individual.removeProperty(propertyType, value);
+      this.forceUpdate();
+      if (this.props.onIndividualUpdated) {
+         this.props.onIndividualUpdated();
+      }
+   }
+
+   getAvailableProperties(): {} {
+      const ontology = this.props.ontology;
+      const individual = this.props.individual;
+      const type = individual.types[0];
+
+      /*
+      console.log("ontology",ontology);
+
+      console.log("type",type);
+
+      const properties = ontology.getClassProperties(type);
+
+      console.log("availableProperties",properties);
+
+      const groupedProps = this.getGroupedProperties(properties);
+
+      console.log("grouProps",groupedProps);
+
+      const groupedProps = {
+      [DATATYPE_PROPERTY.value]: ontology.getPropertiesArray(DATATYPE_PROPERTY),
+      [OBJECT_PROPERTY.value]: ontology.getPropertiesArray(OBJECT_PROPERTY),
+      [ANNOTATION_PROPERTY.value]: ontology.getPropertiesArray(ANNOTATION_PROPERTY)
+   };
+   */
+
+   //         console.log("grouProps",groupedProps);
+
+
+
+   return ontology._propertiesArray ;
+   }
+
+   getGroupedProperties(properties: RDFProperty[]): {} {
+      let dataTypeProps = properties.filter(prop => prop.propertyType === DATATYPE_PROPERTY.value);
+      let objectTypeProps = properties.filter(prop => prop.propertyType === OBJECT_PROPERTY.value);
+      let annotationTypeProps = properties.filter(prop => prop.propertyType === ANNOTATION_PROPERTY.value);
+      const groupedProps = {
+         [DATATYPE_PROPERTY.value]: dataTypeProps,
+         [OBJECT_PROPERTY.value]: objectTypeProps,
+         [ANNOTATION_PROPERTY.value]: annotationTypeProps
+      };
+
+      return groupedProps;
+   }
+
+   propertyGroupRows(availableProps: RDFProperty[], setProps: {}, removeUnsetProps:boolean=false): Array<mixed> {
+
+
+      //         console.log("availProp",availableProps)
+
+      let rows = [];
+      let props = {};
+      const availablePropsIRIs = availableProps.map(prop => {
+         props[prop.IRI] = prop;
+         return prop.IRI;
+      });
+
+      //         console.log("availPropIRI",availablePropsIRIs)
+
+      //         console.log("propertyList",setProps)
+
+      let existingProps = {};
+      for (let propKey in setProps) {
+
+         if(availablePropsIRIs.indexOf(propKey) === -1)
+         {
+            //if (propKey != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            //&& propKey != "http://purl.bdrc.io/ontology/admin/status"  )
+            {
+               //                   console.log("skipping",propKey)
+               continue;
+
+            }
+         }
+
+         existingProps[propKey] = setProps[propKey];
+
+      }
+
+      //         console.log("existProps",existingProps)
+
+      if (!removeUnsetProps) {
+         for (let availableProp of availableProps) {
+            if (!existingProps[availableProp.IRI] && availableProp.ranges.length > 0) {
+               existingProps[availableProp.IRI] = [];
+            }
+         }
+      }
+
+      let propertyLists = [];
+      for (let propertyType in existingProps) {
+         let propertyValues = existingProps[propertyType];
+         propertyLists.push(this.listForProperty(props[propertyType], propertyValues, propertyType));
+      }
+
+
+      //       console.log("return",propertyLists)
+      //        console.groupEnd()
+
+
+      return propertyLists;
+   }
+
+   listForProperty(property: RDFProperty, propertyValues: Array<mixed>, propertyType:mixed): {} {
+
+      //         console.log("RDFprop",property);
+      //         console.log("propValues",propertyValues);
+      //         console.log("propType",propertyType);
+
+      const onLiteralChanged = (event) => {
+         if (this.props.onIndividualUpdated) {
+            this.props.onIndividualUpdated();
+         }
+      };
+
+      //         console.log("property.comments",property.comments);
+
+      let tooltip = property.comments.map(comment => comment.comment).join('\n\n');
+      let title = ((property.label) ? capitalize(property.label) : formatIRI(property.IRI));
+      const propIsEditable = this.props.isEditable;
+      const isEditable = (propertyValue) => {
+         let isEditable = propIsEditable;
+         /*
+         if (propertyValue && propertyValue instanceof Individual) {
+         if (this._editableIndividuals.indexOf(propertyValue) !== -1) {
+         isEditable = true;
+      } else {
+      isEditable = false;
+   }
+   }
+   */
+   return isEditable;
    };
 
-   return <IndividualProperty
+   let onTapAdd = (id,prop,val) => {
+      this.addProperty(property.IRI,null,val);
+   }
+
+   //         console.log("tapAdd1",onTapAdd)
+
+   for (let range of property.ranges) {
+      if (REMOTE_ENTITIES.indexOf(range) !== -1)
+      {
+         onTapAdd = this.props.onAddResource;
+         break;
+      }
+   }
+
+   //         console.log("tapAdd2",property.IRI,property,onTapAdd)
+
+   const propertyView = <IndividualProperty
    nested={this.props.nested}
-   isEditable={() => true}
+   isEditable={isEditable}
    onIndividualUpdated={this.props.onIndividualUpdated}
-   onLiteralChanged={onChange}
+   onLiteralChanged={onLiteralChanged}
    onSelectedResource={this.props.onSelectedResource}
-   onTapAdd={this.props.onTapAdd}
+   onTapAdd={onTapAdd}
    onAddResource={this.props.onAddResource}
    individual={this.props.individual}
    level={this.props.level}
    ontology={this.props.ontology}
-   property={idProperty}
+   property={property}
    propertyValues={propertyValues}
-   title={"ID"}
-   tooltip={"ID"}
+   propertyType={propertyType}
+   title={title}
+   tooltip={tooltip}
+   {...this.props.individual.id.match(/([_A-Z]+[0-9]+)+$/) ? { showLabel : true }:{} }
    />;
-}
 
-getLabelsList(): React.Element<*> | null {
-   let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
+   //         console.log("propView",propertyView.props.title,propertyView)
 
-   if (!labels) return null;
+   return propertyView ;
+   }
 
-   const labelProperty = new RDFProperty('http://www.w3.org/2000/01/rdf-schema#label');
-   const onLiteralChanged = (event) => {
-      if (this.props.onIndividualUpdated) {
-         this.props.onIndividualUpdated();
+   getPropertyLists(): (?React.Element<*>)[] {
+      let removeUnsetProperties = true;
+      if (this.props.isEditable) {
+         removeUnsetProperties = true; //false;
       }
-   };
 
 
-   let onTapAdd = () => this.addProperty(labelProperty.IRI,labelProperty);
 
-   return (
+      let availableProperties = this.getAvailableProperties();
+      let dataTypeProps = availableProperties[DATATYPE_PROPERTY.value];
+      let objectProps = availableProperties[OBJECT_PROPERTY.value];
+      let annotationProps = availableProperties[ANNOTATION_PROPERTY.value];
+      let properties = this.props.individual.getProperties();
+
+      const objectHeading = '' //(!this.props.nested) ? 'Object Properties' : '';
+      let objectRows = this.propertyGroupRows(objectProps, properties, removeUnsetProperties);
+
+      const datatypeHeading = '' // (!this.props.nested) ? 'Datatype Properties' : '';
+      const datatypeRows = this.propertyGroupRows(dataTypeProps, properties, removeUnsetProperties);
+
+      const annotationHeading = (!this.props.nested) ? 'Annotation Properties' : '';
+      let annotationRows = this.propertyGroupRows(annotationProps, properties,  removeUnsetProperties);
+
+
+      for(let a in annotationRows)
+      {
+         //             console.log("a",annotationRows[a]);
+         if(annotationRows[a].props.propertyType == "http://www.w3.org/2004/02/skos/core#prefLabel")
+         {
+            objectRows.unshift(annotationRows[a])
+            delete annotationRows[a]
+         }
+      }
+
+
+
+      const propertyTypes = [
+
+         {
+            heading: objectHeading,
+            rows: objectRows
+         },
+         {
+            heading: datatypeHeading,
+            rows: datatypeRows
+         },
+         {
+            heading: annotationHeading,
+            rows: annotationRows
+         }
+      ];
+
+      const headingStyles = {
+         fontSize: '21px',
+         fontWeight: 'bold',
+         padding: '10px 0 10px 0',
+         margin: '0'
+      };
+
+      const dataRowStyle = {
+         marginLeft: ((this.props.level + 1) * 20) + 'px'
+      };
+
+      let lists: (?React.Element<*>)[] = [];
+      for (let [index, propertyData] of propertyTypes.entries()) {
+         let collapseId = [this.props.individual.id, 'level', this.props.level, index, 'collapsed'].join('_');
+
+         let handleCollapse = () => {
+            this.toggleCollapseState(collapseId);
+         };
+
+
+         //if (this.props.nested) {
+         lists.push(
+            <List>
+            {propertyData.rows}
+            </List>
+         )
+
+         /* // no need anymore
+      }
+      else
+      {
+
+      lists.push(
       <List>
-      <IndividualProperty
+      <ListItem button onClick={handleCollapse}>
+      <ListItemText
+      disableTypography
+      primary={propertyData.heading}
+      style={headingStyles}
+      />
+      {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
+      </ListItem>
+      <Collapse in={this.state.collapseState[collapseId]} style={dataRowStyle} >
+      {propertyData.rows}
+      </Collapse>
+      </List>
+   );
+   }*/
+
+   }
+
+   return lists;
+   }
+
+   getIdList(): React.Element<*> {
+      const idProperty = new RDFProperty('ID');
+      const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
+      const propertyValues = [idLiteral];
+
+      //console.log("getId:propVal",propertyValues,this.props.individual.id);
+
+      const onChange = (value) => {
+         this.props.individual.id = value;
+         this.forceUpdate();
+         if (this.props.onIndividualUpdated) {
+            this.props.onIndividualUpdated();
+         }
+      };
+
+      return <IndividualProperty
       nested={this.props.nested}
-      isEditable={(propertyValue: any) => this.props.nested && this.props.isEditable }
+      isEditable={() => true}
       onIndividualUpdated={this.props.onIndividualUpdated}
-      onLiteralChanged={onLiteralChanged}
+      onLiteralChanged={onChange}
       onSelectedResource={this.props.onSelectedResource}
-      onTapAdd={onTapAdd}//this.props.onAddResource}
+      onTapAdd={this.props.onTapAdd}
       onAddResource={this.props.onAddResource}
       individual={this.props.individual}
       level={this.props.level}
       ontology={this.props.ontology}
-      property={labelProperty}
-      propertyValues={labels}
-      title={"Label"}
-      tooltip={"Labels"}
-      />
-      </List>
-   )
-}
-
-onOpenNewTab(event)  {
-   //       console.log("NEW",this)
-   store.dispatch(ui.editingResourceInNewTab(this.props.individual.id))
-}
-/*
-getSubtitle(txt : string):string
-{
-
-   let subtitle = formatIRI(txt);
-   if(this.props.ontology._classes[txt])
-   {
-      let s = this.props.ontology._classes[txt].label ;
-      if(s && s != '') subtitle = s ;
-   }
-   else if(this.props.ontology._properties[txt])
-   {
-      let s = this.props.ontology._properties[txt].label ;
-      if(s && s != '') subtitle = s ;
+      property={idProperty}
+      propertyValues={propertyValues}
+      title={"ID"}
+      tooltip={"ID"}
+      />;
    }
 
-   return subtitle[0].toUpperCase() + subtitle.slice(1);
-}
-*/
-
-getNestedTitleList(): React.Element<*> | null {
-
-   if (!this.props.nested && !this.props.titleView) return null;
-
-   let titleView = this.props.titleView;
-   if (!titleView) {
-      let title = '';
-      let subtitle = '';
+   getLabelsList(): React.Element<*> | null {
       let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
 
-      //console.log("labels",labels)
+      if (!labels) return null;
 
-      if (this.props.individual.types[0])
-      {
-         subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0]);
-      }
-
-      if (labels && labels.length > 0) {
-         title = labels[0].value;
-      } else if (this.props.individual.id) {
-         if(!this.props.individual.hasGeneratedId)
-         {
-            title = this.props.ontology.getMainLabel(this.props.individual.id);
+      const labelProperty = new RDFProperty('http://www.w3.org/2000/01/rdf-schema#label');
+      const onLiteralChanged = (event) => {
+         if (this.props.onIndividualUpdated) {
+            this.props.onIndividualUpdated();
          }
-         else
-         {
-            /*
-            let t = this.props.ontology._classes[].label ;
-            if(t && t != '') title = t[0].toUpperCase() + t.slice(1);
-            else title = formatIRI(this.props.individual.types[0]);
-               */
-
-            title = this.props.ontology.getMainLabel(this.props.individual.types[0])
-
-            subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
-         }
-      } else {
-         title = <i>&lt;no id&gt;</i>;
-      }
+      };
 
 
-      if(this.props.propertyType && this.props.level >= 2)
-      {
-         subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
-      }
+      let onTapAdd = () => this.addProperty(labelProperty.IRI,labelProperty);
 
-
-      titleView = [ <ListItemText
-         primary={title}
-         secondary={subtitle}
-         /> ]
-
-
-      }
-      else { titleView = [ titleView ] }
-
-
-      //          if(this.props.showLabel)
-      {
-         let pref = []
-
-         let lab = this.props.individual.getProperty("http://www.w3.org/2004/02/skos/core#prefLabel") ;
-         //console.log("label",lab,this.props.individual)
-
-         if(lab != null && lab.length > 0)
-         {
-            for(var l of lab) {
-               pref.push(
-                  <LiteralView literal={l} isEditable={false} noPrefix={true} />
-               );
-            }
-
-            titleView.push(<div className="prefLabel">{pref}</div>)
-         }
-      }
-
-      this._allowExpansion = this.props.isExpandable && (Object.keys(
-         this.props.individual.getProperties()
-      ).length > 0
-      //|| this.props.isEditable
-   );
-   let listItem: React.Element<*>;
-   if (this._allowExpansion) {
-      listItem = []
-      listItem.push( <ListItem {...this.props.isEditable ? {className:"noPad"}:{} } button onClick={() => this.toggleExpandedState()}>
-      {titleView}
-
-      {this.state.isExpanded ? <ExpandLess /> : <ExpandMore />}
-
-
-      </ListItem>)
-
-      if(this.props.nested && this.props.level == 0)
-      {
-         listItem.push(
-            <ListItemSecondaryAction className="plusBut">
-            <IconButton
-            onClick={this.onOpenNewTab.bind(this)}
-            >
-            <AddBoxIcon />
-            </IconButton>
-            </ListItemSecondaryAction>
-         )
-
-      }
-
-   } else {
-      listItem = <ListItem  button>
-      {titleView}
-
-      </ListItem>
-   }
-   return(
-      <List >
-      {listItem}
-      </List>
-   )
-}
-
-render() {
-
-
-
-   // ID
-   let idList = null;
-   if (!this.props.nested) {
-      //            console.log("idList")
-      idList = this.getIdList();
+      return (
+         <List>
+         <IndividualProperty
+         nested={this.props.nested}
+         isEditable={(propertyValue: any) => this.props.nested && this.props.isEditable }
+         onIndividualUpdated={this.props.onIndividualUpdated}
+         onLiteralChanged={onLiteralChanged}
+         onSelectedResource={this.props.onSelectedResource}
+         onTapAdd={onTapAdd}//this.props.onAddResource}
+         onAddResource={this.props.onAddResource}
+         individual={this.props.individual}
+         level={this.props.level}
+         ontology={this.props.ontology}
+         property={labelProperty}
+         propertyValues={labels}
+         title={"Label"}
+         tooltip={"Labels"}
+         />
+         </List>
+      )
    }
 
-   // COMM
-   //         console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
-   //         console.log(this.props);
-
-   let classes = ["individualView"];
-   if (this.props.isEditable) {
-      classes.push("isEditable");
-   }
-   if (this.props.isExpanded) {
-      classes.push("isExpanded");
-   }
-   if(this.props.className) {
-      classes.push(this.props.className);
+   onOpenNewTab(event)  {
+      //       console.log("NEW",this)
+      store.dispatch(ui.editingResourceInNewTab(this.props.individual.id))
    }
    /*
-   if(this._allowExpansion){
-   classes.push("expan")
-} else {
-classes.push("noExpan")
-}
-*/
+   getSubtitle(txt : string):string
+   {
 
-// COMM
-//         console.log("props",this.props);
-//         console.group("getProp");
+      let subtitle = formatIRI(txt);
+      if(this.props.ontology._classes[txt])
+      {
+         let s = this.props.ontology._classes[txt].label ;
+         if(s && s != '') subtitle = s ;
+      }
+      else if(this.props.ontology._properties[txt])
+      {
+         let s = this.props.ontology._properties[txt].label ;
+         if(s && s != '') subtitle = s ;
+      }
 
-const propList = this.getPropertyLists();
+      return subtitle[0].toUpperCase() + subtitle.slice(1);
+   }
+   */
 
-//         console.groupEnd();
-//         console.group("getLab");
+   getNestedTitleList(): React.Element<*> | null {
 
-const labList = this.getLabelsList()
+      if (!this.props.nested && !this.props.titleView) return null;
 
-//         console.groupEnd();
+      let titleView = this.props.titleView;
+      if (!titleView) {
+         let title = '';
+         let subtitle = '';
+         let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
 
-//         console.log("labList",labList);
-//         console.log("propList",propList);
+         //console.log("labels",labels)
 
-let ret = (
-   <div className={classnames(...classes)} onClick={this.props.onClick}>
-   {this.getNestedTitleList()}
-   <Collapse
-      in={this.state.isExpanded}
-      className={"inCollapse " + this.state.isExpanded }
-      >
-   {idList}
-   {labList}
-   {propList}
-   </Collapse>
-   </div>
-);
+         if (this.props.individual.types[0])
+         {
+            subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0]);
+         }
+
+         if (labels && labels.length > 0) {
+            title = labels[0].value;
+         } else if (this.props.individual.id) {
+            if(!this.props.individual.hasGeneratedId)
+            {
+               title = this.props.ontology.getMainLabel(this.props.individual.id);
+            }
+            else
+            {
+               /*
+               let t = this.props.ontology._classes[].label ;
+               if(t && t != '') title = t[0].toUpperCase() + t.slice(1);
+               else title = formatIRI(this.props.individual.types[0]);
+                  */
+
+               title = this.props.ontology.getMainLabel(this.props.individual.types[0])
+
+               subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
+            }
+         } else {
+            title = <i>&lt;no id&gt;</i>;
+         }
 
 
-//         console.groupEnd()
+         if(this.props.propertyType && this.props.level >= 2)
+         {
+            subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
+         }
 
-return ret ;
 
-}
+         titleView = [ <ListItemText
+            primary={title}
+            secondary={subtitle}
+            /> ]
+
+
+         }
+         else { titleView = [ titleView ] }
+
+
+         //          if(this.props.showLabel)
+         {
+            let pref = []
+
+            let lab = this.props.individual.getProperty("http://www.w3.org/2004/02/skos/core#prefLabel") ;
+            //console.log("label",lab,this.props.individual)
+
+            if(lab != null && lab.length > 0)
+            {
+               for(var l of lab) {
+                  pref.push(
+                     <LiteralView literal={l} isEditable={false} noPrefix={true} />
+                  );
+               }
+
+               titleView.push(<div className="prefLabel">{pref}</div>)
+            }
+         }
+
+         this._allowExpansion = this.props.isExpandable && (Object.keys(
+            this.props.individual.getProperties()
+         ).length > 0
+         //|| this.props.isEditable
+      );
+      let listItem: React.Element<*>;
+      if (this._allowExpansion) {
+         listItem = []
+         listItem.push( <ListItem {...this.props.isEditable ? {className:"noPad"}:{} } button onClick={() => this.toggleExpandedState()}>
+         {titleView}
+
+         {this.state.isExpanded ? <ExpandLess /> : <ExpandMore />}
+
+
+         </ListItem>)
+
+         if(this.props.nested && this.props.level == 0)
+         {
+            listItem.push(
+               <ListItemSecondaryAction className="plusBut">
+               <IconButton
+               onClick={this.onOpenNewTab.bind(this)}
+               >
+               <AddBoxIcon />
+               </IconButton>
+               </ListItemSecondaryAction>
+            )
+
+         }
+
+      } else {
+         listItem = <ListItem  button>
+         {titleView}
+
+         </ListItem>
+      }
+      return(
+         <List >
+         {listItem}
+         </List>
+      )
+   }
+      /*
+       shouldComponentUpdate(nextProps) {
+           return false ;
+           //(nextProps.ids !== this.props.ids
+            //    || nextProps.data !== this.props.data);
+       }
+       */
+
+   render() {
+
+
+
+      // ID
+      let idList = null;
+      if (!this.props.nested) {
+         //            console.log("idList")
+         this._idList = this._idList || this.getIdList();
+      }
+
+      // COMM
+      //         console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
+      //         console.log(this.props);
+
+      let classes = ["individualView"];
+      if (this.props.isEditable) {
+         classes.push("isEditable");
+      }
+      if (this.props.isExpanded) {
+         classes.push("isExpanded");
+      }
+      if(this.props.className) {
+         classes.push(this.props.className);
+      }
+      /*
+      if(this._allowExpansion){
+      classes.push("expan")
+   } else {
+   classes.push("noExpan")
+   }
+   */
+
+   // COMM
+   //         console.log("props",this.props);
+   //         console.group("getProp");
+
+   this._propList = this._propList || this.getPropertyLists();
+
+   //         console.groupEnd();
+   //         console.group("getLab");
+
+   this._labList = this._labList || this.getLabelsList()
+
+   //         console.groupEnd();
+
+   //         console.log("labList",labList);
+   //         console.log("propList",propList);
+
+   let ret = (
+      <div className={classnames(...classes)} onClick={this.props.onClick}>
+      {this.getNestedTitleList()}
+      <Collapse
+         in={this.state.isExpanded}
+         className={"inCollapse " + this.state.isExpanded }
+         >
+      {this._idList}
+      {this._labList}
+      {this._propList}
+      </Collapse>
+      </div>
+   );
+
+
+   //         console.groupEnd()
+
+   return ret ;
+
+   }
 }
