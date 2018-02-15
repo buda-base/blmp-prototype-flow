@@ -56,7 +56,7 @@ const getListItemStyle = (level) => {
       border: 0,
       padding: "0 0 5px 0px",
       display: 'flex',
-      alignItems: 'flex-end',
+      alignItems: 'center', //'flex-start',
       marginLeft: 30 + 'px',
       //width:"calc(100% - 30px)"
       //              paddingRight:"50px"
@@ -281,7 +281,8 @@ render() {
    const iconStyle = {marginRight: 0} ;
    const circleStyle = {...greenColor, ...iconSizes.small} ;
    const popStyle = {horizontal: 'left', vertical: 'bottom'} ;
-   const propertySubheader = <div><ListItem>
+   const listStyle = {paddingBottom:"0px",paddingTop:"24px"}
+   const propertySubheader = <div><ListItem style={listStyle}>
    {this.props.isEditable() &&  //!this.props.nested && this.props.level < 1 &&
       <ListItemIcon>
       <IconButton
@@ -391,7 +392,6 @@ render() {
       propertyType={this.props.propertyType}
       onTapAdd={onTapAdd}
       onAddResource={this.props.onAddResource}
-
       />;
 
 
@@ -521,7 +521,7 @@ export default class IndividualView extends React.Component<Props, State> {
       }
    }
 
-
+/*
    componentWillMount()
    {
       console.log("will mount indiView",this.props.individual.id)
@@ -540,7 +540,7 @@ export default class IndividualView extends React.Component<Props, State> {
    {
       console.log("did update indiView",this.props.individual.id)
    }
-
+*/
 
    setCollapseState(id: string, open: boolean) {
       const collapseState = {
@@ -1159,7 +1159,7 @@ export default class IndividualView extends React.Component<Props, State> {
       let idList = null;
       if (!this.props.nested) {
          //            console.log("idList")
-         this._idList = this._idList || this.getIdList();
+         this._idList = /*this._idList ||*/ this.getIdList();
       }
 
       // COMM
@@ -1188,12 +1188,12 @@ export default class IndividualView extends React.Component<Props, State> {
    //         console.log("props",this.props);
    //         console.group("getProp");
 
-   this._propList = this._propList || this.getPropertyLists();
+   this._propList = /*this._propList ||*/ this.getPropertyLists();
 
    //         console.groupEnd();
    //         console.group("getLab");
 
-   this._labList = this._labList || this.getLabelsList()
+   this._labList = /*this._labList ||*/ this.getLabelsList()
 
    //         console.groupEnd();
 
@@ -1205,7 +1205,7 @@ export default class IndividualView extends React.Component<Props, State> {
       {this.getNestedTitleList()}
       <Collapse
          in={this.state.isExpanded}
-         className={"inCollapse " + this.state.isExpanded }
+         className={"inCollapse true"} // + this.state.isExpanded }
          >
       {this._idList}
       {this._labList}

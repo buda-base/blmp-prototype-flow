@@ -85,6 +85,7 @@ class TabContent extends Component<Props, State> {
        if(this._graphTextIRI != this.props.editingResourceIRI)
        {
          this.updateGraphText();
+         this.prepareRender()
          this._graphTextIRI = this.props.editingResourceIRI ;
 
        }
@@ -158,16 +159,15 @@ class TabContent extends Component<Props, State> {
             });
     }
 
-    render() {
-        if (!this.state.graphText && this.props.individual) {
-            this.updateGraphText();
-        }
+    prepareRender()
+    {
 
         let onIndividualUpdated = () =>
         {
 //            console.log("updated!!!");
 
             this.updateGraphText();
+            this.prepareRender()
         };
 
         const previewToggleStyle = {
@@ -179,43 +179,12 @@ class TabContent extends Component<Props, State> {
         const toggleShowPreview = () => {
 
             this.props.onTogglePreviewPanel();
-
-            //if(this.props.hidePreview)
-
-           /*
-            this.setState((prevState: State, props: Props) => {
-                let visibleWidth = this._secondarySplitPaneWidth;
-                if (this._secondarySplitPane) {
-                    if (!prevState.hidePreview) {
-                        this._secondarySplitPaneWidth = this._secondarySplitPane.state.draggedSize;
-                    } else {
-                        visibleWidth = this._secondarySplitPaneWidth;
-                    }
-                }
-                const width = (prevState.hidePreview) ? visibleWidth : '100%';
-                return {
-                    ...prevState,
-                    hidePreview: !(prevState.hidePreview),
-                    subSplitWidth: width
-                }
-            });
-            */
-        };
-
-//         console.log("render/state",this.state);
-//         console.log("render/props",this.props);
-
-         // first react state version :
-         //    onChange={ console.log("resize",this.state.splitWidth) }
-         //    onChange={ this.updateSplitWidth.bind(this) }
-         // first redux version :
-         //    onChange={ width => this.props.onResizeCentralPanel(width) }
-
+         };
 
         if(this.props.editingResource && this.props.editingResourceIRI)
         {
             let ref = this.props.editingResourceIRI
-            console.log(this._cache)
+            console.log("cache",this.props.editingResourceIRI,this._cache)
             this._cache[ref] = this._cache[ref] ||
                <SplitPane
                    split="vertical"
@@ -256,6 +225,7 @@ class TabContent extends Component<Props, State> {
                                  addedProperty={() => {
                                      this.props.onAddedProperty();
                                      this.updateGraphText();
+                                     this.prepareRender()
                                  }}
                              />
                         }
@@ -286,6 +256,23 @@ class TabContent extends Component<Props, State> {
                  </SplitPane>
              </SplitPane>
        }
+   }
+
+    render() {
+        if (!this.state.graphText && this.props.individual) {
+            this.updateGraphText();
+            this.prepareRender()
+        }
+
+
+
+         // first react state version :
+         //    onChange={ console.log("resize",this.state.splitWidth) }
+         //    onChange={ this.updateSplitWidth.bind(this) }
+         // first redux version :
+         //    onChange={ width => this.props.onResizeCentralPanel(width) }
+
+
 
          return (
             <div className="TabContent">

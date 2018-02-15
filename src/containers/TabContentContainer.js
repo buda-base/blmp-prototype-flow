@@ -75,9 +75,10 @@ const mapStateToProps = (state, ownProps) => {
     config = selectors.getConfig(state);
     hostError = selectors.getResourceError(state, "host");
 
-    console.log("state=",state,ownProps);
+    // console.log("state=",state,ownProps);
 
     const props = {
+      ...ownProps,
         ontology,
         editingResourceIRI,
         editingResource,
@@ -97,7 +98,7 @@ const mapStateToProps = (state, ownProps) => {
     }
 
     //console.log("props",props)
-    // console.log("mapstate2prop?",state,ownProps,props);
+    console.log("mapstate2prop?",state,ownProps,props);
 
     return props ;
         //graphText

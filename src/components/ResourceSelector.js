@@ -339,7 +339,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
       let view = <Card>
          <CardContent>
-            <Typography type="headline" component="h2">
+            <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
                Select a resource
             </Typography>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>

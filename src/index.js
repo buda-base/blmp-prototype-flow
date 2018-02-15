@@ -79,4 +79,4 @@ ReactDOM.render(
 let id = "G2800" ;
 setTimeout(function(){ store.dispatch(data.loadResource(id)) },500)
 setTimeout(function(){ store.dispatch(ui.editingResource(1,"http://purl.bdrc.io/resource/"+id)) },1000)
-setTimeout(function(){ store.dispatch(ui.newTab()) },1500)
+// setTimeout(function(){ store.dispatch(ui.newTab()) },1500)
