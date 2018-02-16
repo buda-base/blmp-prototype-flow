@@ -1,4 +1,6 @@
 // @flow
+import * as ui from '../state/ui/actions';
+import store from 'index';
 import React, {Component} from 'react';
 import './LiteralView.css';
 import TextField from 'material-ui/TextField';
@@ -66,6 +68,7 @@ interface Props {
 }
 
 interface State {
+   changed:boolean,
     language: string,
     value: string,
     collapseState: {},
@@ -90,6 +93,7 @@ export default class LiteralView extends Component<Props, State> {
 //         console.log("lang",language)
 
         this.state = {
+           change:false,
             language: language,
             value: props.literal.value,
             collapseState: {}
@@ -163,7 +167,8 @@ export default class LiteralView extends Component<Props, State> {
                 value
             }
         });
-        this.literalChanged();
+        this.setState({changed:true})
+        //this.literalChanged();
     }
 
     languageChanged(event: {}) {
@@ -174,13 +179,20 @@ export default class LiteralView extends Component<Props, State> {
                 language: value
             }
         });
-        this.literalChanged();
+        //this.literalChanged();
+         this.setState({changed:true})
     }
 
     literalChanged() {
-        if (this.props.onChange) {
+        if (this.props.onChange && this.state.changed) {
+           // store.dispatch(ui.savingData())
+           this.setState({changed:false})
             const literal = this.props.literal;
-            this.props.onChange(literal.value, literal.language);
+            setTimeout((function(that,lit){ return function(){
+               that.props.onChange(lit.value, lit.language) } } )(this,literal), 10);
+
+            // this.props.onChange(literal.value, literal.language)
+           // store.dispatch(ui.savedData())
         }
     }
 
@@ -193,12 +205,14 @@ export default class LiteralView extends Component<Props, State> {
 
     render() {
 
+
         let value = this.props.literal.value;
         if (this.props.isEditable) {
             if (this.props.literal.isDate) {
                 value = <TextField
                     type="datetime-local"
                     value={this.props.literal.value.replace(/:[.0-9]+Z$/,"")}
+                    onBlur={this.literalChanged.bind(this)}
                     onChange={this.valueChanged.bind(this)}
                 />
             } else {
@@ -208,6 +222,7 @@ export default class LiteralView extends Component<Props, State> {
                     // floatingLabelFixed={true}
                     value={this.props.literal.value}
                     ref={(textField) => this._valueControl = textField}
+                    onBlur={this.literalChanged.bind(this)}
                     onChange={this.valueChanged.bind(this)}
                     { ... this.props.literal.hasLanguage && this.props.isEditable ?
                         {style: styles.valueField } : {}}

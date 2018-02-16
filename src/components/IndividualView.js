@@ -118,6 +118,8 @@ console.log("did update indiProp",this.props.individual.id)
 constructor(props: Props) {
    super(props);
 
+   console.log("constructor",this.props.individual.IRI)
+
    this.state = {
       collapseState: {},
       isExpanded: props.isExpanded,
@@ -585,7 +587,7 @@ export default class IndividualView extends React.Component<Props, State> {
       if(propy) property = propy
 
 
-      //console.log("add",this.props.individual,propertyType,property,type);
+      // console.log("add",this.props.individual,propertyType,property,type);
 
       if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
       {
@@ -635,6 +637,7 @@ export default class IndividualView extends React.Component<Props, State> {
             individual.addProperty(propertyType, literal);
          }
       }
+
 
       this.forceUpdate();
       if (this.props.onIndividualUpdated) {
@@ -761,6 +764,7 @@ export default class IndividualView extends React.Component<Props, State> {
       //         console.log("propType",propertyType);
 
       const onLiteralChanged = (event) => {
+         //console.log("literalchanged2")
          if (this.props.onIndividualUpdated) {
             this.props.onIndividualUpdated();
          }
@@ -794,7 +798,17 @@ export default class IndividualView extends React.Component<Props, State> {
    for (let range of property.ranges) {
       if (REMOTE_ENTITIES.indexOf(range) !== -1)
       {
-         onTapAdd = this.props.onAddResource;
+         let addResource = (a:Individual,b:RDFProperty) =>
+         {
+            // console.log("addR!!!",a,b)
+            this.props.onAddResource(a,b);
+            this.forceUpdate();
+            if (this.props.onIndividualUpdated) {
+               this.props.onIndividualUpdated();
+            }
+         }
+
+         onTapAdd = addResource;
          break;
       }
    }
@@ -971,6 +985,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
       const labelProperty = new RDFProperty('http://www.w3.org/2000/01/rdf-schema#label');
       const onLiteralChanged = (event) => {
+         //console.log("literalchanged")
          if (this.props.onIndividualUpdated) {
             this.props.onIndividualUpdated();
          }
@@ -1151,20 +1166,32 @@ export default class IndividualView extends React.Component<Props, State> {
        }
        */
 
-   render() {
+   prepareRender()
+   {
 
-
-
-      // ID
-      let idList = null;
       if (!this.props.nested) {
          //            console.log("idList")
          this._idList = /*this._idList ||*/ this.getIdList();
       }
 
-      // COMM
-      //         console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
-      //         console.log(this.props);
+      this._propList = /*this._propList ||*/ this.getPropertyLists();
+
+      this._labList = /*this._labList ||*/ this.getLabelsList()
+
+   }
+
+   render() {
+
+         // COMM
+         //         console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
+         //         console.log(this.props);
+
+      this.prepareRender()
+
+      //         console.groupEnd();
+
+      //         console.log("labList",labList);
+      //         console.log("propList",propList);
 
       let classes = ["individualView"];
       if (this.props.isEditable) {
@@ -1176,48 +1203,25 @@ export default class IndividualView extends React.Component<Props, State> {
       if(this.props.className) {
          classes.push(this.props.className);
       }
-      /*
-      if(this._allowExpansion){
-      classes.push("expan")
-   } else {
-   classes.push("noExpan")
-   }
-   */
 
-   // COMM
-   //         console.log("props",this.props);
-   //         console.group("getProp");
-
-   this._propList = /*this._propList ||*/ this.getPropertyLists();
-
-   //         console.groupEnd();
-   //         console.group("getLab");
-
-   this._labList = /*this._labList ||*/ this.getLabelsList()
-
-   //         console.groupEnd();
-
-   //         console.log("labList",labList);
-   //         console.log("propList",propList);
-
-   let ret = (
-      <div className={classnames(...classes)} onClick={this.props.onClick}>
-      {this.getNestedTitleList()}
-      <Collapse
-         in={this.state.isExpanded}
-         className={"inCollapse true"} // + this.state.isExpanded }
-         >
-      {this._idList}
-      {this._labList}
-      {this._propList}
-      </Collapse>
-      </div>
-   );
+      let ret = (
+         <div className={classnames(...classes,"open"+ this.state.isExpanded )} onClick={this.props.onClick}>
+         {this.getNestedTitleList()}
+         <Collapse
+            in={this.state.isExpanded}
+            className={"inCollapse nohide "+ this.state.isExpanded }
+            >
+         {this._idList}
+         {this._labList}
+         {this._propList}
+         </Collapse>
+         </div>
+      );
 
 
-   //         console.groupEnd()
+      //         console.groupEnd()
 
-   return ret ;
+      return ret ;
 
    }
 }

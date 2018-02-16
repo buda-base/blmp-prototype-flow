@@ -15,6 +15,7 @@ export type TabState = {
     addingResource: AddingResource | null,
     findResource: string | null,
     searchResource: string | null,
+    addedFoundResource?: boolean | null,
 
     splitWidth:number,
     subSplitWidth:string | number,
@@ -24,13 +25,15 @@ export type TabState = {
 export type UIState = {
     editingResources: {[tabId: number]: TabState},
     activeTabId: number | null,
-    tabsOrder: number[]
+    tabsOrder: number[],
+    saving:boolean,
 }
 
 const DEFAULT_STATE: UIState = {
     editingResources: {},
     activeTabId: null,
-    tabsOrder: []
+    tabsOrder: [],
+    saving:false
 }
 
 const DEFAULT_TAB_STATE: TabState = {
@@ -43,7 +46,7 @@ const DEFAULT_TAB_STATE: TabState = {
     splitWidth:"50%",
     subSplitWidth:350,
     hidePreview:true,
-    graphText:null
+    graphText:null,
 }
 
 let reducers = {};
@@ -200,6 +203,7 @@ reducers[actions.TYPES.searchResource] = searchResource;
 export const addedFoundResource = (state: UIState, action: TabAction): UIState => {
     state = updateTabState(action.meta.tabId, state, 'addingResource', null);
     state = updateTabState(action.meta.tabId, state, 'findResource', null);
+    state = updateTabState(action.meta.tabId, state, 'addedFoundResource', true);
     return state;
 }
 reducers[actions.TYPES.addedFoundResource] = addedFoundResource;
@@ -265,6 +269,20 @@ export const togglePreviewPanel = (state: UIState, action: Action) => {
     }
 }
 reducers[actions.TYPES.togglePreviewPanel] = togglePreviewPanel;
+
+export const savingData = (state: UIState, action: Action) => {
+    return { ...state,
+            saving : true
+    }
+}
+reducers[actions.TYPES.savingData] = savingData;
+
+export const savedData = (state: UIState, action: Action) => {
+    return { ...state,
+            saving : false
+    }
+}
+reducers[actions.TYPES.savedData] = savedData;
 
 
 // UI Reducer

@@ -194,7 +194,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
    render() {
 
-      console.log("props", this.props)
+      //console.log("props", this.props)
 
       let message;
       let isValid;

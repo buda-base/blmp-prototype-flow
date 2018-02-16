@@ -164,3 +164,17 @@ export const togglePreviewPanel = (tabId: number): TabAction => {
         payload: tabId
     }
 }
+
+TYPES.savingData = 'SAVING_DATA';
+export const savingData = (): TabAction => {
+    return {
+        type: TYPES.savingData
+    }
+}
+
+TYPES.savedData = 'SAVED_DATA';
+export const savedData = (): TabAction => {
+    return {
+        type: TYPES.savedData
+    }
+}

@@ -13,6 +13,14 @@ export const getWidthInfo = (state: UIState, tabId: number): number | null => {
     return { splitWidth : sw, subSplitWidth : ssw, hidePreview : hide }
 }
 
+export const getAddedFoundResource = (state: UIState, tabId: number): boolean | null => {
+   if (state.editingResources[tabId]) { return state.editingResources[tabId].addedFoundResource; }
+   return null
+}
+export const getSaving = (state: UIState): boolean | null => {
+   return state.saving;
+}
+
 export const getSelectedTabId = (state: UIState): number | null => {
     return state.activeTabId;
 }

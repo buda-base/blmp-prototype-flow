@@ -35,6 +35,7 @@ class App extends Component<Props> {
                 {tabs}
                 <TabContentContainer
                     tabId={this.props.selectedTabId}
+                    saving={this.props.saving}
                 />
             </div>
         );

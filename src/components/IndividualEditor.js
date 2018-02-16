@@ -8,51 +8,51 @@ import ReactDOM from 'react-dom';
 
 export default class IndividualEditor extends Component {
    //_IRI : null
-   
+
    /*
    componentWillMount()
    {
         console.groupCollapsed("EDITOR")
-        console.log("debut edi") 
-    }    
-    
+        console.log("debut edi")
+    }
+
    componentDidMount()
    {
-        console.log("fin edi") 
+        console.log("fin edi")
         console.groupEnd();
     }
-   
+
    componentWillUpdate()
    {
         console.groupCollapsed("UPDATeditor")
-        console.log("debut updatEdi") 
-    }    
-    
+        console.log("debut updatEdi")
+    }
+
    componentDidUpdate()
    {
-        console.log("fin updatEdi") 
+        console.log("fin updatEdi")
         console.groupEnd();
     }
     */
-    
+
     /*
-    shouldComponentUpdate(nextProps, nextState) 
+    shouldComponentUpdate(nextProps, nextState)
     {
        console.log("UPDATE?",this.props)
        if(this.props.individual.id != this._IRI)
-       {        
+       {
           this._IRI = this.props.individual.id;
 //           this.forceUpdate()
           this.render();
-          return true ; 
+          return true ;
        }
        return false ;
     }
     */
-    
+
     render() {
-       
-        
+
+
         let editor;
         let individual = this.props.individual;
         if (individual) {
@@ -78,6 +78,6 @@ export default class IndividualEditor extends Component {
         )
         return ret ;
     }
-     
-       
+
+
 }

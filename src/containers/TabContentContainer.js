@@ -35,8 +35,14 @@ const mapStateToProps = (state, ownProps) => {
     let widthInfo ;
     let graphText ;
 
+    let addedFoundResource  ;
+
+    let loaded ;
 
     if (tabId) {
+
+       addedFoundResource = selectors.getAddedFoundResource(state,tabId)
+
         editingResourceIRI = selectors.getEditingResourceIRI(state, tabId);
         if (editingResourceIRI) {
             editingResource = selectors.getResource(state, editingResourceIRI);
@@ -94,11 +100,12 @@ const mapStateToProps = (state, ownProps) => {
         results,
         config,
         hostError,
-        ...widthInfo,
+        addedFoundResource,
+        ...widthInfo
     }
 
     //console.log("props",props)
-    console.log("mapstate2prop?",state,ownProps,props);
+    console.log("mapstate2prop?TabContent",state,ownProps,props);
 
     return props ;
         //graphText
@@ -124,9 +131,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             dispatch(ui.selectedResourceIRI(tabId, IRI));
         },
         onAddResource: (indvidual: Individual, property: RDFProperty) => {
-
-//            console.log("addR",indvidual,property);
-
+           // console.log("addR",indvidual,property);
             dispatch(ui.addingResource(tabId, indvidual, property));
         },
         onCancelAddingResource: () => dispatch(ui.cancelAddingResource(tabId)),
@@ -136,7 +141,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             // console.log("wefound",id)
         },
         onSearchResource: (id) => {
-           console.log("lets search",id)
+            // console.log("lets search",id)
             dispatch(ui.searchResource(tabId, id))
         },
         onAddedProperty: () => dispatch(ui.addedFoundResource(tabId)),
