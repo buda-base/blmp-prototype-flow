@@ -45,3 +45,5 @@ button.removeButton { height:36px;}
 .inCollapse:not(.nohide).true { margin-left:0 !important; }
 
 .individualView.opentrue {  box-shadow: 5px 0 5px -4px rgba(0,0,0,0.2);  }
+
+.encaps { display:block !important;  box-shadow: -5px 0 5px -4px rgba(0,0,0,0.2);   margin:20px 5px!important;padding:0 0 10px 5px !important;}

@@ -283,7 +283,8 @@ render() {
    const iconStyle = {marginRight: 0} ;
    const circleStyle = {...greenColor, ...iconSizes.small} ;
    const popStyle = {horizontal: 'left', vertical: 'bottom'} ;
-   const listStyle = {paddingBottom:"0px",paddingTop:"24px"}
+   const listStyle = {padding:"0 16px 0 0",margin:"0px 0px 10px 0px"}
+   //,boxShadow: "0px 5px 5px -4px rgba(0,0,0,0.2)"}
    const propertySubheader = <div><ListItem style={listStyle}>
    {this.props.isEditable() &&  //!this.props.nested && this.props.level < 1 &&
       <ListItemIcon>
@@ -446,7 +447,7 @@ render() {
       const headingStyles = {
          fontSize: '12px',
          fontWeight: 'normal',
-         padding: '0px 0px 0px 30px',
+         padding: '0px 0px 0px 15px',
          margin: '0',
          textTransform:"uppercase"
       };
@@ -455,8 +456,8 @@ render() {
          marginLeft: ((this.props.level + 1) * 20) + 'px'
       };
 
-      return ( <List>
-         <List>
+      return (
+         <List  className={this.props.level == 0 ?"encaps":""} >
          {propertySubheader}
          <ListItem button onClick={handleCollapse}>
          <ListItemText
@@ -472,12 +473,11 @@ render() {
             style={dataRowStyle} >
          {valueRows}
          </Collapse>
-         </List>
-         </List> );
+         </List>);
       }
       else
       {
-         return (<List>
+         return (<List className={this.props.level == 0 ?"encaps":""}>
             {propertySubheader}
             {valueRows}
             </List>);
