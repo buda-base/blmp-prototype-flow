@@ -78,6 +78,6 @@ ReactDOM.render(
 
 // let id = "P1583" ;
 // setTimeout(function(){ store.dispatch(data.loadResource(id)) },250)
-// setTimeout(function(){ store.dispatch(ui.editingResource(1,"http://purl.bdrc.io/resource/"+id)) },500)
+// setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },500)
 // setTimeout(function(){ store.dispatch(ui.newTab()) },750)
 // setTimeout(function(){ store.dispatch(ui.togglePreviewPanel(1)) },1000)

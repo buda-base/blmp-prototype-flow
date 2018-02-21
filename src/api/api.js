@@ -67,7 +67,7 @@ export default class API {
         }
     }
 
-    getSearchContents(url: string, key:string, param:string="L_LANG=@bo-x-ewts&I_LIM=10&"): Promise<[]> {
+    getSearchContents(url: string, key:string, param:string="L_LANG=@bo-x-ewts&I_LIM=10000&"): Promise<[]> {
         let text;
         return new Promise((resolve, reject) => {
 

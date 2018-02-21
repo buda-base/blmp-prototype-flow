@@ -286,7 +286,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
                indiv.addProperty("http://www.w3.org/2004/02/skos/core#prefLabel",new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", lab, lang))
 
-               console.log("indiv",indiv)
+               // console.log("indiv",indiv)
 
                res.push(<IndividualView key={n}
                   onClick={(e) => this.selectResult(e,id)}

@@ -104,7 +104,7 @@ export default class Individual {
          this._hasGeneratedId = true;
       }
 
-      console.log("addProps",c,c?c._properties:'undef');
+      // console.log("addProps",c,c?c._properties:'undef');
 
       if(c) {
          let sup = [].concat(c._superclasses)
@@ -115,7 +115,7 @@ export default class Individual {
          let props = [].concat(Object.keys(c._properties))
          for(let s in sup){ props = props.concat(Object.keys(sup[s]._properties)) }
 
-         console.log("props",props)
+         // console.log("props",props)
 
          for(let p in props){ this.addProperty(props[p]); }
       }

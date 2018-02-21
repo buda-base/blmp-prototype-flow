@@ -95,7 +95,7 @@ export default class Graph {
 
       getIndividualWithId(id: string): Individual {
 
-         console.log("getIndiv",id,Graph.current,this._store);
+         // console.log("getIndiv",id,Graph.current,this._store);
 
          let init = true ;
 
@@ -103,14 +103,14 @@ export default class Graph {
 
          Graph.individuAll[id] = individual;
 
-         console.log("indiv",individual);
+         // console.log("indiv",individual);
 
          this.getIndividualTypes(id).map(type => individual.addType(type));
          const node = rdf.sym(id);
          const statements = this._store.statementsMatching(node, undefined, undefined);
          for (let statement of statements) {
 
-            console.log("statement.predicate",statement.predicate,);
+            // console.log("statement.predicate",statement.predicate,);
 
             const prop = statement.predicate;
             let value = statement.object.value;
@@ -146,7 +146,7 @@ export default class Graph {
             init = false ;
          }
 
-         console.log("indiv fin",individual);
+         // console.log("indiv fin",individual);
 
          return individual;
       }
@@ -190,7 +190,7 @@ export default class Graph {
             if (this._ontology.isClass(propertyRange)) {
                blankIndividual.addDefaultProperties(this._ontology._classes[propertyRange])
             }
-            
+
          } else {
             let literal = new Literal(propertyRange, object.value, object.lang);
             individual.addProperty(property, literal);

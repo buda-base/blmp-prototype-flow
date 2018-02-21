@@ -5,8 +5,10 @@
 
 /* .tabResourceSelector .MuiListItemText-root-157:not(:last-of-type) { text-align:right; } */
 /* .tabResourceSelector .MuiListItemText-root-157 + .MuiListItemText-root-157 { text-align:left; } */
-.tabResourceSelector .individualView .prefLabel { flex: 10 1 auto ; margin-left:10px; }
-.tabResourceSelector .individualView ul li > :first-child { flex: 1 10 auto ;  text-align:left; }
+.tabResourceSelector .individualView ul div[tabindex] { justify-content:space-between;}
+.tabResourceSelector .individualView ul div[tabindex] > * { flex-basis:auto; min-width:auto; }
+.tabResourceSelector .individualView .prefLabel {  margin-left:10px; }
+.tabResourceSelector .individualView ul li > :first-child { text-align:left; }
 
 /* .prefLabel  */
 .literalView { line-height:1.1 !important; }
@@ -52,3 +54,5 @@ button.removeButton { height:36px;}
 .isEditable .encaps { display:block !important;  box-shadow: -5px 0 5px -4px rgba(0,0,0,0.2);   margin:20px 5px!important;padding:0 0 10px 5px !important;}
 
 .individualView:not(.isEditable) > div:last-child { margin-left:35px;  }
+
+.tabResourceSelector .individualView .prefLabel { text-align:right;}
