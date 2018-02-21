@@ -24,7 +24,7 @@ const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_BASE_IRI = 'http://purl.bdrc.io/ontology/core/';
 const BASE_IRI = 'http://purl.bdrc.io/resource/';
-const TURTLE_MIME_TYPE = 'text/turtle';
+const TURTLE_MIME_TYPE = 'text/turtle' ;
 
 export const REMOTE_ENTITIES = [
     "http://purl.bdrc.io/ontology/core/Corporation",

@@ -181,7 +181,7 @@ class TabContent extends Component<Props, State> {
 
         let onIndividualUpdated = () =>
         {
-           console.log("updating...")
+           // console.log("updating...")
             this.updateGraphText();
             this.resetRender();
         };
@@ -191,7 +191,7 @@ class TabContent extends Component<Props, State> {
         {
             let ref = this.props.editingResourceIRI
 
-            console.log("cache",this.props.editingResourceIRI,this._cache)
+            // console.log("cache",this.props.editingResourceIRI,this._cache)
 
             this._cache[ref] = this._cache[ref] ||
                <IndividualEditor
@@ -208,7 +208,7 @@ class TabContent extends Component<Props, State> {
             this.updateGraphText();
         }
 
-        console.log("tabrender",this.props)
+        // console.log("tabrender",this.props)
 
         if(this.props.addedFoundResource) this._cache[this.props.editingResourceIRI] = false
         this.prepareRender()
@@ -327,7 +327,7 @@ class TabContent extends Component<Props, State> {
 
             </div> )
 
-            console.log("render finished",this.props)
+            // console.log("render finished",this.props)
             return ret ;
     }
 }

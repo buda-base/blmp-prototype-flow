@@ -57,7 +57,7 @@ const getListItemStyle = (level) => {
       padding: "0 0 5px 0px",
       display: 'flex',
       alignItems: 'center', //'flex-start',
-      marginLeft: 30 + 'px',
+      marginLeft: 15 + 'px',
       //width:"calc(100% - 30px)"
       //              paddingRight:"50px"
    };
@@ -283,7 +283,7 @@ render() {
    const iconStyle = {marginRight: 0} ;
    const circleStyle = {...greenColor, ...iconSizes.small} ;
    const popStyle = {horizontal: 'left', vertical: 'bottom'} ;
-   const listStyle = {padding:"0 16px 0 0",margin:"0px 0px 10px 0px"}
+   const listStyle = {padding:"0 16px 0 0",margin:"0px 0px 5px 0px"}
    //,boxShadow: "0px 5px 5px -4px rgba(0,0,0,0.2)"}
    const propertySubheader = <div><ListItem style={listStyle}>
    {this.props.isEditable() &&  //!this.props.nested && this.props.level < 1 &&
@@ -587,7 +587,8 @@ export default class IndividualView extends React.Component<Props, State> {
       if(propy) property = propy
 
 
-      // console.log("add",this.props.individual,propertyType,property,type);
+      //
+      console.log("add",this.props.individual,propertyType,property,type);
 
       if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
       {
@@ -602,7 +603,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
          const propertyRange = property.ranges[0];
 
-         //console.log("range",propertyRange)
+         console.log("range",propertyRange)
 
          if (ontology.isClass(propertyRange)) {
             const propertyIndividual = new Individual();
@@ -616,19 +617,7 @@ export default class IndividualView extends React.Component<Props, State> {
             this._editableIndividuals.push(propertyIndividual);
             individual.addProperty(propertyType, propertyIndividual);
 
-            let c = ontology._classes[val]
-            // console.log(c,c._properties);
-            if(c) {
-               let sup = [].concat(c._superclasses)
-               for(let s in c._superclasses) { sup = sup.concat(c._superclasses[s]._superclasses) ; }
-
-               //console.log("sup",sup)
-
-               let props = [].concat(Object.keys(c._properties))
-               for(let s in sup){ props = props.concat(Object.keys(sup[s]._properties)) }
-               //console.log(props)
-               for(let p in props){ propertyIndividual.addProperty(props[p]); }
-            }
+            propertyIndividual.addDefaultProperties(ontology._classes[val])
 
 
          } else {

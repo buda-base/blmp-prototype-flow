@@ -93,6 +93,34 @@ export default class Individual {
         // console.log("addI",name,value)
     }
 
+   addDefaultProperties(c:RDFClass)
+   {
+
+         // console.log("id?",this._id)
+
+      if (this._id === undefined) {
+         // console.log("id set")
+         this._id = '_:b' + ID++;
+         this._hasGeneratedId = true;
+      }
+
+      console.log("addProps",c,c?c._properties:'undef');
+
+      if(c) {
+         let sup = [].concat(c._superclasses)
+         for(let s in c._superclasses) { sup = sup.concat(c._superclasses[s]._superclasses) ; }
+
+         // console.log("sup",sup)
+
+         let props = [].concat(Object.keys(c._properties))
+         for(let s in sup){ props = props.concat(Object.keys(sup[s]._properties)) }
+
+         console.log("props",props)
+
+         for(let p in props){ this.addProperty(props[p]); }
+      }
+   }
+
     removeProperty(name: string, value: {}) {
         if (this._properties[name]) {
             this._properties[name] = this._properties[name].filter(val => val !== value);

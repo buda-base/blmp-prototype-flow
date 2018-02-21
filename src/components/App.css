@@ -1,6 +1,6 @@
 
 /* debug mode - everything visible */
-/* * { background-color:rgba(255,0,128,0.1); }  */
+/* * { background-color:rgba(255,0,128,0.1); } */
 
 
 
@@ -35,7 +35,7 @@
 }
 
 .individualEditor {
-    margin: 30px 0 0 30px;
+    margin: 30px 0 0 15px;
     font-size: 18px;
 }
 

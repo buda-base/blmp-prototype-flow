@@ -41,9 +41,14 @@ button.removeButton { height:36px;}
 
 
 .inCollapse:not(.nohide):not(.true) > * { display:none ; }
-.inCollapse.nohide.true { margin-bottom:25px; }
-.inCollapse:not(.nohide).true { margin-left:0 !important; }
 
-.individualView.opentrue {  box-shadow: 5px 0 5px -4px rgba(0,0,0,0.2);  }
+.isEditable .inCollapse.nohide { padding-left:15px; }
+.isEditable .inCollapse.nohide.true { margin-bottom:25px; padding-left:15px; }
 
-.encaps { display:block !important;  box-shadow: -5px 0 5px -4px rgba(0,0,0,0.2);   margin:20px 5px!important;padding:0 0 10px 5px !important;}
+.isEditable .inCollapse:not(.nohide).true { margin-left:0 !important; }
+
+.individualView.opentrue {  box-shadow: 5px 0 5px -4px rgba(0,0,0,0.2); margin-bottom:10px;  }
+
+.isEditable .encaps { display:block !important;  box-shadow: -5px 0 5px -4px rgba(0,0,0,0.2);   margin:20px 5px!important;padding:0 0 10px 5px !important;}
+
+.individualView:not(.isEditable) > div:last-child { margin-left:35px;  }
