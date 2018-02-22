@@ -9,9 +9,12 @@ import App from 'components/App';
 const mapStateToProps = (state,ownProps) => {
     const selectedTabId = selectors.getSelectedTabId(state);
     const saving = selectors.getSaving(state);
+    const logged = selectors.getLogged(state);
 
 
     const props =  {
+      ...ownProps,
+      logged,
       saving,
       selectedTabId
     }

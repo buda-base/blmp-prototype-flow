@@ -4,15 +4,11 @@ import * as ui from 'state/ui/actions';
 import * as data from 'state/data/actions';
 import AppContainer from './containers/AppContainer';
 import './index.css';
-import { CookiesProvider } from 'react-cookie';
 
-// Material-UI
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import indigo from 'material-ui/colors/indigo';
 
 // Redux
 import { createStore, applyMiddleware } from 'redux';
-import { Provider } from 'react-redux';
+
 
 // Saga
 import 'babel-polyfill';
@@ -24,6 +20,15 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from 'state/reducers';
 
+import { makeMainRoutes } from './routes';
+
+/*
+// test ok --> login page
+import Auth from './Auth/Auth.js';
+
+const auth = new Auth();
+auth.login();
+*/
 
 const logger = store => next => action => {
   console.group(action.type)
@@ -57,22 +62,10 @@ export default store ;
 sagaMiddleware.run(rootSaga);
 
 
-const theme = createMuiTheme({
-    palette: {
-        primary: indigo,
-        secondary: indigo
-    }
-});
+const routes = makeMainRoutes();
 
 ReactDOM.render(
-    // setup redux store
-    <Provider store={store}>
-      <CookiesProvider>
-        <MuiThemeProvider theme={theme}>
-            <AppContainer />
-        </MuiThemeProvider>
-     </CookiesProvider>
-    </Provider>,
+   routes,
     document.getElementById('root')
 );
 

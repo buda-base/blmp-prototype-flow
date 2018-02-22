@@ -15,6 +15,12 @@ export type TabAction = Action & Tab;
 
 export const TYPES = {};
 
+TYPES.loggedIn = 'LOGGED_IN';
+export const loggedIn = createAction(TYPES.loggedIn);
+
+TYPES.loggedOut = 'LOGGED_OUT';
+export const loggedOut = createAction(TYPES.loggedOut);
+
 TYPES.newTab = 'NEW_TAB';
 export const newTab = createAction(TYPES.newTab);
 

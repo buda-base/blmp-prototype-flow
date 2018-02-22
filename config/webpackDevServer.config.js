@@ -84,7 +84,7 @@ module.exports = function(proxy, allowedHost) {
     //   // See https://github.com/facebookincubator/create-react-app/issues/387.
     //   disableDotRule: true,
     // },
-    historyApiFallback: false,
+    historyApiFallback: true,
     public: allowedHost,
     proxy,
     before(app) {

@@ -233,9 +233,10 @@ class TabContent extends Component<Props, State> {
 
          let ret = (
             <div className="TabContent">
-                {!this.props.editingResource &&
+                { (!this.props.logged || !this.props.editingResource) &&
                     <div className="tabResourceSelector">
                         <ResourceSelector
+                            logged={this.props.logged}
                             isDialog={false}
                             selectedResource={this.props.onOpenedResource}
                             findResource={this.props.onFindResource}
@@ -253,7 +254,7 @@ class TabContent extends Component<Props, State> {
                         />
                     </div>
                 }
-                {this.props.editingResource &&
+                { this.props.logged && this.props.editingResource &&
 
                       <SplitPane
                          split="vertical"
@@ -273,6 +274,7 @@ class TabContent extends Component<Props, State> {
                                }
                                {this.props.addingResource &&
                                     <ResourceSelector
+                                        logged={this.props.logged}
                                         isDialog={true}
                                         individual={this.props.addingResource.individual}
                                         property={this.props.addingResource.property}

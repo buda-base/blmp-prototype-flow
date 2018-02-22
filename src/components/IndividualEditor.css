@@ -56,3 +56,5 @@ button.removeButton { height:36px;}
 .individualView:not(.isEditable) > div:last-child { margin-left:35px;  }
 
 .tabResourceSelector .individualView .prefLabel { text-align:right;}
+
+.Tabs { display:flex;align-items:center;justify-content: space-between;}

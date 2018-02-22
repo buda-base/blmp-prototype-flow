@@ -9,7 +9,8 @@ import * as data from 'state/data/actions';
 import { initiateApp } from 'state/actions';
 
 type Props = {
-    selectedTabId: number | null
+    selectedTabId: number | null,
+    logged?:boolean
 }
 
 class App extends Component<Props> {
@@ -28,12 +29,14 @@ class App extends Component<Props> {
 
    render() {
 
-       let tabs=<TabsContainer /> ;
+       let tabs=<TabsContainer auth={this.props.auth} logged={this.props.logged} /> ;
 
         return (
             <div className="App">
                 {tabs}
                 <TabContentContainer
+                    auth={this.props.auth}
+                    logged={this.props.logged}
                     tabId={this.props.selectedTabId}
                     saving={this.props.saving}
                 />

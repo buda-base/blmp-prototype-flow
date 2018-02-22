@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import TabsList, { Tab } from 'material-ui/Tabs';
 import IconButton from 'material-ui/IconButton';
 import AddBoxIcon from 'material-ui-icons/AddBox';
+import Button from 'material-ui/Button';
 import HighlighOffIcon from 'material-ui-icons/HighlightOff';
 import Individual from 'lib/Individual';
 import formatIRI from 'lib/formatIRI';
@@ -20,7 +21,8 @@ type Props = {
     selectedTabIndex: number,
     onSelectTab: (tabId: number) => void,
     onCloseTab: (tabId: number) => void,
-    onNewTab: () => void
+    onNewTab: () => void,
+    auth:Auth
 }
 
 export default class Tabs extends Component<Props> {
@@ -58,7 +60,24 @@ export default class Tabs extends Component<Props> {
         }
     }
 
+   goTo(route) {
+     this.props.history.replace(`/${route}`)
+   }
+
+   login() {
+     this.props.auth.login();
+   }
+
+   logout() {
+     this.props.auth.logout();
+   }
+
     render() {
+
+      console.log("props",this.props)
+
+      const { isAuthenticated } = this.props.auth;
+
         return(
             <div className="Tabs">
                 <TabsList
@@ -98,7 +117,30 @@ export default class Tabs extends Component<Props> {
                         <AddBoxIcon />
                     </IconButton>
                 </TabsList>
-
+                <div class="auth">
+                   {
+              !this.props.logged && (
+                  <Button
+                    bsStyle="primary"
+                    className="btn-margin"
+                    onClick={this.login.bind(this)}
+                  >
+                    Log In
+                  </Button>
+                )
+            }
+            {
+              this.props.logged /*isAuthenticated()*/ && (
+                  <Button
+                    bsStyle="primary"
+                    className="btn-margin"
+                    onClick={this.logout.bind(this)}
+                  >
+                    Log Out
+                  </Button>
+                )
+            }
+                </div>
 
             </div>
         );

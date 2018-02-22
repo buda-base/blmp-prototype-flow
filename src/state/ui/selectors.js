@@ -21,6 +21,10 @@ export const getSaving = (state: UIState): boolean | null => {
    return state.saving;
 }
 
+export const getLogged = (state: UIState): boolean | null => {
+   return state.logged;
+}
+
 export const getSelectedTabId = (state: UIState): number | null => {
     return state.activeTabId;
 }

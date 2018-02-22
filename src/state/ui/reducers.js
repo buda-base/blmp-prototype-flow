@@ -27,6 +27,7 @@ export type UIState = {
     activeTabId: number | null,
     tabsOrder: number[],
     saving:boolean,
+    logged?:boolean
 }
 
 const DEFAULT_STATE: UIState = {
@@ -269,6 +270,20 @@ export const togglePreviewPanel = (state: UIState, action: Action) => {
     }
 }
 reducers[actions.TYPES.togglePreviewPanel] = togglePreviewPanel;
+
+export const loggedIn = (state: UIState, action: Action) => {
+    return { ...state,
+            logged : true
+    }
+}
+reducers[actions.TYPES.loggedIn] = loggedIn;
+
+export const loggedOut = (state: UIState, action: Action) => {
+    return { ...state,
+            logged : false
+    }
+}
+reducers[actions.TYPES.loggedOut] = loggedOut;
 
 export const savingData = (state: UIState, action: Action) => {
     return { ...state,

@@ -1,4 +1,5 @@
 // @flow
+import Auth from 'Auth/Auth';
 import React from 'react';
 import { connect } from 'react-redux';
 import * as ui from 'state/ui/actions';
@@ -6,7 +7,7 @@ import selectors from 'state/selectors';
 import Tabs from 'components/Tabs';
 import store from "../index.js";
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state,ownProps) => {
     const tabsOrder: number[] = selectors.getTabsOrder(state);
     const selectedTabId = selectors.getSelectedTabId(state);
     const selectedTabIndex = tabsOrder.indexOf(selectedTabId);
@@ -19,8 +20,9 @@ const mapStateToProps = (state) => {
             resource
         }
     });
-    
+
     return {
+      ...ownProps,
         tabData,
         selectedTabIndex
     }
@@ -32,7 +34,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(ui.selectTab(tabId));
         },
         onCloseTab: (tabId: number) => {
-            dispatch(ui.closeTab(tabId));            
+            dispatch(ui.closeTab(tabId));
         },
         onNewTab: () => {
             dispatch(ui.newTab());

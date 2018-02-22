@@ -200,6 +200,7 @@ export default class ResourceSelector extends React.Component<Props> {
       let isValid;
 
       let host,menu ;
+
       if(this.props.config)
       {
          const textStyle = {marginLeft:"15px",marginBottom:"10px"}
@@ -220,7 +221,11 @@ export default class ResourceSelector extends React.Component<Props> {
    */
       }
 
-      if (this.props.hostError) {
+      if(!this.props.logged)
+      {
+         message = <Typography>You must be logged in to access these resources.</Typography>
+      }
+      else if (this.props.hostError) {
          message = <Typography>Error reaching {host} : {this.props.hostError}</Typography>
       }
       else if (this.props.findingResourceId) {
@@ -342,57 +347,60 @@ export default class ResourceSelector extends React.Component<Props> {
             <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
                Select a resource
             </Typography>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
-               <TextField
-                  autoFocus
-                  label="Resource ID"
-                  id="resourceID"
-                  type="text"
-                  inputRef={(searchInput) => this._textfield = searchInput } //; this._focus = false ;  console.log("ref");} }
-                  onKeyPress={(e) => this.handleKeypress(e,"res")}
-                  onChange={ (e) => this.handleChange(e,"res")}
-               />
-               <span style={{textAlign:"center",width:"60px",display:"inline-block"}}>or</span>
-               <TextField
-                  inputRef={(searchInput) => this._textfieldS = searchInput } //; this._focus = true ; console.log("refS"); } }
-                  label="Keyword(s)"
-                  id="keyword"
-                  type="text"
-                  onKeyPress={(e) => this.handleKeypress(e,"key")}
-                  onChange={ (e) => this.handleChange(e,"key")}
-               />
-            </div>
-            <br/>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-               <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
-                  Search
-               </Button>
-               <Button style={{marginTop:"15px",padding:"0"}} onClick={this.handleClick}>
-               <ListItem style={{display:"flex",justifyContent:"space-between"}}>
-                  <ListItemText
-                     style={{textTransform:"none",textAlign:"left",paddingRight:"0"}}
-                     primary={host}
-                     secondary="Endpoint"
+            {this.props.logged &&
+               [
+               <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+                  <TextField
+                     autoFocus
+                     label="Resource ID"
+                     id="resourceID"
+                     type="text"
+                     inputRef={(searchInput) => this._textfield = searchInput } //; this._focus = false ;  console.log("ref");} }
+                     onKeyPress={(e) => this.handleKeypress(e,"res")}
+                     onChange={ (e) => this.handleChange(e,"res")}
                   />
-                  <ListItemIcon style={{marginRight:"0",marginLeft:"15px",color:col}}>{icon}</ListItemIcon>
-               </ListItem>
-               </Button>
+                  <span style={{textAlign:"center",width:"60px",display:"inline-block"}}>or</span>
+                  <TextField
+                     inputRef={(searchInput) => this._textfieldS = searchInput } //; this._focus = true ; console.log("refS"); } }
+                     label="Keyword(s)"
+                     id="keyword"
+                     type="text"
+                     onKeyPress={(e) => this.handleKeypress(e,"key")}
+                     onChange={ (e) => this.handleChange(e,"key")}
+                  />
+               </div>,
+               <br/>,
+               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
+                     Search
+                  </Button>
+                  <Button style={{marginTop:"15px",padding:"0"}} onClick={this.handleClick}>
+                  <ListItem style={{display:"flex",justifyContent:"space-between"}}>
+                     <ListItemText
+                        style={{textTransform:"none",textAlign:"left",paddingRight:"0"}}
+                        primary={host}
+                        secondary="Endpoint"
+                     />
+                     <ListItemIcon style={{marginRight:"0",marginLeft:"15px",color:col}}>{icon}</ListItemIcon>
+                  </ListItem>
+                  </Button>
 
-                  <Popover
-                     open={this.state.open}
-                     anchorEl={this.state.anchorEl}
-                     anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                     //targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                     onClose={this.handleRequestClose}
-                  >
-                     <List>{menu}</List>
-                  </Popover>
+                     <Popover
+                        open={this.state.open}
+                        anchorEl={this.state.anchorEl}
+                        anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                        //targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                        onClose={this.handleRequestClose}
+                     >
+                        <List>{menu}</List>
+                     </Popover>
 
-            </div>
-
+               </div>
+               ]
+            }
          </CardContent>
 
-         { (this.props.findingResourceId || this.props.hostError || this.props.searchingResource) &&
+         { (!this.props.logged || this.props.findingResourceId || this.props.hostError || this.props.searchingResource) &&
             <CardContent>
                {message}
             </CardContent>
