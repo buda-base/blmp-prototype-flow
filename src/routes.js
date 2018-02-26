@@ -10,7 +10,6 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import indigo from 'material-ui/colors/indigo';
 import { Provider } from 'react-redux';
 import { CookiesProvider } from 'react-cookie';
-
 import store from 'index';
 
 const theme = createMuiTheme({
@@ -20,7 +19,7 @@ const theme = createMuiTheme({
     }
 });
 
-const auth = new Auth();
+export let auth = new Auth();
 
 const handleAuthentication = (nextState, replace) => {
   if (/access_token|id_token|error/.test(nextState.location.hash)) {
@@ -62,3 +61,6 @@ return (<Router history={history} >
 
 );
 }
+
+
+export default makeMainRoutes ;

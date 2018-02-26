@@ -1,22 +1,24 @@
 // src/Auth/Auth.js
 
-import auth0 from 'auth0-js';import history from '../history';
+import auth0 from 'auth0-js';
 import store from 'index';
+import history from '../history';
 import * as ui from '../state/ui/actions'
 
 
 export default class Auth {
-  auth0 = new auth0.WebAuth({
-    domain: 'test-bdrc.auth0.com',
-    clientID: 'gibx5evMPCm5U9jp7sXOU5IBVePebsZB',
-    redirectUri: 'http://localhost:3000/callback',
-    audience: 'https://test-bdrc.auth0.com/userinfo',
-    responseType: 'token id_token',
-    scope: 'openid'
-  });
+
+   auth1 : WebAuth ;
+
+
+  setConfig(config)
+  {
+     this.auth1 = new auth0.WebAuth(config)
+  }
 
   login() {
-    this.auth0.authorize();
+     console.log("auth1",this.auth1,auth0)
+    this.auth1.authorize();
   }
 
   constructor() {
@@ -24,13 +26,22 @@ export default class Auth {
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
+    this.auth1 = new auth0.WebAuth({
+      domain: 'test-bdrc.auth0.com',
+      clientID: 'gibx5evMPCm5U9jp7sXOU5IBVePebsZB',
+      redirectUri: 'http://localhost:3000/callback',
+      audience: 'https://test-bdrc.auth0.com/userinfo',
+      responseType: 'token id_token',
+      scope: 'openid'
+    });
+    this.setConfig.bind(this)
   }
 
   handleAuthentication() {
-    this.auth0.parseHash((err, authResult) => {
+    this.auth1.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
-        history.replace('/');        
+        history.replace('/');
         store.dispatch(ui.loggedIn())
       } else if (err) {
         history.replace('/');

@@ -130,7 +130,7 @@ export default class Tabs extends Component<Props> {
                 )
             }
             {
-              this.props.logged /*isAuthenticated()*/ && (
+              this.props.logged /*|| isAuthenticated()*/ && (
                   <Button
                     bsStyle="primary"
                     className="btn-margin"

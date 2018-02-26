@@ -1,3 +1,4 @@
+import Auth from 'Auth/Auth';
 import { call, put, takeLatest, select, all } from 'redux-saga/effects';
 import { INITIATE_APP } from 'state/actions';
 import * as dataActions from 'state/data/actions';
@@ -5,6 +6,7 @@ import * as uiActions from 'state/ui/actions';
 import selectors from 'state/selectors';
 import bdrcApi from 'api/api';
 import store from 'index';
+import {auth} from '../../routes';
 
 const api = new bdrcApi();
 
@@ -12,9 +14,12 @@ function* initiateApp() {
    try {
       let cookies = store.getState().data.cookies ;
       let config ;
-      if(cookies) config = cookies.get("config")
+      // if(cookies) config = cookies.get("config")
 
-      if(!config) config = yield call([api, api.loadConfig]);
+      if(!config || !cookies.auth) config = yield call([api, api.loadConfig]);
+      auth.setConfig(config.auth)
+      console.log("auth",auth)
+
       yield put(dataActions.loadedConfig(config));
       yield put(dataActions.choosingHost(config.ldspdi.endpoints[config.ldspdi.index]));
 

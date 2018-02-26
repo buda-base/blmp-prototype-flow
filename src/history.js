@@ -2,4 +2,6 @@
 
 import createHistory from 'history/createBrowserHistory'
 
-export default createHistory()
+let history = createHistory()
+
+export default history ;

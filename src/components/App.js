@@ -1,3 +1,4 @@
+import Auth from 'Auth/Auth';
 import store from 'index';
 import React, { Component } from 'react';
 import TabsContainer from 'containers/TabsContainer';
@@ -7,6 +8,9 @@ import { withCookies, Cookies } from 'react-cookie';
 import { instanceOf } from 'prop-types';
 import * as data from 'state/data/actions';
 import { initiateApp } from 'state/actions';
+
+export const auth = new Auth();
+
 
 type Props = {
     selectedTabId: number | null,

@@ -3,5 +3,14 @@
    {
       "endpoints":["http://localhost:8080","http://localhost:13280","http://buda1.bdrc.io:13280","http://purl.bdrc.io"],
       "index":0
+   },
+   "auth":
+   {
+     "domain": "test-bdrc.auth0.com",
+     "clientID": "gibx5evMPCm5U9jp7sXOU5IBVePebsZB",
+     "redirectUri": "http://localhost:3000/callback",
+     "audience": "https://test-bdrc.auth0.com/userinfo",
+     "responseType": "token id_token",
+     "scope": "openid"
    }
 }
