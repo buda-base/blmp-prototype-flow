@@ -8,7 +8,7 @@
    {
      "domain": "bdrc-io.auth0.com",
      "clientID": "q1YsWjfmP37r8TspUOIqLF5l9Phw9QQY",
-     "redirectUri": "http://localhost:3000/callback",
+     "redirectUri": "http://localhost:3000/auth/callback",
      "audience": "https://bdrc-io.auth0.com/userinfo",
      "responseType": "token id_token",
      "scope": "openid"

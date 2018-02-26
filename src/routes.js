@@ -25,7 +25,7 @@ export let auth = new Auth();
 
 const handleAuthentication = (nextState, replace) => {
   if (/access_token|id_token|error/.test(nextState.location.hash)) {
-     console.log("auth?",auth)
+     // console.log("auth?",auth)
     auth.handleAuthentication();
   }
 }
@@ -36,7 +36,7 @@ class AuthCallback extends Component<Props>
 {
    render()
    {
-      console.log("Route.props",this.props)
+      // console.log("Route.props",this.props)
       if(!this.props.config) { return <Loader loaded={false} /> ; }
       else {
          handleAuthentication(this.props.props);
@@ -46,7 +46,7 @@ class AuthCallback extends Component<Props>
 }
 
 const mapStateToProps = (state,ownProps) => {
-   console.log("mapS2P",state,ownProps);
+   // console.log("mapS2P",state,ownProps);
    let config = state.data.config;
    return { ...ownProps, config }
 }
@@ -80,7 +80,7 @@ return (<Router history={history} >
               </MuiThemeProvider>
             </CookiesProvider>
          </Provider>}/>
-        <Route path="/callback" render={(props) =>
+        <Route path="/auth/callback" render={(props) =>
            <AuthCallbackContainer props={props} store={store} />
         } />
       </div>
