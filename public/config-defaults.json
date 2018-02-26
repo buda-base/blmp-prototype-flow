@@ -6,10 +6,10 @@
    },
    "auth":
    {
-     "domain": "test-bdrc.auth0.com",
-     "clientID": "gibx5evMPCm5U9jp7sXOU5IBVePebsZB",
+     "domain": "bdrc-io.auth0.com",
+     "clientID": "q1YsWjfmP37r8TspUOIqLF5l9Phw9QQY",
      "redirectUri": "http://localhost:3000/callback",
-     "audience": "https://test-bdrc.auth0.com/userinfo",
+     "audience": "https://bdrc-io.auth0.com/userinfo",
      "responseType": "token id_token",
      "scope": "openid"
    }

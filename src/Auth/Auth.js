@@ -17,7 +17,7 @@ export default class Auth {
   }
 
   login() {
-     console.log("auth1",this.auth1,auth0)
+     // console.log("auth1",this.auth1,auth0)
     this.auth1.authorize();
   }
 
@@ -26,14 +26,16 @@ export default class Auth {
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
+    /*
     this.auth1 = new auth0.WebAuth({
-      domain: 'test-bdrc.auth0.com',
-      clientID: 'gibx5evMPCm5U9jp7sXOU5IBVePebsZB',
-      redirectUri: 'http://localhost:3000/callback',
-      audience: 'https://test-bdrc.auth0.com/userinfo',
-      responseType: 'token id_token',
-      scope: 'openid'
+     "domain": "bdrc-io.auth0.com",
+     "clientID": "q1YsWjfmP37r8TspUOIqLF5l9Phw9QQY",
+     "redirectUri": "http://localhost:3000/callback",
+     "audience": "https://bdrc-io.auth0.com/userinfo",
+     "responseType": "token id_token",
+     "scope": "openid"
     });
+    */
     this.setConfig.bind(this)
   }
 
