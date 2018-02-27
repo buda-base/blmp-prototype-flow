@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import AppContainer from 'containers/AppContainer';
 import React,{Component} from 'react';
 import { Route, Router } from 'react-router-dom';
-import Callback from './Auth/Callback';
+import AuthCallbackContainer from './Auth/Callback';
 import Auth from './Auth/Auth';
 import history from './history';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
@@ -22,38 +22,6 @@ const theme = createMuiTheme({
 });
 
 export let auth = new Auth();
-
-const handleAuthentication = (nextState, replace) => {
-  if (/access_token|id_token|error/.test(nextState.location.hash)) {
-     // console.log("auth?",auth)
-    auth.handleAuthentication();
-  }
-}
-
-type Props = {}
-
-class AuthCallback extends Component<Props>
-{
-   render()
-   {
-      // console.log("Route.props",this.props)
-      if(!this.props.config) { return <Loader loaded={false} /> ; }
-      else {
-         handleAuthentication(this.props.props);
-         return <Callback {...this.props.props} />
-      }
-   }
-}
-
-const mapStateToProps = (state,ownProps) => {
-   // console.log("mapS2P",state,ownProps);
-   let config = state.data.config;
-   return { ...ownProps, config }
-}
-
-const AuthCallbackContainer = connect(
-    mapStateToProps
-)(AuthCallback);
 
 export const makeMainRoutes = () => {
 
@@ -81,7 +49,9 @@ return (<Router history={history} >
             </CookiesProvider>
          </Provider>}/>
         <Route path="/auth/callback" render={(props) =>
-           <AuthCallbackContainer props={props} store={store} />
+           <Provider store={store}>
+             <AuthCallbackContainer props={props} />
+          </Provider>
         } />
       </div>
     </Router>

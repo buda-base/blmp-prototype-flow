@@ -1,4 +1,5 @@
 // @flow
+import {auth} from "../routes"
 import {directoryPrefixes} from 'api/api';
 import Literal from 'lib/Literal';
 import * as data from 'state/data/actions';
@@ -196,6 +197,8 @@ export default class ResourceSelector extends React.Component<Props> {
 
       //console.log("props", this.props)
 
+      let loggedIn = auth.isAuthenticated() ;
+
       let message;
       let isValid;
 
@@ -221,7 +224,7 @@ export default class ResourceSelector extends React.Component<Props> {
    */
       }
 
-      if(!this.props.logged)
+      if(!loggedIn) //!this.props.logged)
       {
          message = <Typography>You must be logged in to access these resources.</Typography>
       }
@@ -337,7 +340,7 @@ export default class ResourceSelector extends React.Component<Props> {
       */
 
 
-      // console.log("render.props",this.props)
+      console.log("render.props",this.props)
 
       let col = (this.props.hostError ? "red":"green")
       let icon = (this.props.hostError ? <CloudOffIcon/>:<CloudDoneIcon/>)
@@ -347,7 +350,7 @@ export default class ResourceSelector extends React.Component<Props> {
             <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
                Select a resource
             </Typography>
-            {this.props.logged &&
+            {loggedIn &&
                [
                <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
                   <TextField
@@ -400,7 +403,7 @@ export default class ResourceSelector extends React.Component<Props> {
             }
          </CardContent>
 
-         { (!this.props.logged || this.props.findingResourceId || this.props.hostError || this.props.searchingResource) &&
+         { (!loggedIn || this.props.findingResourceId || this.props.hostError || this.props.searchingResource) &&
             <CardContent>
                {message}
             </CardContent>

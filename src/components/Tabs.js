@@ -117,9 +117,9 @@ export default class Tabs extends Component<Props> {
                         <AddBoxIcon />
                     </IconButton>
                 </TabsList>
-                <div class="auth">
+                <div className="auth">
                    {
-              !this.props.logged && (
+              !isAuthenticated() && (
                   <Button
                     bsStyle="primary"
                     className="btn-margin"
@@ -130,7 +130,7 @@ export default class Tabs extends Component<Props> {
                 )
             }
             {
-              this.props.logged /*|| isAuthenticated()*/ && (
+              isAuthenticated() && (
                   <Button
                     bsStyle="primary"
                     className="btn-margin"
