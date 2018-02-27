@@ -110,7 +110,7 @@ export default class ResourceSelector extends React.Component<Props> {
    selectResult(e:Event, IRI:string)
    {
 
-      console.log("opening")
+      // console.log("opening")
       this.setState({isOpening:true})
 
       store.dispatch(data.loadResult(IRI.replace(/^.*\/([^/]+)$/,"$1")))
@@ -340,7 +340,7 @@ export default class ResourceSelector extends React.Component<Props> {
       */
 
 
-      console.log("render.props",this.props)
+      // console.log("render.props",this.props)
 
       let col = (this.props.hostError ? "red":"green")
       let icon = (this.props.hostError ? <CloudOffIcon/>:<CloudDoneIcon/>)

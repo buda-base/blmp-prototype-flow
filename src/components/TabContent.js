@@ -19,6 +19,7 @@ import Ontology from 'lib/Ontology';
 import RDFProperty from 'lib/RDFProperty';
 import Individual from 'lib/Individual';
 
+import {auth} from "../routes"
 
 import './TabContent.css';
 
@@ -233,7 +234,7 @@ class TabContent extends Component<Props, State> {
 
          let ret = (
             <div className="TabContent">
-                { (!this.props.logged || !this.props.editingResource) &&
+                { (!auth.isAuthenticated() || !this.props.editingResource) &&
                     <div className="tabResourceSelector">
                         <ResourceSelector
                             logged={this.props.logged}
@@ -254,7 +255,7 @@ class TabContent extends Component<Props, State> {
                         />
                     </div>
                 }
-                { this.props.logged && this.props.editingResource &&
+                { auth.isAuthenticated() && this.props.editingResource &&
 
                       <SplitPane
                          split="vertical"

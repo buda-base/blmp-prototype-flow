@@ -74,7 +74,7 @@ export default class Tabs extends Component<Props> {
 
     render() {
 
-      console.log("props",this.props)
+      // console.log("props",this.props)
 
       const { isAuthenticated } = this.props.auth;
 

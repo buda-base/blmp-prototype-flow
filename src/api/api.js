@@ -67,14 +67,15 @@ export default class API {
         }
     }
 
-    getSearchContents(url: string, key:string, param:string="L_LANG=@bo-x-ewts&I_LIM=10000&"): Promise<[]> {
+    getSearchContents(url: string, key:string, param:string="LG_NAME=bo-x-ewts&I_LIM=10000&"): Promise<[]> {
         let text;
+
         return new Promise((resolve, reject) => {
 
             this._fetch( url,
             {// header pour accéder aux résultat en JSON !
               method: 'POST',
-              body:"searchType=BLMP&"+param+"L_NAME=\""+key+"\"",
+              body:"searchType=BLMP&"+param+"L_NAME="+key+"&"+this.getAuthStr(),
               headers:new Headers({"Content-Type": "application/x-www-form-urlencoded"})
            }).then((response) => {
 
@@ -115,12 +116,12 @@ export default class API {
     async loadConfig(): Promise<string>
     {
       try {
-         let config =  JSON.parse(await this.getURLContents(this._configPath,false));
+         let config =  JSON.parse(await this.getURLContents(this._configPath,false,false));
          console.log("config",config)
          return config ;
       }
       catch(e) {
-         let config =  JSON.parse(await this.getURLContents(this._configDefaultsPath,false));
+         let config =  JSON.parse(await this.getURLContents(this._configDefaultsPath,false,false));
          console.log("config-defaults",config)
          return config ;
       }
@@ -190,12 +191,26 @@ export default class API {
       })
       */
 
+      getAuthStr()
+      {
+         const access_token = localStorage.getItem('access_token');
+         const id_token = localStorage.getItem('id_token');
+         const expires_at = localStorage.getItem('expires_at');
 
-    getURLContents(url: string, minSize : boolean = true): Promise<string> {
+         const param = { access_token, id_token, expires_at } ;
+
+         const authStr = Object.keys(param).map( (k) => k+"="+param[k] ).join('&')
+
+         return authStr ;
+
+      }
+
+    getURLContents(url: string, minSize : boolean = true, usePost : boolean = true): Promise<string> {
         let text;
+
         return new Promise((resolve, reject) => {
 
-            this._fetch( url
+            this._fetch( url+(!usePost?"":"?"+this.getAuthStr())
                   /*
                ,  {
                method: 'GET',
@@ -237,7 +252,7 @@ export default class API {
 
     async getOntology(): Promise<Ontology> {
         if (!this._ontology) {
-            let ontologyData = await this.getURLContents(this._ontologyPath);
+            let ontologyData = await this.getURLContents(this._ontologyPath,false,false);
             this._ontology = await this._processOntologyData(ontologyData);
         }
 

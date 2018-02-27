@@ -14,7 +14,7 @@ function* initiateApp() {
    try {
       let cookies = store.getState().data.cookies ;
       let config ;
-      // if(cookies) config = cookies.get("config")
+      if(cookies) config = cookies.get("config")
 
       if(!config || !cookies.auth) config = yield call([api, api.loadConfig]);
       auth.setConfig(config.auth)
