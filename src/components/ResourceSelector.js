@@ -157,7 +157,7 @@ export default class ResourceSelector extends React.Component<Props> {
          const searchTerm = this._textfieldS.value;
          if (searchTerm)
          {
-            this.props.searchResource(searchTerm.toUpperCase());
+            this.props.searchResource(searchTerm) //.toUpperCase());
          }
       }
    }
@@ -274,9 +274,9 @@ export default class ResourceSelector extends React.Component<Props> {
             {
                let r = this.props.results.rows[i].dataRow
 
-               let id = r.s.replace(/^.*> *(.*)<.*$/,"$1")
-               let lab = r.lit.replace(/@.*/,"")
-               let lang = r.lit.replace(/.*@/,"@")
+               let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
+               let lab = r.lit.value
+               let lang = r.lit.lang
                let p = id[0]
                let indiv ;
 

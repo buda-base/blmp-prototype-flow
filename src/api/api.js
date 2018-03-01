@@ -67,16 +67,44 @@ export default class API {
         }
     }
 
-    getSearchContents(url: string, key:string, param:string="LG_NAME=bo-x-ewts&I_LIM=10000&"): Promise<[]> {
-        let text;
+    getSearchContents(url: string, key:string, param:{}={}): Promise<{}>
+   {
+
+      console.log("key",key);
+
+      let res = {}, text
+      param = { searchType:"BLMP",LG_NAME:"bo-x-ewts",I_LIM:500, ...param }
+      if(key.indexOf("\"") === -1) key = "\""+key+"\""
+      param["L_NAME"] = key ;
+      url += "/"+param["searchType"];
+      delete param["searchType"]
+
+      console.log("query",key,url,param);
+
+      // + this.getAuthStr() ...
+
+      var formData = new FormData();
+      for (var k in param) {
+          formData.append(k, param[k]);
+      }
+      // (using formData directly as body doesn't seem to work...)
+      let body = [...formData.entries()]
+                     .map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]))
+                     .join('&')
+
+      console.log("body",body);
 
         return new Promise((resolve, reject) => {
 
             this._fetch( url,
             {// header pour accéder aux résultat en JSON !
               method: 'POST',
-              body:"searchType=BLMP&"+param+"L_NAME="+key+"&"+this.getAuthStr(),
-              headers:new Headers({"Content-Type": "application/x-www-form-urlencoded"})
+              body:body,
+              headers:new Headers(
+                 {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "application/json"
+                 })
            }).then((response) => {
 
                 if (!response.ok) {
@@ -381,7 +409,7 @@ export default class API {
           // let url = "http://localhost:8080/resource/templates" ; //this._getResourceURL(id);
 
           let config = store.getState().data.config.ldspdi
-          let url = config.endpoints[config.index]+"/resource/templates" ;
+          let url = config.endpoints[config.index]+"/query" ;
           let data = this.getSearchContents(url, key);
 
          // console.log("_reData");
