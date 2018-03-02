@@ -619,6 +619,11 @@ export default class IndividualView extends React.Component<Props, State> {
 
             propertyIndividual.addDefaultProperties(ontology._classes[val])
 
+            if(property.ranges.indexOf('http://purl.bdrc.io/ontology/core/PersonName') !== -1
+               || property.ranges.indexOf('http://purl.bdrc.io/ontology/core/WorkTitle') !== -1)
+            {
+               propertyIndividual.addProperty("http://www.w3.org/2000/01/rdf-schema#label")
+            }
 
          } else {
             const ranges = ontology.getPropertyRanges(propertyType);

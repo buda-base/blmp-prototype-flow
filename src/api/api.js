@@ -67,6 +67,21 @@ export default class API {
         }
     }
 
+
+    getAuthStr()
+    {
+       const access_token = localStorage.getItem('access_token');
+       const id_token = localStorage.getItem('id_token');
+       const expires_at = localStorage.getItem('expires_at');
+
+       const param = { access_token, id_token, expires_at } ;
+
+       const authStr = Object.keys(param).map( (k) => k+"="+param[k] ).join('&')
+
+       return authStr ;
+
+    }
+
     getSearchContents(url: string, key:string, param:{}={}): Promise<{}>
    {
 
@@ -97,7 +112,7 @@ export default class API {
         return new Promise((resolve, reject) => {
 
             this._fetch( url,
-            {// header pour accéder aux résultat en JSON !
+            {
               method: 'POST',
               body:body,
               headers:new Headers(
@@ -108,7 +123,7 @@ export default class API {
            }).then((response) => {
 
                 if (!response.ok) {
-                    if (response.status === '404') {
+                    if (response.status === 404) {
                         throw new ResourceNotFound('The search server '+url+' seem to have moved...');
                     }
                     else {
@@ -219,20 +234,6 @@ export default class API {
       })
       */
 
-      getAuthStr()
-      {
-         const access_token = localStorage.getItem('access_token');
-         const id_token = localStorage.getItem('id_token');
-         const expires_at = localStorage.getItem('expires_at');
-
-         const param = { access_token, id_token, expires_at } ;
-
-         const authStr = Object.keys(param).map( (k) => k+"="+param[k] ).join('&')
-
-         return authStr ;
-
-      }
-
     getURLContents(url: string, minSize : boolean = true, usePost : boolean = true): Promise<string> {
         let text;
 
@@ -253,7 +254,7 @@ export default class API {
          ).then((response) => {
 
                 if (!response.ok) {
-                    if (response.status === '404') {
+                    if (response.status === 404) {
                         throw new ResourceNotFound('The resource does not exist.');
                     }
                     else {
