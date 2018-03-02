@@ -42,7 +42,7 @@ function* watchEditingResource() {
 
 export function* loadResource(IRI) {
 
-   console.log("load");
+   // console.log("load");
 
    yield put(dataActions.loading(IRI, true));
    try {

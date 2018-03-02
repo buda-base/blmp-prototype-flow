@@ -128,7 +128,7 @@ export default class ResourceSelector extends React.Component<Props> {
          }
       } else if (this.props.selectedResource && this.props.findingResource) {
 
-         console.log("opening")
+         // console.log("opening")
          this.setState({isOpening:true})
 
          setTimeout((function(that) {
@@ -340,7 +340,7 @@ export default class ResourceSelector extends React.Component<Props> {
       */
 
 
-      console.log("render.props",this.props,isValid,this._search)
+      // console.log("render.props",this.props,isValid,this._search)
 
       let col = (this.props.hostError ? "red":"green")
       let icon = (this.props.hostError ? <CloudOffIcon/>:<CloudDoneIcon/>)

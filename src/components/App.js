@@ -32,7 +32,7 @@ class App extends Component<Props> {
    }
 
    render() {
-      console.log("render?")
+      // console.log("render?")
 
        let tabs=<TabsContainer auth={this.props.auth} logged={this.props.logged} /> ;
 

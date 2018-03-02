@@ -19,7 +19,7 @@ const mapStateToProps = (state,ownProps) => {
       selectedTabId
     }
 
-    console.log("mapstate2prop?App",state,ownProps,props);
+    // console.log("mapstate2prop?App",state,ownProps,props);
 
     return props
 };

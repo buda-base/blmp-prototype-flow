@@ -118,7 +118,7 @@ console.log("did update indiProp",this.props.individual.id)
 constructor(props: Props) {
    super(props);
 
-   console.log("constructor",this.props.individual.IRI)
+   // console.log("constructor",this.props.individual.IRI)
 
    this.state = {
       collapseState: {},
@@ -612,17 +612,19 @@ export default class IndividualView extends React.Component<Props, State> {
                let v = ontology._classes[propertyRange] ;
                if(v && !v.hasSuperclass(typeIRI)) { propertyIndividual.addType(val); }
                else { propertyIndividual.id = val ; }
+               propertyIndividual.addDefaultProperties(ontology._classes[val])
             }
-            else { propertyIndividual.addType(propertyRange); }
+            else { propertyIndividual.addType(propertyRange);
+               propertyIndividual.addDefaultProperties(ontology._classes[propertyRange])
+            }
             this._editableIndividuals.push(propertyIndividual);
             individual.addProperty(propertyType, propertyIndividual);
 
-            propertyIndividual.addDefaultProperties(ontology._classes[val])
 
             if(property.ranges.indexOf('http://purl.bdrc.io/ontology/core/PersonName') !== -1
                || property.ranges.indexOf('http://purl.bdrc.io/ontology/core/WorkTitle') !== -1)
             {
-               propertyIndividual.addProperty("http://www.w3.org/2000/01/rdf-schema#label")
+               propertyIndividual.addProperty("http://www.w3.org/2000/01/rdf-schema#label",new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString","","en"))
             }
 
          } else {
