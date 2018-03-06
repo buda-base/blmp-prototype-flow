@@ -270,9 +270,9 @@ export default class ResourceSelector extends React.Component<Props> {
          {
             let res = [] ;
             let n = 0 ;
-            for(let i in this.props.results.rows)
+            for(let i in this.props.results.results)
             {
-               let r = this.props.results.rows[i].dataRow
+               let r = this.props.results.results[i].bindings
 
                let id = r.s.value.replace(/^.*?([^/]+)$/,"$1")
                let lab = r.lit.value
