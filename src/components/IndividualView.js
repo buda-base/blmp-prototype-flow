@@ -899,6 +899,7 @@ export default class IndividualView extends React.Component<Props, State> {
       };
 
       let lists: (?React.Element<*>)[] = [];
+      let newprops: (?React.Element<*>)[] = [];
       for (let [index, propertyData] of propertyTypes.entries()) {
          let collapseId = [this.props.individual.id, 'level', this.props.level, index, 'collapsed'].join('_');
 
@@ -907,11 +908,23 @@ export default class IndividualView extends React.Component<Props, State> {
          };
 
 
+         // check/put elsewhere properties without value
+         // (eg length of array of values is 0)
+
+
          //if (this.props.nested) {
+
+         for(let i in propertyData.rows) {
+            let r = propertyData.rows[i]
+            // console.log("r",r)
+            if(!r.props.propertyValues || r.props.propertyValues.length === 0) {
+               newprops.push(propertyData.rows[i])
+               delete propertyData.rows[i]
+            }
+         }
+
          lists.push(
-            <List>
-            {propertyData.rows}
-            </List>
+            <List>{propertyData.rows}</List>
          )
 
          /* // no need anymore
@@ -936,9 +949,36 @@ export default class IndividualView extends React.Component<Props, State> {
    );
    }*/
 
-   }
+      }
 
-   return lists;
+      if(newprops.length > 0) {
+
+         const greenColor = {
+            fill: green[800]
+         };
+         const iconStyle = {marginRight: 0} ;
+         const circleStyle = {...greenColor, ...iconSizes.small} ;
+
+         console.log("newprops",newprops)
+         lists.push(
+            <List>
+               <ListItem style={{paddingLeft:0}}>
+                  <ListItemIcon>
+                     <IconButton
+                        //onClick={this._list ? this.handleClick : onTapAdd}
+                        style={iconStyle}
+                        >
+                        <AddCircleIcon style={circleStyle}/>
+                     </IconButton>
+                  </ListItemIcon>
+                  <ListItemText title={this.props.tooltip} primary="Add another property" disableTypography style={listHeaderStyle} />
+               </ListItem>
+            </List>
+         ) ;
+         //<List>{newprops}</List>)
+      }
+
+      return lists;
    }
 
    getIdList(): React.Element<*> {
