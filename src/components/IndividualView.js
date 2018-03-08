@@ -519,7 +519,8 @@ export default class IndividualView extends React.Component<Props, State> {
 
       this.state = {
          collapseState: {},
-         isExpanded: props.isExpanded
+         isExpanded: props.isExpanded,
+         open: false,
       }
    }
 
@@ -835,6 +836,30 @@ export default class IndividualView extends React.Component<Props, State> {
    return propertyView ;
    }
 
+   handleClick = (event) => {
+
+      // This prevents ghost click.
+      event.preventDefault();
+
+      this.setState({
+         open: true,
+         anchorEl: event.currentTarget,
+      });
+   };
+
+   handleRequestClose = () => {
+      this.setState({
+         open: false,
+      });
+   };
+
+   handleMenu = (event, value : string = "") => {
+      // This prevents ghost click.
+      event.preventDefault();
+
+   }
+
+
    getPropertyLists(): (?React.Element<*>)[] {
       let removeUnsetProperties = true;
       if (this.props.isEditable) {
@@ -958,6 +983,16 @@ export default class IndividualView extends React.Component<Props, State> {
          };
          const iconStyle = {marginRight: 0} ;
          const circleStyle = {...greenColor, ...iconSizes.small} ;
+         const popStyle = {horizontal: 'left', vertical: 'bottom'} ;
+
+         let poplist = []
+
+         for(let p of newprops)
+         {
+            poplist.push(
+               <MenuItem onClick={(e) => { p.props.onTapAdd(this.props.individual,this.props.property); this.handleRequestClose(e) }}>{p.props.title}</MenuItem>
+            )
+         }
 
          console.log("newprops",newprops)
          lists.push(
@@ -965,7 +1000,7 @@ export default class IndividualView extends React.Component<Props, State> {
                <ListItem style={{paddingLeft:0}}>
                   <ListItemIcon>
                      <IconButton
-                        //onClick={this._list ? this.handleClick : onTapAdd}
+                        onClick={this.handleClick}
                         style={iconStyle}
                         >
                         <AddCircleIcon style={circleStyle}/>
@@ -973,6 +1008,16 @@ export default class IndividualView extends React.Component<Props, State> {
                   </ListItemIcon>
                   <ListItemText title={this.props.tooltip} primary="Add another property" disableTypography style={listHeaderStyle} />
                </ListItem>
+
+               <Popover
+                  open={this.state.open}
+                  anchorEl={this.state.anchorEl}
+                  anchorOrigin={popStyle}
+                  //targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                  onClose={this.handleRequestClose}
+               >
+                  <List>{poplist}</List>
+               </Popover>
             </List>
          ) ;
          //<List>{newprops}</List>)
