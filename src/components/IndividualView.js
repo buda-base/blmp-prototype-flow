@@ -932,11 +932,6 @@ export default class IndividualView extends React.Component<Props, State> {
             this.toggleCollapseState(collapseId);
          };
 
-
-         // check/put elsewhere properties without value
-         // (eg length of array of values is 0)
-
-
          //if (this.props.nested) {
 
          for(let i in propertyData.rows) {
@@ -990,11 +985,17 @@ export default class IndividualView extends React.Component<Props, State> {
          for(let p of newprops)
          {
             poplist.push(
-               <MenuItem onClick={(e) => { p.props.onTapAdd(this.props.individual,this.props.property); this.handleRequestClose(e) }}>{p.props.title}</MenuItem>
+               <MenuItem onClick={(e) =>
+                  {
+                     // console.log("click!!",this.props,p.props);
+                     p.props.onTapAdd(this.props.individual,p.props.property);
+                     this.handleRequestClose(e)
+                  }
+               }>{p.props.title}</MenuItem>
             )
          }
 
-         console.log("newprops",newprops)
+         // console.log("newprops",newprops,propertyTypes,this.props)
          lists.push(
             <List>
                <ListItem style={{paddingLeft:0}}>

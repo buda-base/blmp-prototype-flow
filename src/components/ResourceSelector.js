@@ -118,7 +118,7 @@ export default class ResourceSelector extends React.Component<Props> {
    }
    selectedResource() {
 
-      console.log("selected!!",this.props)
+      // console.log("selected!!",this.props)
 
       if (this.props.findingResource && this.props.individual && this.props.property) {
 
