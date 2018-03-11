@@ -1,5 +1,7 @@
 // @flow
 import type { Action } from 'state/actions';
+import {directoryPrefixes} from 'api/api';
+import store from 'index';
 import createReducer from 'lib/createReducer';
 import * as actions from './actions';
 import type { OntologyAction } from './actions';
@@ -74,6 +76,11 @@ reducers[actions.TYPES.loadedResource] = loadedResource;
 export const createResource = (state: DataState, action: actions.LoadedResourceAction) => {
 
          let indiv = new Individual("http://purl.bdrc.io/resource/"+action.payload) ;
+         let p = directoryPrefixes[action.payload[0]].replace(/s$/,"")
+         p = "http://purl.bdrc.io/ontology/core/"+ p[0].toUpperCase() + p.substring(1)
+         // console.log("dbg",p)
+         indiv._types.push(p)
+         indiv.addDefaultProperties(store.getState().data.ontology._classes[p])
 
       return {
       ...state,
