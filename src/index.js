@@ -69,8 +69,8 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-let id = "P1" ;
-setTimeout(function(){ store.dispatch(data.loadResource(id)) },250)
-setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },500)
+// let id = "P1" ;
+// setTimeout(function(){ store.dispatch(data.loadResource(id)) },250)
+// setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },500)
 // setTimeout(function(){ store.dispatch(ui.newTab()) },750)
 // setTimeout(function(){ store.dispatch(ui.togglePreviewPanel(1)) },1000)

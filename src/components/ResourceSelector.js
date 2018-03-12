@@ -107,20 +107,37 @@ export default class ResourceSelector extends React.Component<Props> {
    };
 
 
-   selectResult(e:Event, IRI:string)
+   selectResult(e:Event, i:Individual)
    {
 
-      // console.log("opening")
-      this.setState({isOpening:true})
+      if(!this.props.isDialog)
+      {
+         console.log("opening",i)
+         this.setState({isOpening:true})
 
-      store.dispatch(data.loadResult(IRI.replace(/^.*\/([^/]+)$/,"$1")))
-
+         store.dispatch(data.loadResult(i._id.replace(/^.*\/([^/]+)$/,"$1")))
+      }
+      else {
+         this.selectedResource(i)
+      }
    }
-   selectedResource() {
 
-      // console.log("selected!!",this.props)
 
-      if (this.props.findingResource && this.props.individual && this.props.property) {
+   selectedResource(i:Individual) {
+
+      console.log("selected!!",i,this.props)
+
+      if ( i )
+      {
+         const individual = this.props.individual;
+         const property = this.props.property;
+         individual.addProperty(property.IRI, i);
+
+         if (this.props.addedProperty) {
+            this.props.addedProperty();
+         }
+      }
+      else if (this.props.findingResource && this.props.individual && this.props.property) {
 
          const individual = this.props.individual;
          const property = this.props.property;
@@ -131,7 +148,6 @@ export default class ResourceSelector extends React.Component<Props> {
          }
       } else if (this.props.selectedResource && this.props.findingResource) {
 
-         // console.log("opening")
          this.setState({isOpening:true})
 
          setTimeout((function(that) {
@@ -287,7 +303,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
                if(directoryPrefixes[p])
                {
-                  indiv = new Individual(id)
+                  indiv = new Individual(r.s.value)
                   indiv.types.push("http://purl.bdrc.io/ontology/core/"+directoryPrefixes[p].replace(/s$/,""))
                }
                else {
@@ -300,7 +316,7 @@ export default class ResourceSelector extends React.Component<Props> {
                // console.log("indiv",indiv)
 
                res.push(<IndividualView key={n}
-                  onClick={(e) => this.selectResult(e,id)}
+                  onClick={(e) => this.selectResult(e,indiv)}
                   individual={indiv}
                   isEditable={false}
                   isExpanded={false}

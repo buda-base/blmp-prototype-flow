@@ -49,8 +49,6 @@ export function* loadResource(IRI) {
       let individual = yield call([api, api.getResource], IRI);
 
       let onto = store.getState().data.ontology
-      // console.log("loaded",individual,onto)
-
       individual.addDefaultProperties(onto._classes[individual._types[0]])
 
       yield put(dataActions.loadedResource(IRI, individual));
@@ -84,7 +82,12 @@ export function* loadResult(IRI) {
    yield put(dataActions.loading(IRI, true));
    try {
       const individual = yield call([api, api.getResource], IRI);
+
+      let onto = store.getState().data.ontology
+      individual.addDefaultProperties(onto._classes[individual._types[0]])
+
       yield put(dataActions.loadedResource(IRI, individual));
+
       // IRI might only be the resource ID so make sure the
       // actual IRI is set as well.
       if (individual.id !== IRI) {
