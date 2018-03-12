@@ -127,7 +127,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
       console.log("selected!!",i,this.props)
 
-      if ( i )
+      if ( i && i._id )
       {
          const individual = this.props.individual;
          const property = this.props.property;
