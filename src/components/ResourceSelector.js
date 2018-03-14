@@ -373,41 +373,43 @@ export default class ResourceSelector extends React.Component<Props> {
 
       let view =
       <div>
-         <Card style={{marginBottom:"30px"}}>
-            <CardContent>
-               <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
-                  Create a resource
-               </Typography>
-               {loggedIn &&
-                  <TextField
-                     autoFocus
-                     label="Resource ID"
-                     id="resourceIDc"
-                     type="text"
-                     inputRef={(searchInput) => this._textfieldC = searchInput } //; this._focus = false ;  console.log("ref");} }
-                     onKeyPress={(e) => this.handleKeypress(e,"resC")}
-                     onChange={ (e) => this.handleChange(e,"resC")}
-                  />
-               }
-            </CardContent>
-            {loggedIn &&
+         {!this.props.isDialog && 
+            <Card style={{marginBottom:"30px"}}>
                <CardContent>
-                  { //!isValid && !this._search && this.props.findingResourceError && this.props.findingResourceError.match(/The resource does not exist.$/) &&
-                     <Button
-                        onClick={this.createdResource.bind(this)}
-                        //{... this._textfieldC && this._textfieldC.value ? {}:{disabled:true}}
-                        >
-                           Create
-                     </Button>
+                  <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
+                     Create a resource
+                  </Typography>
+                  {loggedIn &&
+                     <TextField
+                        autoFocus
+                        label="Resource ID"
+                        id="resourceIDc"
+                        type="text"
+                        inputRef={(searchInput) => this._textfieldC = searchInput } //; this._focus = false ;  console.log("ref");} }
+                        onKeyPress={(e) => this.handleKeypress(e,"resC")}
+                        onChange={ (e) => this.handleChange(e,"resC")}
+                     />
                   }
                </CardContent>
-            }
-            { message && !loggedIn &&
-               <CardContent>
-                  {message}
-               </CardContent>
-            }
-         </Card>
+               {loggedIn &&
+                  <CardContent>
+                     { //!isValid && !this._search && this.props.findingResourceError && this.props.findingResourceError.match(/The resource does not exist.$/) &&
+                        <Button
+                           onClick={this.createdResource.bind(this)}
+                           //{... this._textfieldC && this._textfieldC.value ? {}:{disabled:true}}
+                           >
+                              Create
+                        </Button>
+                     }
+                  </CardContent>
+               }
+               { message && !loggedIn &&
+                  <CardContent>
+                     {message}
+                  </CardContent>
+               }
+            </Card>
+         }
          <Card>
             <CardContent>
                <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>

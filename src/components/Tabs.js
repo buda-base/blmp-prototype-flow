@@ -56,7 +56,7 @@ export default class Tabs extends Component<Props> {
         } else if (data.resourceId) {
             return formatIRI(data.resourceId);
         } else {
-            return "Select a resource";
+            return "Resource selector";
         }
     }
 

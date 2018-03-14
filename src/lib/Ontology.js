@@ -181,7 +181,7 @@ export default class Ontology {
 
         }
 
-      console.log("classes",this._classes);
+      console.log("properties",this._properties);
 
         classes = this._classes
         for(let c in classes)

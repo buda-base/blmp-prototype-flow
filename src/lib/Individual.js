@@ -1,4 +1,5 @@
 // @flow
+import store from 'index';
 import Literal from 'lib/Literal';
 
 let UNIQUE_ID = 0;
@@ -112,12 +113,32 @@ export default class Individual {
 
          // console.log("sup",sup)
 
+         let onto = store.getState().data.ontology
          let props = [].concat(Object.keys(c._properties))
-         for(let s in sup){ props = props.concat(Object.keys(sup[s]._properties)) }
+         for(let s in sup){
+            props = props.concat(Object.keys(sup[s]._properties))
+
+            // + add annotation property that dont have domain eg prefLabel
+            for(let a in onto._annotationProperties)
+            {
+               let anno = onto._annotationProperties[a]
+               // console.log(onto._annotationProperties[a]._IRI)
+               if(!anno._domains || anno._domains.length === 0)
+               {
+                  props.push(onto._annotationProperties[a]._IRI);
+               }
+            }
+         }
+
 
          // console.log("props",props)
 
          for(let p in props){ this.addProperty(props[p]); }
+
+
+
+
+
       }
    }
 
