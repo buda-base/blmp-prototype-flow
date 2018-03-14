@@ -244,10 +244,10 @@ export default class ResourceSelector extends React.Component<Props> {
             onKeyPress={(e) => this.handleEndpoint(e)}
          />)
          /*
-            inputRef={(searchInput) => this._textfield = searchInput } //; this._focus = false ;  console.log("ref");} }
-            onKeyPress={(e) => this.handleKeypress(e,"res")}
-            onChange={ (e) => this.handleChange(e,"res")}
-   */
+         inputRef={(searchInput) => this._textfield = searchInput } //; this._focus = false ;  console.log("ref");} }
+         onKeyPress={(e) => this.handleKeypress(e,"res")}
+         onChange={ (e) => this.handleChange(e,"res")}
+         */
       }
 
       if(!loggedIn) //!this.props.logged)
@@ -351,7 +351,7 @@ export default class ResourceSelector extends React.Component<Props> {
          {
             message = <Typography>No results found.</Typography>
          }
-        else if (this.props.findingResourceError) {
+         else if (this.props.findingResourceError) {
             message = <Typography>Error loading resource: {this.props.findingResourceError}</Typography>
          }
          else {
@@ -372,12 +372,13 @@ export default class ResourceSelector extends React.Component<Props> {
       let icon = (this.props.hostError ? <CloudOffIcon/>:<CloudDoneIcon/>)
 
       let view =
-         <div>
-            <Card style={{marginBottom:"30px"}}>
-               <CardContent>
-                  <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
-                     Create a resource
-                  </Typography>
+      <div>
+         <Card style={{marginBottom:"30px"}}>
+            <CardContent>
+               <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
+                  Create a resource
+               </Typography>
+               {loggedIn &&
                   <TextField
                      autoFocus
                      label="Resource ID"
@@ -387,30 +388,33 @@ export default class ResourceSelector extends React.Component<Props> {
                      onKeyPress={(e) => this.handleKeypress(e,"resC")}
                      onChange={ (e) => this.handleChange(e,"resC")}
                   />
-               </CardContent>
+               }
+            </CardContent>
+            {loggedIn &&
                <CardContent>
                   { //!isValid && !this._search && this.props.findingResourceError && this.props.findingResourceError.match(/The resource does not exist.$/) &&
                      <Button
                         onClick={this.createdResource.bind(this)}
                         //{... this._textfieldC && this._textfieldC.value ? {}:{disabled:true}}
                         >
-                        Create
+                           Create
                      </Button>
                   }
                </CardContent>
-               { false &&
-                  <CardContent>
-                     {}
-                  </CardContent>
-               }
-            </Card>
-            <Card>
+            }
+            { message && !loggedIn &&
                <CardContent>
-                  <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
-                     Select a resource
-                  </Typography>
-                  {loggedIn &&
-                     [
+                  {message}
+               </CardContent>
+            }
+         </Card>
+         <Card>
+            <CardContent>
+               <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
+                  Select a resource
+               </Typography>
+               {loggedIn &&
+                  [
                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
                         <TextField
                            autoFocus
@@ -437,35 +441,35 @@ export default class ResourceSelector extends React.Component<Props> {
                            Search
                         </Button>
                         <Button style={{marginTop:"15px",padding:"0"}} onClick={this.handleClick}>
-                        <ListItem style={{display:"flex",justifyContent:"space-between"}}>
-                           <ListItemText
-                              style={{textTransform:"none",textAlign:"left",paddingRight:"0"}}
-                              primary={host}
-                              secondary="Endpoint"
-                           />
-                           <ListItemIcon style={{marginRight:"0",marginLeft:"15px",color:col}}>{icon}</ListItemIcon>
-                        </ListItem>
+                           <ListItem style={{display:"flex",justifyContent:"space-between"}}>
+                              <ListItemText
+                                 style={{textTransform:"none",textAlign:"left",paddingRight:"0"}}
+                                 primary={host}
+                                 secondary="Endpoint"
+                              />
+                              <ListItemIcon style={{marginRight:"0",marginLeft:"15px",color:col}}>{icon}</ListItemIcon>
+                           </ListItem>
                         </Button>
 
-                           <Popover
-                              open={this.state.open}
-                              anchorEl={this.state.anchorEl}
-                              anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                              //targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                              onClose={this.handleRequestClose}
+                        <Popover
+                           open={this.state.open}
+                           anchorEl={this.state.anchorEl}
+                           anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                           //targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                           onClose={this.handleRequestClose}
                            >
                               <List>{menu}</List>
                            </Popover>
 
-                     </div>
+                        </div>
                      ]
                   }
                </CardContent>
 
                { message && (!loggedIn || this.props.findingResourceId || this.props.hostError || this.props.searchingResource) &&
-                     <CardContent>
-                        {message}
-                     </CardContent>
+                  <CardContent>
+                     {message}
+                  </CardContent>
                }
 
                { (this.props.isDialog || isValid ) &&
@@ -485,34 +489,34 @@ export default class ResourceSelector extends React.Component<Props> {
             </Card>
          </div>
 
-      if (this.props.isDialog) {
-         view = <Dialog open={true}>{view}</Dialog>
-      }
+         if (this.props.isDialog) {
+            view = <Dialog open={true}>{view}</Dialog>
+         }
 
-      return(
-         view
-      );
+         return(
+            view
+         );
 
-      /*
-      return(
-      <div>
-      <p>ResourceSelector!</p>
-      <Dialog open={this.props.isOpen}>
-      <DialogTitle>Select a resource</DialogTitle>
-      <DialogContent>
-      <DialogContentText>
-      Please enter the ID of the resource you would like to use.
-   </DialogContentText>
-   <TextField
-   autoFocus
-   label="Resource ID"
-   id="resourceID"
-   type="text"
-   inputRef={(searchInput) => this._textfield = searchInput}
-/>
-<Button onClick={this.findResource.bind(this)}>
-Search
-</Button>
+            /*
+            return(
+            <div>
+            <p>ResourceSelector!</p>
+            <Dialog open={this.props.isOpen}>
+            <DialogTitle>Select a resource</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+            Please enter the ID of the resource you would like to use.
+         </DialogContentText>
+         <TextField
+         autoFocus
+         label="Resource ID"
+         id="resourceID"
+         type="text"
+         inputRef={(searchInput) => this._textfield = searchInput}
+      />
+      <Button onClick={this.findResource.bind(this)}>
+      Search
+   </Button>
 </DialogContent>
 
 {this.props.findingResourceId &&
