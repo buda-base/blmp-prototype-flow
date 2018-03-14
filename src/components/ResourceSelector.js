@@ -63,6 +63,7 @@ type Props = {
 export default class ResourceSelector extends React.Component<Props> {
    _textfield = null;
    _textfieldS = null;
+   _textfieldC = null;
    _textfieldUrl = null;
    _isValid = false ;
    _notFound = false ;
@@ -157,10 +158,13 @@ export default class ResourceSelector extends React.Component<Props> {
    }
 
    createdResource() {
-      // console.log("create",this.props)
-
-      store.dispatch(data.createResource(this.props.findingResourceId))
-      store.dispatch(ui.editingResource(store.getState().ui.activeTabId, this.props.findingResourceId))
+      //console.log("create",this.props,this._textfieldC.value)
+      let value = this._textfieldC.value
+      if(value)
+      {
+         store.dispatch(data.createResource(value))
+         store.dispatch(ui.editingResource(store.getState().ui.activeTabId, value))
+      }
    }
 
    findResource() {
@@ -183,10 +187,13 @@ export default class ResourceSelector extends React.Component<Props> {
 
    handleChange(e,txt : string = '')
    {
-      this._isValid = false ;
+      if(txt !== 'resC')
+      {
+         this._isValid = false ;
 
-      if(txt === 'key') this._search = true ;
-      else if(txt === 'res') this._search = false ;
+         if(txt === 'key') this._search = true ;
+         else this._search = false ;
+      }
    }
 
    handleKeypress(e,txt : string = '')
@@ -196,10 +203,10 @@ export default class ResourceSelector extends React.Component<Props> {
 
       if (e.key === 'Enter')
       {
-         if(!this._search && this._isValid){ this.selectedResource(); }
+         if(txt === 'resC') { this.createdResource() }
+         else if(!this._search && this._isValid){ this.selectedResource(); }
          else { this.findResource(); }
       }
-
    }
 
    handleEndpoint(e)
@@ -364,88 +371,119 @@ export default class ResourceSelector extends React.Component<Props> {
       let col = (this.props.hostError ? "red":"green")
       let icon = (this.props.hostError ? <CloudOffIcon/>:<CloudDoneIcon/>)
 
-      let view = <Card>
-         <CardContent>
-            <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
-               Select a resource
-            </Typography>
-            {loggedIn &&
-               [
-               <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+      let view =
+         <div>
+            <Card style={{marginBottom:"30px"}}>
+               <CardContent>
+                  <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
+                     Create a resource
+                  </Typography>
                   <TextField
                      autoFocus
                      label="Resource ID"
-                     id="resourceID"
+                     id="resourceIDc"
                      type="text"
-                     inputRef={(searchInput) => this._textfield = searchInput } //; this._focus = false ;  console.log("ref");} }
-                     onKeyPress={(e) => this.handleKeypress(e,"res")}
-                     onChange={ (e) => this.handleChange(e,"res")}
+                     inputRef={(searchInput) => this._textfieldC = searchInput } //; this._focus = false ;  console.log("ref");} }
+                     onKeyPress={(e) => this.handleKeypress(e,"resC")}
+                     onChange={ (e) => this.handleChange(e,"resC")}
                   />
-                  <span style={{textAlign:"center",width:"60px",display:"inline-block"}}>or</span>
-                  <TextField
-                     inputRef={(searchInput) => this._textfieldS = searchInput } //; this._focus = true ; console.log("refS"); } }
-                     label="Keyword(s)"
-                     id="keyword"
-                     type="text"
-                     onKeyPress={(e) => this.handleKeypress(e,"key")}
-                     onChange={ (e) => this.handleChange(e,"key")}
-                  />
-               </div>,
-               <br/>,
-               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                  <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
-                     Search
-                  </Button>
-                  <Button style={{marginTop:"15px",padding:"0"}} onClick={this.handleClick}>
-                  <ListItem style={{display:"flex",justifyContent:"space-between"}}>
-                     <ListItemText
-                        style={{textTransform:"none",textAlign:"left",paddingRight:"0"}}
-                        primary={host}
-                        secondary="Endpoint"
-                     />
-                     <ListItemIcon style={{marginRight:"0",marginLeft:"15px",color:col}}>{icon}</ListItemIcon>
-                  </ListItem>
-                  </Button>
+               </CardContent>
+               <CardContent>
+                  { //!isValid && !this._search && this.props.findingResourceError && this.props.findingResourceError.match(/The resource does not exist.$/) &&
+                     <Button
+                        onClick={this.createdResource.bind(this)}
+                        //{... this._textfieldC && this._textfieldC.value ? {}:{disabled:true}}
+                        >
+                        Create
+                     </Button>
+                  }
+               </CardContent>
+               { false &&
+                  <CardContent>
+                     {}
+                  </CardContent>
+               }
+            </Card>
+            <Card>
+               <CardContent>
+                  <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
+                     Select a resource
+                  </Typography>
+                  {loggedIn &&
+                     [
+                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+                        <TextField
+                           autoFocus
+                           label="Resource ID"
+                           id="resourceID"
+                           type="text"
+                           inputRef={(searchInput) => this._textfield = searchInput } //; this._focus = false ;  console.log("ref");} }
+                           onKeyPress={(e) => this.handleKeypress(e,"res")}
+                           onChange={ (e) => this.handleChange(e,"res")}
+                        />
+                        <span style={{textAlign:"center",width:"60px",display:"inline-block"}}>or</span>
+                        <TextField
+                           inputRef={(searchInput) => this._textfieldS = searchInput } //; this._focus = true ; console.log("refS"); } }
+                           label="Keyword(s)"
+                           id="keyword"
+                           type="text"
+                           onKeyPress={(e) => this.handleKeypress(e,"key")}
+                           onChange={ (e) => this.handleChange(e,"key")}
+                        />
+                     </div>,
+                     <br/>,
+                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                        <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
+                           Search
+                        </Button>
+                        <Button style={{marginTop:"15px",padding:"0"}} onClick={this.handleClick}>
+                        <ListItem style={{display:"flex",justifyContent:"space-between"}}>
+                           <ListItemText
+                              style={{textTransform:"none",textAlign:"left",paddingRight:"0"}}
+                              primary={host}
+                              secondary="Endpoint"
+                           />
+                           <ListItemIcon style={{marginRight:"0",marginLeft:"15px",color:col}}>{icon}</ListItemIcon>
+                        </ListItem>
+                        </Button>
 
-                     <Popover
-                        open={this.state.open}
-                        anchorEl={this.state.anchorEl}
-                        anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                        //targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                        onClose={this.handleRequestClose}
-                     >
-                        <List>{menu}</List>
-                     </Popover>
+                           <Popover
+                              open={this.state.open}
+                              anchorEl={this.state.anchorEl}
+                              anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                              //targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                              onClose={this.handleRequestClose}
+                           >
+                              <List>{menu}</List>
+                           </Popover>
 
-               </div>
-               ]
-            }
-         </CardContent>
+                     </div>
+                     ]
+                  }
+               </CardContent>
 
-         { (!loggedIn || this.props.findingResourceId || this.props.hostError || this.props.searchingResource) &&
-            <CardContent>
-               {message}
-            </CardContent>
-         }
+               { message && (!loggedIn || this.props.findingResourceId || this.props.hostError || this.props.searchingResource) &&
+                     <CardContent>
+                        {message}
+                     </CardContent>
+               }
 
-         <CardContent>
-            {this.props.isDialog &&
-               <Button onClick={this.props.cancel}>
-                  Cancel
-               </Button>
-            }
-            {isValid &&
-               <Button onClick={this.selectedResource.bind(this)}>
-                  Select
-               </Button>
-            }
-            {!isValid && !this._search && this.props.findingResourceError && this.props.findingResourceError.match(/The resource does not exist.$/) &&
-               <Button onClick={this.createdResource.bind(this)}>
-                  Create
-               </Button>
-            }
-         </CardContent>
-      </Card>
+               { (this.props.isDialog || isValid ) &&
+                  <CardContent>
+                     {this.props.isDialog &&
+                        <Button onClick={this.props.cancel}>
+                           Cancel
+                        </Button>
+                     }
+                     {isValid &&
+                        <Button onClick={this.selectedResource.bind(this)}>
+                           Select
+                        </Button>
+                     }
+                  </CardContent>
+               }
+            </Card>
+         </div>
 
       if (this.props.isDialog) {
          view = <Dialog open={true}>{view}</Dialog>
