@@ -115,7 +115,7 @@ export default class ResourceSelector extends React.Component<Props> {
       // This prevents ghost click.
       event.preventDefault();
 
-      console.log("value",value,this.props);
+      //console.log("value",value,this.props);
       store.dispatch(data.choosingHost(value))
 
       this.setState({
@@ -129,7 +129,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
       if(!this.props.isDialog)
       {
-         console.log("opening",i)
+         //console.log("opening",i)
          this.setState({isOpening:true})
 
          store.dispatch(data.loadResult(i._id.replace(/^.*\/([^/]+)$/,"$1")))
@@ -142,7 +142,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
    selectedResource(i:Individual) {
 
-      console.log("selected!!",i,this.props)
+      //console.log("selected!!",i,this.props)
 
       if ( i && i._id )
       {
@@ -175,7 +175,7 @@ export default class ResourceSelector extends React.Component<Props> {
 
    createdResource() {
 
-      console.log("create",this.props)
+      //console.log("create",this.props)
 
 
       let value = this.state.resource
@@ -440,7 +440,7 @@ export default class ResourceSelector extends React.Component<Props> {
                      { //!isValid && !this._search && this.props.findingResourceError && this.props.findingResourceError.match(/The resource does not exist.$/) &&
                         <Button
                            onClick={this.createdResource.bind(this)}
-                           {... this.state.resource ? {}:{disabled:true}}
+                           //{... this.state.resource ? {}:{disabled:true}}
                            >
                               Create
                         </Button>

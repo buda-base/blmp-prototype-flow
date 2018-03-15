@@ -75,10 +75,12 @@ reducers[actions.TYPES.loadedResource] = loadedResource;
 
 export const createResource = (state: DataState, action: actions.LoadedResourceAction) => {
 
+         console.log("dbg",action)
+
          let indiv = new Individual("http://purl.bdrc.io/resource/"+action.payload) ;
-         let p = directoryPrefixes[action.payload[0]].replace(/s$/,"")
+         let prefix = action.payload.replace(/^([A-Z]+)[^A-Z]*$/,"$1")
+         let p = directoryPrefixes[prefix].replace(/s$/,"")
          p = "http://purl.bdrc.io/ontology/core/"+ p[0].toUpperCase() + p.substring(1)
-         // console.log("dbg",p)
          indiv._types.push(p)
          indiv.addDefaultProperties(store.getState().data.ontology._classes[p])
 
