@@ -105,7 +105,7 @@ export default class Individual {
          this._hasGeneratedId = true;
       }
 
-      // console.log("addProps",c,c?c._properties:'undef');
+      console.log("addProps",c,c?c._properties:'undef');
 
       if(c) {
          let sup = [].concat(c._superclasses)
@@ -116,6 +116,7 @@ export default class Individual {
          let onto = store.getState().data.ontology
          let props = [].concat(Object.keys(c._properties))
          for(let s in sup){
+
             for(let p of Object.keys(sup[s]._properties)) {
                if(!p.match(/\/toberemoved\//)) {
                   props.push(p)
@@ -127,20 +128,25 @@ export default class Individual {
                let anno = onto._annotationProperties[a]
                // console.log(onto._annotationProperties[a]._IRI)
                if(!anno._domains || anno._domains.length === 0) {
-                  if(!anno._IRI.match(/\/toberemoved\//)) {
+                  if(!anno._IRI.match(/toberemoved/)) {
                      props.push(anno._IRI);
                   }
                }
             }
 
 
-         // console.log("props",props)
+            console.log("props")
 
-            for(let p in props){ this.addProperty(props[p]); }
+            for(let p in props){
+
+               console.log(onto._properties[props[p]])
+
+               this.addProperty(props[p]);
+            }
          }
       }
    }
-   
+
     removeProperty(name: string, value: {}) {
         if (this._properties[name]) {
             this._properties[name] = this._properties[name].filter(val => val !== value);

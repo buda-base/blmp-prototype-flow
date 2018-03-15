@@ -17,8 +17,11 @@ import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import Popover from 'material-ui/Popover';
+import Select from 'material-ui/Select';
 import {MenuItem} from 'material-ui/Menu';
 import IndividualView from 'components/IndividualView';
+import Input, { InputLabel } from 'material-ui/Input';
+import { FormControl, FormHelperText } from 'material-ui/Form';
 import {ListItem, ListItemText, ListItemIcon} from 'material-ui/List';
 import CloudOffIcon from 'material-ui-icons/CloudOff';
 import CloudDoneIcon from 'material-ui-icons/CloudDone';
@@ -68,15 +71,28 @@ export default class ResourceSelector extends React.Component<Props> {
    _isValid = false ;
    _notFound = false ;
    _search = false ;
+   _refSelec = null ;
+   _selecControl : Component<any> ;
 
    constructor(props) {
       super(props);
 
       this.state = {
          open: false,
-         isOpening : false
+         isOpening : false,
+         resource:null
       };
    }
+
+
+   resourceChanged(event: {}) {
+      let value = event.target.value;
+
+      console.log("res",event.target);
+
+      this.setState({resource:value})
+   }
+
 
    handleClick = (event) => {
       // This prevents ghost click.
@@ -158,13 +174,18 @@ export default class ResourceSelector extends React.Component<Props> {
    }
 
    createdResource() {
-      //console.log("create",this.props,this._textfieldC.value)
-      let value = this._textfieldC.value
+
+      console.log("create",this.props)
+
+
+      let value = this.state.resource
+
       if(value)
       {
-         store.dispatch(data.createResource(value))
-         store.dispatch(ui.editingResource(store.getState().ui.activeTabId, value))
+         store.dispatch(data.createResource(value+"000"))
+         store.dispatch(ui.editingResource(store.getState().ui.activeTabId, value+"000"))
       }
+
    }
 
    findResource() {
@@ -373,13 +394,35 @@ export default class ResourceSelector extends React.Component<Props> {
 
       let view =
       <div>
-         {!this.props.isDialog && 
+         {!this.props.isDialog &&
             <Card style={{marginBottom:"30px"}}>
                <CardContent>
-                  <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
+                  <Typography type="headline" component="h2" style={{fontSize:"1.5em",marginBottom:"10px"}}>
                      Create a resource
                   </Typography>
                   {loggedIn &&
+                     <FormControl htmlFor="reSelec" style={{width:"200px"}}>
+                        <InputLabel
+                           {...
+                              this.state.resource?{style:{transform:"translate(0, 1.5px) scale(0.75)",transformOrigin: "top left"}}:{}
+                           }>Type of resource</InputLabel>
+                           <Select
+                              //ref={(select) => this.setState({resource:select}) }
+                              onChange={ this.resourceChanged.bind(this) }
+                              value={ this.state.resource }
+                              input={<Input id="reSelec" style={{textTransform:"capitalize"}}/>}
+                              ref={(select) => this._selecControl = select}
+                              >
+                                 {
+                                    Object.keys(directoryPrefixes).map((k) =>
+                                       <MenuItem key={k} value={k} style={{textTransform:"capitalize"}}>
+                                          {directoryPrefixes[k].replace(/s$/,"")}
+                                       </MenuItem>)
+                                 }
+                           </Select>
+                     </FormControl>
+
+                     /*
                      <TextField
                         autoFocus
                         label="Resource ID"
@@ -389,6 +432,7 @@ export default class ResourceSelector extends React.Component<Props> {
                         onKeyPress={(e) => this.handleKeypress(e,"resC")}
                         onChange={ (e) => this.handleChange(e,"resC")}
                      />
+                     */
                   }
                </CardContent>
                {loggedIn &&
@@ -396,7 +440,7 @@ export default class ResourceSelector extends React.Component<Props> {
                      { //!isValid && !this._search && this.props.findingResourceError && this.props.findingResourceError.match(/The resource does not exist.$/) &&
                         <Button
                            onClick={this.createdResource.bind(this)}
-                           //{... this._textfieldC && this._textfieldC.value ? {}:{disabled:true}}
+                           {... this.state.resource ? {}:{disabled:true}}
                            >
                               Create
                         </Button>
@@ -412,7 +456,7 @@ export default class ResourceSelector extends React.Component<Props> {
          }
          <Card>
             <CardContent>
-               <Typography type="headline" component="h2" style={{fontSize:"1.5em"}}>
+               <Typography type="headline" component="h2" style={{fontSize:"1.5em",marginBottom:"10px"}}>
                   Select a resource
                </Typography>
                {loggedIn &&
