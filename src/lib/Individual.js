@@ -11,6 +11,7 @@ export default class Individual {
     _id: ?string;
     _hasGeneratedId: boolean;
     _types: string[];
+    _propTree: {};
     _properties: {};
     _uniqueId: string;
     _namespaces: {};
@@ -94,7 +95,7 @@ export default class Individual {
         // console.log("addI",name,value)
     }
 
-   addDefaultProperties(c:RDFClass)
+   addDefaultProperties(c:RDFClass,addAnno:boolean=false)
    {
 
          // console.log("id?",this._id)
@@ -105,45 +106,99 @@ export default class Individual {
          this._hasGeneratedId = true;
       }
 
-      console.log("addProps",c,c?c._properties:'undef');
+      console.log("addProps",this._properties) //,c,c?c._properties:'undef');
 
       if(c) {
+
+        this._propTree = { "/" : { "/class" : {}  , "/super" : {}, "/annotations" : {} } }
+
+
          let sup = [].concat(c._superclasses)
-         for(let s in c._superclasses) { sup = sup.concat(c._superclasses[s]._superclasses) ; }
+         let queue = sup.slice()
+         while( queue.length > 0 )
+         {
+           let head = queue[0]
+           queue.shift()
+
+           // console.log("head",head)
+
+           for(let s in head._superclasses) {
+             queue = queue.concat(head._superclasses[s]._superclasses) ;
+             sup = sup.concat(head._superclasses[s]._superclasses) ;
+           }
+
+           // console.log("queue",queue)
+         }
 
          // console.log("sup",sup)
 
          let onto = store.getState().data.ontology
-         let props = [].concat(Object.keys(c._properties))
+         let props = []
+
+         for(let p of Object.keys(c._properties)) {
+           if(!p.match(/\/toberemoved\//)) {
+               props.push(p)
+
+               console.log("r",p)
+
+               this._propTree[p] = "/class"
+             }
+         }
+
+
+
          for(let s in sup){
+
+             console.log("sup",s)
 
             for(let p of Object.keys(sup[s]._properties)) {
                if(!p.match(/\/toberemoved\//)) {
-                  props.push(p)
+                   props.push(p)
+
+                   console.log("p",p)
+
+                   this._propTree[p] = "/super"
+
                }
             }
             // + add annotation property that dont have domain eg prefLabel
-            for(let a in onto._annotationProperties)
+
+            // or not ? only at root level
+
+            if(addAnno) for(let a in onto._annotationProperties)
             {
                let anno = onto._annotationProperties[a]
                // console.log(onto._annotationProperties[a]._IRI)
                if(!anno._domains || anno._domains.length === 0) {
+
                   if(!anno._IRI.match(/toberemoved/)) {
+
+                     console.log("q",anno._IRI)
+
                      props.push(anno._IRI);
+
+                    let p = anno._IRI
+
+                     if(!p.match(/\/toberemoved\//)) {
+                         props.push(p)
+
+                         console.log("p",p)
+
+                         this._propTree[p] = "/annotations" ;
+                      }
                   }
                }
             }
+          }
+          for(let p in props){
 
+             console.log("p",onto._properties[props[p]])
 
-            console.log("props")
+             this.addProperty(props[p]);
 
-            for(let p in props){
+          }
 
-               console.log(onto._properties[props[p]])
-
-               this.addProperty(props[p]);
-            }
-         }
+          console.log("propTree",this._propTree)
       }
    }
 

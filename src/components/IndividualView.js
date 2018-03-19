@@ -971,7 +971,10 @@ export default class IndividualView extends React.Component<Props, State> {
 
       }
 
+
       if(newprops.length > 0) {
+          const tree= this.props.individual._propTree
+         console.log("tree",this.props.individual.id,tree)
 
          const greenColor = {
             fill: green[800]
@@ -980,11 +983,15 @@ export default class IndividualView extends React.Component<Props, State> {
          const circleStyle = {...greenColor, ...iconSizes.small} ;
          const popStyle = {horizontal: 'left', vertical: 'bottom'} ;
 
-         let poplist = []
+         let poplist = {}
 
          for(let p of newprops)
          {
-            poplist.push(
+           console.log("newp",p.props.propertyType,tree[p.props.propertyType])
+
+            if(!poplist[tree[p.props.propertyType]]) poplist = {...poplist, [tree[p.props.propertyType]]:[] }
+
+            poplist[tree[p.props.propertyType]].push(
                <MenuItem onClick={(e) =>
                   {
                      // console.log("click!!",this.props,p.props);
@@ -994,6 +1001,30 @@ export default class IndividualView extends React.Component<Props, State> {
                }>{p.props.title}</MenuItem>
             )
          }
+
+         console.log("poplist",poplist);
+
+
+          let collapseList = []
+          for(let k of Object.keys(poplist))
+          {
+            let collapseId = "pop_"+k+"_"+this.props.individual.id
+             let handleCollapse = () => {
+                this.toggleCollapseState(collapseId);
+             };
+
+             collapseList.push(
+               <div>
+               <ListItem onClick={handleCollapse}>
+                 <ListItemText primary={k} />
+                 {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
+                 </ListItem>
+                 <Collapse in={this.state.collapseState[collapseId]} style={{marginLeft:"30px"}}>
+                   {poplist[k]}
+                 </Collapse>
+              </div>
+             )
+          }
 
          // console.log("newprops",newprops,propertyTypes,this.props)
          lists.push(
@@ -1017,7 +1048,9 @@ export default class IndividualView extends React.Component<Props, State> {
                   //targetOrigin={{horizontal: 'left', vertical: 'top'}}
                   onClose={this.handleRequestClose}
                >
-                  <List>{poplist}</List>
+                  <List>
+                    {collapseList}
+                  </List>
                </Popover>
             </List>
          ) ;

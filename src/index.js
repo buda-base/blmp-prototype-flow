@@ -69,7 +69,11 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-// let id = "P1" ;
+// let id = "G000" ;
+// setTimeout(function(){ store.dispatch(data.createResource(id)) },750)
+// setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },1000)
+
+//let id = "P1" ;
 // setTimeout(function(){ store.dispatch(data.loadResource(id)) },250)
 // setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },500)
 // setTimeout(function(){ store.dispatch(ui.newTab()) },750)

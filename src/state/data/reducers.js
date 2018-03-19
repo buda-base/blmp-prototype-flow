@@ -82,7 +82,12 @@ export const createResource = (state: DataState, action: actions.LoadedResourceA
          let p = directoryPrefixes[prefix].replace(/s$/,"")
          p = "http://purl.bdrc.io/ontology/core/"+ p[0].toUpperCase() + p.substring(1)
          indiv._types.push(p)
-         indiv.addDefaultProperties(store.getState().data.ontology._classes[p])
+
+         //console.log("indiv",indiv);
+
+         indiv.addDefaultProperties(store.getState().data.ontology._classes[p],true)
+
+        //console.log("indivAdd",indiv);
 
       return {
       ...state,

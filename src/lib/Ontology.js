@@ -483,6 +483,10 @@ export default class Ontology {
             return;
         }
         let rdfClass = this._classes[classIRI];
+
+
+                   console.log("class",classIRI,rdfClass)
+
         if (!rdfClass) {
             rdfClass = new RDFClass(classIRI);
             this._classes[classIRI] = rdfClass;
@@ -506,7 +510,6 @@ export default class Ontology {
                 }
             }
 
-           // console.log("class",rdfClass)
         }
 
         for  (let annotationPropIRI in this._annotationProperties) {
