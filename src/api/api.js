@@ -174,7 +174,7 @@ export default class API {
     {
       return new Promise((resolve, reject) =>
       {
-         this._fetch(host+"/resource/P1").then((response) =>
+         this._fetch(host+"").then((response) =>
          {
             if (response.ok)
             {
@@ -391,7 +391,7 @@ export default class API {
          // url = "http://buda1.bdrc.io:13280/resource/"+id ;
          // url = "http://localhost:8080/resource/"+id ;
          let config = store.getState().data.config.ldspdi
-         url = config.endpoints[config.index]+"/resource/"+id ;
+         url = config.endpoints[config.index]+"/resource/"+id+".ttl" ;
 
 
 //         console.log([OBJECT_PATH, dir, objectDir, id, url])
