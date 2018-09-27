@@ -14,7 +14,7 @@ import Serializer from '../lib/Serializer';
 
 import type { AddingResource } from 'state/ui/actions';
 
-import Button from 'material-ui/Button';
+import Button from '@material-ui/core/Button';
 import Ontology from 'lib/Ontology';
 import RDFProperty from 'lib/RDFProperty';
 import Individual from 'lib/Individual';

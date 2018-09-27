@@ -3,17 +3,18 @@ import * as ui from '../state/ui/actions';
 import store from 'index';
 import React, {Component} from 'react';
 import './LiteralView.css';
-import TextField from 'material-ui/TextField';
-import Select from 'material-ui/Select';
-import Input, { InputLabel } from 'material-ui/Input';
-// import DatePicker from 'material-ui/DatePicker';
-import { MenuItem } from 'material-ui/Menu';
-import { FormControl, FormHelperText } from 'material-ui/Form';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+// import DatePicker from '@material-ui/core/DatePicker';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import Literal from '../lib/Literal';
-import Collapse from 'material-ui/transitions/Collapse';
-import List , {ListItem, ListItemText, ListSubheader, ListItemSecondaryAction, ListItemIcon} from 'material-ui/List';
-import ExpandMore from 'material-ui-icons/ExpandMore';
-import ExpandLess from 'material-ui-icons/ExpandLess';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import ExpandLess from '@material-ui/icons/ExpandLess';
 
 const styles = {
     inlineSelect: {

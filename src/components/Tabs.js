@@ -1,10 +1,11 @@
 // @flow
 import React, { Component } from 'react';
-import TabsList, { Tab } from 'material-ui/Tabs';
-import IconButton from 'material-ui/IconButton';
-import AddBoxIcon from 'material-ui-icons/AddBox';
-import Button from 'material-ui/Button';
-import HighlighOffIcon from 'material-ui-icons/HighlightOff';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import IconButton from '@material-ui/core/IconButton';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import Button from '@material-ui/core/Button';
+import HighlighOffIcon from '@material-ui/icons/HighlightOff';
 import Individual from 'lib/Individual';
 import formatIRI from 'lib/formatIRI';
 import store from '../index.js';
@@ -25,7 +26,7 @@ type Props = {
     auth:Auth
 }
 
-export default class Tabs extends Component<Props> {
+export default class TabsBar extends Component<Props> {
 
     _onSelectTab(event: {}, value: number) {
         const tabId = this.props.tabData[value].tabId;
@@ -80,7 +81,7 @@ export default class Tabs extends Component<Props> {
 
         return(
             <div className="Tabs">
-                <TabsList
+                <Tabs
                     onChange={this._onSelectTab.bind(this)}
                     value={this.props.selectedTabIndex}
                 >
@@ -116,7 +117,7 @@ export default class Tabs extends Component<Props> {
                     >
                         <AddBoxIcon />
                     </IconButton>
-                </TabsList>
+                </Tabs>
                 <div className="auth">
                    {
               !isAuthenticated() && (

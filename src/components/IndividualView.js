@@ -22,18 +22,22 @@ import * as uiActions from 'state/ui/actions';
 import RDFComponents from './RDF/rdf_components';
 
 // Material-UI
-import List, {ListItem, ListItemText, ListSubheader, ListItemSecondaryAction, ListItemIcon} from 'material-ui/List';
-import Collapse from 'material-ui/transitions/Collapse';
-import ExpandLess from 'material-ui-icons/ExpandLess';
-import ExpandMore from 'material-ui-icons/ExpandMore';
-import IconButton from 'material-ui/IconButton';
-import AddCircleIcon from 'material-ui-icons/AddCircle';
-import RemoveCircleIcon from 'material-ui-icons/RemoveCircle';
-import {red, green} from 'material-ui/colors';
-import AddBoxIcon from 'material-ui-icons/AddBox';
-import Popover from 'material-ui/Popover';
-import Menu from 'material-ui/Menu/Menu.js';
-import {MenuItem} from 'material-ui/Menu';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import {red, green} from '@material-ui/core/colors';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import Popover from '@material-ui/core/Popover';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 const iconSizes = {

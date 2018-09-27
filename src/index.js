@@ -20,7 +20,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from 'state/reducers';
 
-import { makeMainRoutes } from './routes';
+import makeMainRoutes from './routes';
 
 /*
 // test ok --> login page

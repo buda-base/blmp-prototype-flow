@@ -111,13 +111,12 @@ export default class API {
 
         return new Promise((resolve, reject) => {
 
-            this._fetch( url,
+            this._fetch( url+"?"+body+"&format=json",
             {
-              method: 'POST',
-              body:body,
+              method: 'GET',
               headers:new Headers(
                  {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    //"Content-Type": "application/x-www-form-urlencoded",
                     "Accept": "application/json"
                  })
            }).then((response) => {
