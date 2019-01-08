@@ -11,7 +11,7 @@
 .tabResourceSelector .individualView ul li > :first-child { text-align:left; }
 
 /* .prefLabel  */
-.literalView { line-height:1.1 !important; }
+.literalView { line-height:1.1 !important; display:flex;align-items: flex-end;}
 
 .inDivHeading { display:flex; align-items: center; justify-content: space-between; width:100%; position:relative; }
 .inDivHeading > div:last-child { margin:0 15px; font-size:20px; text-align:right; }
@@ -29,9 +29,11 @@ li.noPad { padding-right:0; }
 /* .literalView { flex:none !important; } */
 .literalView > div:first-child:last-child { width:calc(100% - 20px); }
 
-button.removeButton { height:36px;}
-.plusBut,.remoBut { position:relative !important; margin-top:0px !important;display:flex;align-items:center;right:0 !important;}
+button.removeButton { height:46px;}
+.plusBut,.remoBut { position:relative !important; margin-top:0px !important;display:flex;align-items:center;right:0 !important;transform:none !important;}
 /* .remoBut.ind { margin-right:24px; } */
+.encaps > li > div { transform:none; }
+
 
 .Pane2 .individualView > ul, .inCollapse > div > div > div,
 .individualView ul li { display:flex; }
