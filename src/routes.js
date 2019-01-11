@@ -15,6 +15,9 @@ import store from 'index';
 import Loader from "react-loader"
 
 const theme = createMuiTheme({
+   typography: {
+      useNextVariants: true,
+   },
     palette: {
         primary: indigo,
         secondary: indigo

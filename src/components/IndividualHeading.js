@@ -21,9 +21,11 @@ const prefix = {
 
 export default class IndividualHeading extends React.Component {
 
+   /*
     constructor(props) {
         super(props);
     }
+    */
 
     get title() {
         let title = "";
@@ -80,8 +82,8 @@ export default class IndividualHeading extends React.Component {
                 <h1>{this.title}</h1>
                 <h2>{this.subtitle}</h2>
             </div>,
-            <Loader loaded={this.props.loaded} style={{position:"absolute",left:"50%",top:"0"}}/>,
-                  <div  key={1} ><div className="prefLabel">{pref}</div></div>
+            <Loader key={1}loaded={this.props.loaded} style={{position:"absolute",left:"50%",top:"0"}}/>,
+            <div  key={2} ><div className="prefLabel">{pref}</div></div>
             ]
         );
     }

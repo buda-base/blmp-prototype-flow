@@ -417,21 +417,22 @@ render() {
    let removeButton = "";
    if (isEditable && this.props.title != "ID") {
       const style = {...redColor, ...iconSizes.small} ;
-      removeButton = <IconButton
-      onClick={onTapRemove}
-      className="removeButton"
-      >
-      <RemoveCircleIcon style={style}/>
-      </IconButton>;
+      removeButton =
+         <IconButton
+            onClick={onTapRemove}
+            className="removeButton"   >
+            <RemoveCircleIcon style={style}/>
+         </IconButton>;
    }
 
-   valueRows.push(<ListItem
-      style={listItemStyle}
-      >
-      {view}
-      <ListItemSecondaryAction
-      className={"remoBut "+sty}
-      >{removeButton}</ListItemSecondaryAction>
+   valueRows.push(
+      <ListItem
+         key={0}
+         style={listItemStyle} >
+         {view}
+         <ListItemSecondaryAction
+            className={"remoBut "+sty}
+            >{removeButton}</ListItemSecondaryAction>
       </ListItem>);
 
       //              this.props.isExpanded &&
@@ -948,7 +949,7 @@ export default class IndividualView extends React.Component<Props, State> {
          }
 
          lists.push(
-            <List>{propertyData.rows}</List>
+            <List key={collapseId}>{propertyData.rows}</List>
          )
 
          /* // no need anymore
@@ -991,12 +992,12 @@ export default class IndividualView extends React.Component<Props, State> {
 
          for(let p of newprops)
          {
-           console.log("newp",p.props.propertyType,tree[p.props.propertyType])
+           //console.log("newp",p.props.propertyType,tree[p.props.propertyType])
 
             if(!poplist[tree[p.props.propertyType]]) poplist = {...poplist, [tree[p.props.propertyType]]:[] }
 
             poplist[tree[p.props.propertyType]].push(
-               <MenuItem onClick={(e) =>
+               <MenuItem key={0} onClick={(e) =>
                   {
                      // console.log("click!!",this.props,p.props);
                      p.props.onTapAdd(this.props.individual,p.props.property);
@@ -1018,7 +1019,7 @@ export default class IndividualView extends React.Component<Props, State> {
              };
 
              collapseList.push(
-               <div>
+               <div key={collapseId}>
                <ListItem onClick={handleCollapse}>
                  <ListItemText primary={k} />
                  {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
@@ -1032,7 +1033,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
          // console.log("newprops",newprops,propertyTypes,this.props)
          lists.push(
-            <List>
+            <List key={0}>
                <ListItem style={{paddingLeft:0}}>
                   <ListItemIcon>
                      <IconButton

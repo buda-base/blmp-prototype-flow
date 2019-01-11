@@ -106,7 +106,7 @@ export default class Individual {
          this._hasGeneratedId = true;
       }
 
-      console.log("addProps",this._properties) //,c,c?c._properties:'undef');
+      console.log("addProps",c,this._properties) //,c,c?c._properties:'undef');
 
       if(c) {
 
@@ -120,7 +120,7 @@ export default class Individual {
            let head = queue[0]
            queue.shift()
 
-           // console.log("head",head)
+            console.log("head",head)
 
            for(let s in head._superclasses) {
              queue = queue.concat(head._superclasses[s]._superclasses) ;

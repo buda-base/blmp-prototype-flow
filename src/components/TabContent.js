@@ -266,7 +266,7 @@ class TabContent extends Component<Props, State> {
                          ref={(split) => this._mainSplitPane = split}
                          >
                             <SplitPane split="horizontal" size={90} allowResize={false} >
-                               <div className="inDivHeading">
+                               <div className="inDivHeading" >
                                   <IndividualHeading individual={this.props.individual} loaded={!this.props.saving} />
                                </div>
                                <div>

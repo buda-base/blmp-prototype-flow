@@ -75,7 +75,7 @@ export default class TabsBar extends Component<Props> {
 
     render() {
 
-      // console.log("props",this.props)
+      //console.log("sTi",this.prop.selectedTabIndex)
 
       const { isAuthenticated } = this.props.auth;
 
@@ -83,7 +83,7 @@ export default class TabsBar extends Component<Props> {
             <div className="Tabs">
                 <Tabs
                     onChange={this._onSelectTab.bind(this)}
-                    value={this.props.selectedTabIndex}
+                     value={ this.props.selectedTabIndex !== -1 ? this.props.selectedTabIndex : 0 }
                 >
                     {this.props.tabData.map((data,i) => {
                         return <Tab key={i}
@@ -112,7 +112,7 @@ export default class TabsBar extends Component<Props> {
                             }
                         />
                     })}
-                    <IconButton
+                    <IconButton // react/material conflicts generating warnings... "indicator" etc.
                         onClick={this._onNewTab.bind(this)}
                     >
                         <AddBoxIcon />

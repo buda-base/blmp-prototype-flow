@@ -260,8 +260,9 @@ export default class ResourceSelector extends React.Component<Props> {
       {
          const textStyle = {marginLeft:"15px",marginBottom:"10px"}
          host = this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
-         menu = this.props.config.ldspdi.endpoints.map((e) => <MenuItem onClick={(ev) => this.handleMenu(ev,e)}>{e}</MenuItem> )
+         menu = this.props.config.ldspdi.endpoints.map((e,k) => <MenuItem key={k} onClick={(ev) => this.handleMenu(ev,e)}>{e}</MenuItem> )
          menu.push(<TextField
+            key={0}
             style={textStyle}
             label="New URL"
             id="url"
@@ -466,7 +467,7 @@ export default class ResourceSelector extends React.Component<Props> {
                </Typography>
                {loggedIn &&
                   [
-                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+                     <div key={0} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
                         <TextField
                            autoFocus
                            label="Resource ID"
@@ -486,8 +487,8 @@ export default class ResourceSelector extends React.Component<Props> {
                            onChange={ (e) => this.handleChange(e,"key")}
                         />
                      </div>,
-                     <br/>,
-                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                     <br key={1}/>,
+                     <div key={2} style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                         <Button  onClick={this.findResource.bind(this)} style={{marginTop:"15px"}}>
                            Search
                         </Button>

@@ -21,6 +21,8 @@ const mapStateToProps = (state,ownProps) => {
         }
     });
 
+    //console.log("Tabs mS2p",tabData);
+
     return {
       ...ownProps,
         tabData,
