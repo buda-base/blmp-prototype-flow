@@ -28,7 +28,10 @@ type Props = {
 
 export default class TabsBar extends Component<Props> {
 
-    _onSelectTab(event: {}, value: number) {
+    _onSelectTab(value: number,event: Event) {
+
+      console.log("selec!",value)
+
         const tabId = this.props.tabData[value].tabId;
         this.props.onSelectTab(tabId);
     }
@@ -82,35 +85,41 @@ export default class TabsBar extends Component<Props> {
         return(
             <div className="Tabs">
                 <Tabs
-                    onChange={this._onSelectTab.bind(this)}
+                     //onChange={this._onSelectTab.bind(this)}
                      value={ this.props.selectedTabIndex !== -1 ? this.props.selectedTabIndex : 0 }
                 >
                     {this.props.tabData.map((data,i) => {
-                        return <Tab key={i}
-                            style={{
-                                width: 240
-                            }}
-                            label={
-                                <div>
-                                    <IconButton
-                                        onClick={this._onCloseTab.bind(this,i)}
-                                        style={{
-                                            position: 'absolute',
-                                            top: 1,
-                                            left: -5
-                                        }}
-                                    >
-                                        <HighlighOffIcon
-                                            style={{
-                                                width: 20,
-                                                height: 20
-                                            }}
-                                        />
-                                    </IconButton>
-                                    {this.getLabel(data)}
-                                </div>
-                            }
-                        />
+                        return (
+                           <div style={{position:"relative"}}
+                               key={i}>
+                              <IconButton
+                                  onClick={this._onCloseTab.bind(this,i)}
+                                  style={{
+                                      zIndex:2,
+                                      position: 'absolute',
+                                      top: 1,
+                                      left: -5
+                                  }}
+                              >
+                                  <HighlighOffIcon
+                                      style={{
+                                          width: 20,
+                                          height: 20
+                                      }}
+                                  />
+                              </IconButton>
+                           <Tab
+                               style={{
+                                   width: 240
+                               }}
+                               label={
+                                   <div>
+                                       {this.getLabel(data)}
+                                   </div>
+                               }
+                               onClick={this._onSelectTab.bind(this,i)}
+                           />
+                        </div> )
                     })}
                     <IconButton // react/material conflicts generating warnings... "indicator" etc.
                         onClick={this._onNewTab.bind(this)}
