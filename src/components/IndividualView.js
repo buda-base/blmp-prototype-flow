@@ -997,7 +997,7 @@ export default class IndividualView extends React.Component<Props, State> {
             if(!poplist[tree[p.props.propertyType]]) poplist = {...poplist, [tree[p.props.propertyType]]:[] }
 
             poplist[tree[p.props.propertyType]].push(
-               <MenuItem key={0} onClick={(e) =>
+               <MenuItem key={p.props.title} onClick={(e) =>
                   {
                      // console.log("click!!",this.props,p.props);
                      p.props.onTapAdd(this.props.individual,p.props.property);

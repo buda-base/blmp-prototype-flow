@@ -412,20 +412,20 @@ export default class ResourceSelector extends React.Component<Props> {
                            {...
                               this.state.resource?{style:{transform:"translate(0, 1.5px) scale(0.75)",transformOrigin: "top left"}}:{}
                            }>Type of resource</InputLabel>
-                           <Select
-                              //ref={(select) => this.setState({resource:select}) }
-                              onChange={ this.resourceChanged.bind(this) }
-                              value={ this.state.resource }
-                              input={<Input id="reSelec" style={{textTransform:"capitalize"}}/>}
-                              ref={(select) => this._selecControl = select}
-                              >
-                                 {
-                                    Object.keys(directoryPrefixes).map((k) =>
-                                       <MenuItem key={k} value={k} style={{textTransform:"capitalize"}}>
-                                          {directoryPrefixes[k].replace(/s$/,"")}
-                                       </MenuItem>)
-                                 }
-                           </Select>
+                        <Select
+                           //ref={(select) => this.setState({resource:select}) }
+                           onChange={ this.resourceChanged.bind(this) }
+                           value={ this.state.resource }
+                           input={<Input id="reSelec" style={{textTransform:"capitalize"}}/>}
+                           ref={(select) => this._selecControl = select}
+                           >
+                              {
+                                 Object.keys(directoryPrefixes).map((k) =>
+                                    <MenuItem key={k} value={k} style={{textTransform:"capitalize"}}>
+                                       {directoryPrefixes[k].replace(/s$/,"")}
+                                    </MenuItem>)
+                              }
+                        </Select>
                      </FormControl>
 
                      /*

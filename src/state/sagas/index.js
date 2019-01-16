@@ -7,6 +7,7 @@ import selectors from 'state/selectors';
 import bdrcApi from 'api/api';
 import store from 'index';
 import {auth} from '../../routes';
+import populateDB from "offline/populateDB"
 
 const api = new bdrcApi();
 
@@ -26,6 +27,10 @@ function* initiateApp() {
       const ontology = yield call([api, api.getOntology]);
       yield put(dataActions.loadedOntology(ontology));
       yield put(uiActions.newTab());
+
+
+      populateDB(api);
+
    } catch(e) {
       console.log('initiateApp error: %o', e);
       // TODO: add action for initiation failure

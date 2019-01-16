@@ -139,7 +139,7 @@ export default class Individual {
            if(!p.match(/\/toberemoved\//)) {
                props.push(p)
 
-               console.log("r",p)
+               console.log("p",p)
 
                this._propTree[p] = "/class"
              }
@@ -155,7 +155,7 @@ export default class Individual {
                if(!p.match(/\/toberemoved\//)) {
                    props.push(p)
 
-                   console.log("p",p)
+                   console.log("q",p)
 
                    this._propTree[p] = "/super"
 
@@ -173,7 +173,7 @@ export default class Individual {
 
                   if(!anno._IRI.match(/toberemoved/)) {
 
-                     console.log("q",anno._IRI)
+                     //console.log("q",anno._IRI)
 
                      props.push(anno._IRI);
 
@@ -182,7 +182,7 @@ export default class Individual {
                      if(!p.match(/\/toberemoved\//)) {
                          props.push(p)
 
-                         console.log("p",p)
+                         console.log("r",p)
 
                          this._propTree[p] = "/annotations" ;
                       }
@@ -192,7 +192,7 @@ export default class Individual {
           }
           for(let p in props){
 
-             console.log("p",onto._properties[props[p]])
+             console.log("s",onto._properties[props[p]])
 
              this.addProperty(props[p]);
 
