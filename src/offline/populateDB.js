@@ -81,12 +81,8 @@ async function populateDB(api) {
 
          i++;
          if(i > 1000) break ;
-      }      
+      }
 	}
-
-
-
-
 }
 
 export default populateDB ;

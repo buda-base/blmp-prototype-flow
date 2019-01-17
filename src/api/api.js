@@ -4,6 +4,7 @@ import Graph from '../lib/Graph';
 import Ontology from '../lib/Ontology';
 import Individual from '../lib/Individual';
 import store from '../index';
+import * as idb from 'idb' ;
 
 export const directoryPrefixes = {
     'C': 'corporations', //
@@ -440,10 +441,25 @@ export default class API {
 
     async _getResourceData(id: string): Promise<string | null> {
         try {
-            let url = this._getResourceURL(id);
-            let resourceData = this.getURLContents(url);
+            let resourceData
+            let config = store.getState().data.config
+            if(config && config.ldspdi && config.ldspdi.endpoints && config.ldspdi.endpoints[config.ldspdi.index] === "offline") {
+               console.log("id",id)
 
-//             console.log("reData");
+               let db = await idb.openDb('blmp-db', 2)
+               let tx = await db.transaction('objects', 'readwrite');
+               let objects = await tx.objectStore('objects');
+               let val = await objects.get((!id.match(/^http:/)?"http://purl.bdrc.io/resource/":"")+id)
+
+               if(!val) throw new Error("offline resource not found ("+id+")")
+               else resourceData = val ;
+            }
+            else {
+               let url = this._getResourceURL(id);
+               resourceData = this.getURLContents(url);
+            }
+
+           console.log("reData",resourceData);
 
             return resourceData;
         } catch(e) {

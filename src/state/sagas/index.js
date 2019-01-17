@@ -29,7 +29,7 @@ function* initiateApp() {
       yield put(uiActions.newTab());
 
 
-      populateDB(api);
+      //populateDB(api);
 
    } catch(e) {
       console.log('initiateApp error: %o', e);
@@ -69,6 +69,13 @@ export function* loadResource(IRI) {
 }
 
 export function* chooseHost(host:string) {
+
+   if(host === "offline") {
+      yield put(dataActions.chosenHost(host));
+      yield put(dataActions.hostError(host," "));
+      return
+   }
+
    try
    {
       yield call([api, api.testHost], host);

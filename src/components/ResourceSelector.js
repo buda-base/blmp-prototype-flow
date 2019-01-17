@@ -281,7 +281,7 @@ export default class ResourceSelector extends React.Component<Props> {
       {
          message = <Typography>You must be logged in to access these resources.</Typography>
       }
-      else if (this.props.hostError) {
+      else if (this.props.hostError && host !== "offline") {
          message = <Typography>Error reaching {host} : {this.props.hostError}</Typography>
       }
       else if (this.props.findingResourceId) {
@@ -485,6 +485,7 @@ export default class ResourceSelector extends React.Component<Props> {
                            type="text"
                            onKeyPress={(e) => this.handleKeypress(e,"key")}
                            onChange={ (e) => this.handleChange(e,"key")}
+                           {...(host === "offline" ? {disabled:true,title:"offline use - search disabled"}:{})}
                         />
                      </div>,
                      <br key={1}/>,
