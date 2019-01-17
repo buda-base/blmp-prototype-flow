@@ -278,13 +278,16 @@ export default class API {
         });
     }
 
-    async getOntology(): Promise<Ontology> {
-        if (!this._ontology) {
-            let ontologyData = await this.getURLContents(this._ontologyPath,false,false);
+    async getOntology(returnDataOnly:boolean=false): Promise<Ontology> {
+        let ontologyData
+
+        if (!this._ontology || returnDataOnly) {
+            ontologyData = await this.getURLContents(this._ontologyPath,false,false);
             this._ontology = await this._processOntologyData(ontologyData);
         }
 
-        return this._ontology;
+        if(!returnDataOnly) return this._ontology;
+        else return ontologyData ;
     }
 
     get _ontologyPath(): string {

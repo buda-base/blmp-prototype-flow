@@ -12,7 +12,7 @@ async function populateDB(api) {
      return;
    }
 
-   var openRequest = indexedDB.open("blmp-db",1);
+   var openRequest = indexedDB.open("blmp-db",2);
 	openRequest.onupgradeneeded = function(e) {
 		console.log("running onupgradeneeded");
 		var thisDb = e.target.result;
@@ -20,6 +20,12 @@ async function populateDB(api) {
 		if(!thisDb.objectStoreNames.contains("objects")) {
 			console.log("need to make the objectstore");
 			let objectStore = thisDb.createObjectStore("objects");
+			//objectStore.createIndex("title", "title", { unique: false });
+		}
+
+		if(!thisDb.objectStoreNames.contains("ontology")) {
+			console.log("need to make the onoltogy objectstore");
+			let objectStore = thisDb.createObjectStore("ontology");
 			//objectStore.createIndex("title", "title", { unique: false });
 		}
 	}
@@ -32,6 +38,25 @@ async function populateDB(api) {
 		};
 
 		console.log("idb",db);
+
+      let onto = await api.getOntology(true)
+
+      var transaction = db.transaction(["ontology"], "readwrite");
+      transaction.oncomplete = function(event) {
+         console.log("Transaction ok");
+      };
+
+      transaction.onerror = function(event) {
+		   console.error("Transaction error: " + transaction.error);
+      };
+
+      var ontoStore = transaction.objectStore("ontology");
+
+      var objRequest = ontoStore.put(onto,"ontology/core");
+      objRequest.onsuccess = function(event) {
+        console.log("Added ",onto);
+      };
+
 
       let i = 0
       for(let d of personsID) {
@@ -56,7 +81,7 @@ async function populateDB(api) {
 
          i++;
          if(i > 1000) break ;
-      }
+      }      
 	}
 
 
