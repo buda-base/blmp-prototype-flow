@@ -29,8 +29,6 @@ function* initiateApp() {
       yield put(uiActions.newTab());
 
 
-      //populateDB(api);
-
    } catch(e) {
       console.log('initiateApp error: %o', e);
       // TODO: add action for initiation failure
@@ -70,9 +68,25 @@ export function* loadResource(IRI) {
 
 export function* chooseHost(host:string) {
 
+
    if(host === "offline") {
-      yield put(dataActions.chosenHost(host));
-      yield put(dataActions.hostError(host," "));
+
+      let config = store.getState().data.config
+      console.log("ldspdi",config.ldspdi)
+      if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline")
+      {
+         if(window.confirm("[experimental feature]\nstart populating indexedDB from previous endpoint ?\n"+config.ldspdi.endpoints[config.ldspdi.index]))
+         {
+            alert("[experimental feature]\nplease wait until endpoint actually set to 'Offline'\n(this may take several minutes\nopen console/network to view progress)")
+            yield put(dataActions.hostError("offline","offline endpoint"));
+            populateDB(api);
+         }
+      }
+      else {
+
+         yield put(dataActions.chosenHost(host));
+         yield put(dataActions.hostError(host,"offline endpoint"));
+      }
       return
    }
 

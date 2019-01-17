@@ -2,6 +2,8 @@
 import personsID from "./data"
 import api from 'api/api';
 import * as idb from 'idb'
+import store from '../index';
+import * as dataActions from '../state/data/actions';
 
 async function populateDB(api) {
 
@@ -80,8 +82,14 @@ async function populateDB(api) {
          };
 
          i++;
-         if(i > 1000) break ;
+         if(i > 100) break ;
       }
+
+      alert("[experimental feature]\ntransfer complete");
+
+      store.dispatch(dataActions.chosenHost("offline"));
+      store.dispatch(dataActions.hostError("offline","offline endpoint"));
+
 	}
 }
 
