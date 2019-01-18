@@ -73,7 +73,7 @@ export default class PlaceType extends RDFComponent {
            <div style={flexStyle} >
             <ListItemText
                   primary={formatIRI(this.props.individual.id)}
-                  secondary={formatIRI(this.props.individual.types[0])}
+                  //secondary={formatIRI(this.props.individual.types[0])}
                   onClick={this.handleClick}
                />
 

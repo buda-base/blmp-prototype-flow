@@ -289,7 +289,7 @@ render() {
    const popStyle = {horizontal: 'left', vertical: 'bottom'} ;
    const listStyle = {padding:"0 16px 0 0",margin:"0px 0px 5px 0px"}
    //,boxShadow: "0px 5px 5px -4px rgba(0,0,0,0.2)"}
-   const propertySubheader = <div><ListItem style={listStyle}>
+   const propertySubheader = [<ListItem style={listStyle} >
    {this.props.isEditable() &&  //!this.props.nested && this.props.level < 1 &&
       <ListItemIcon>
       <IconButton
@@ -302,7 +302,7 @@ render() {
    }
    <ListItemText title={this.props.tooltip} primary={this.props.title} disableTypography style={listHeaderStyle} />
 
-   </ListItem>
+</ListItem>,
    <Popover
       open={this.state.open}
       anchorEl={this.state.anchorEl}
@@ -311,8 +311,7 @@ render() {
       onClose={this.handleRequestClose}
    >
       <List>{this._list}</List>
-   </Popover>
-   </div>;
+   </Popover>];
 
    // Values
 
@@ -461,9 +460,13 @@ render() {
          marginLeft: ((this.props.level + 1) * 20) + 'px'
       };
 
+      let inline = (valueRows.length === 1) ;
+
+      console.log('rows',valueRows)
+
       return (
-         <List  className={this.props.level == 0 ?"encaps":""} >
-         {propertySubheader}
+         <List  className={(this.props.level == 0 ?"encaps":"")+ (inline?" ListFlex":"")+" DontFlex"} >
+         <div className={inline?"ListItemInline":""}>{propertySubheader}</div>
          <ListItem button onClick={handleCollapse}>
          <ListItemText
          disableTypography
@@ -482,8 +485,12 @@ render() {
       }
       else
       {
-         return (<List className={this.props.level == 0 ?"encaps":""}>
-            {propertySubheader}
+         let inline = (valueRows.length === 1) ;
+
+         console.log('rows',valueRows)
+
+         return (<List className={(this.props.level == 0 ?"encaps":"")+ (inline?" ListFlex":"")}>
+            <div className={inline?"ListItemInline":""}>{propertySubheader}</div>
             {valueRows}
             </List>);
          }
@@ -1179,10 +1186,12 @@ export default class IndividualView extends React.Component<Props, State> {
 
          if (labels && labels.length > 0) {
             title = labels[0].value;
+            //subtitle = '' ;
          } else if (this.props.individual.id) {
             if(!this.props.individual.hasGeneratedId)
             {
                title = this.props.ontology.getMainLabel(this.props.individual.id);
+               subtitle = '' ;
             }
             else
             {
@@ -1194,20 +1203,24 @@ export default class IndividualView extends React.Component<Props, State> {
 
                title = this.props.ontology.getMainLabel(this.props.individual.types[0])
 
-               subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
+               subtitle = '' ; //this.props.ontology.getMainLabel(this.props.propertyType);
             }
          } else {
             title = <i>&lt;no id&gt;</i>;
+
+            subtitle = '' ;
          }
 
 
          if(this.props.propertyType && this.props.level >= 2)
          {
-            subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
+            //subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
+
+            subtitle = '' ;
          }
 
 
-         titleView = [ <ListItemText
+         titleView = [ <ListItemText className="ListItemNoSec"
             primary={title}
             secondary={subtitle}
             /> ]

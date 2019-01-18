@@ -81,6 +81,10 @@ export function* chooseHost(host:string) {
             yield put(dataActions.hostError("offline","offline endpoint"));
             populateDB(api);
          }
+         else {
+            yield put(dataActions.chosenHost(host));
+            yield put(dataActions.hostError("offline","offline endpoint"));
+         }
       }
       else {
 

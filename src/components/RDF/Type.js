@@ -93,9 +93,9 @@ export default class Type extends RDFComponent {
 
 
            <div style={flexStyle} >
-            <ListItemText
+            <ListItemText className="ListItemNoSec"
                   primary={onto.getMainLabel(this.props.individual.id)}
-                  secondary={onto.getMainLabel(this.props.property.ranges[0])}
+                  //secondary={onto.getMainLabel(this.props.property.ranges[0])}
                   onClick={this.handleClick}
                />
 

@@ -25,12 +25,19 @@
 .individualView ul ul > div { display:flex; }
 li.noPad { padding-right:0; }
 
+/* .ListItemNoSec > span + p:last-child { display:none; } */
+.ListItemInline { display:inline-block !important;}
+.ListItemInline + li:last-child {  }
+.isEditable .encaps.ListFlex,.ListFlex { display:flex !important; }
+
+.individualView >  ul > div { padding:0 }
+
 /* LiteralView */
 /* .literalView { flex:none !important; } */
 .literalView > div:first-child:last-child { width:calc(100% - 20px); }
 
-button.removeButton { height:46px;}
-.plusBut,.remoBut { position:relative !important; margin-top:0px !important;display:flex;align-items:center;right:0 !important;transform:none !important;}
+button.removeButton { height:46px; width:24px;height:24px;margin-top:-24px;}
+.plusBut,.remoBut { position:relative !important; margin-top:0px !important;display:flex;align-items:center;right:0 !important;transform:none !important;top:0!important;}
 /* .remoBut.ind { margin-right:24px; } */
 .encaps > li > div { transform:none; }
 
@@ -53,7 +60,7 @@ button.removeButton { height:46px;}
 
 .individualView.opentrue {  box-shadow: 5px 0 5px -4px rgba(0,0,0,0.2); margin-bottom:10px;  }
 
-.isEditable .encaps { display:block !important;  box-shadow: -5px 0 5px -4px rgba(0,0,0,0.2);   margin:20px 5px!important;padding:0 0 10px 5px !important;}
+.isEditable .encaps { display:block !important;  box-shadow: -5px 0 5px -4px rgba(0,0,0,0.2);   /*margin:20px 5px!important; */ padding:0 0 10px 5px !important;}
 
 .individualView:not(.isEditable) > div:last-child { margin-left:35px;  }
 
