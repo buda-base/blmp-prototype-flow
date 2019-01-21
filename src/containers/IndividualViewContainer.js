@@ -8,19 +8,19 @@ import IndividualView from 'components/IndividualView';
 
 import store from "../index.js";
 
-/* // no need ... for now
+// no need ... for now
 const mapStateToProps = (state,ownProps) => {
-    let props = { ...ownProps }
-    
-    console.log("state2prop",state,ownProps)
-    
+    let props = { ...ownProps, assocResources:state.data.assocResources }
+
+    console.log("iVc ms2p",props)
+
     return props ;
 }
-*/
+
 const mapDispatchToProps = (dispatch) => {
     return {
         onSelectedResource: (IRI) => {
-           
+
             //console.log("selected ?",IRI)
             dispatch(ui.selectedResourceIRI(store.getState().ui.activeTabId,IRI));
         }
@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const IndividualViewContainer = connect(
-    null, //mapStateToProps,
+    mapStateToProps,
     mapDispatchToProps
 )(IndividualView);
 

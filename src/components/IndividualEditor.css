@@ -35,6 +35,8 @@ li.noPad { padding-right:0; }
 
 .individualView >  ul > div { padding:0 }
 
+button[disabled] { opacity:0.5; }
+
 /* LiteralView */
 /* .literalView { flex:none !important; } */
 .literalView > div:first-child:last-child { width:calc(100% - 20px); }

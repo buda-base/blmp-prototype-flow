@@ -22,7 +22,7 @@ const styles = {
         float: 'left'
     },
     valueField: {
-        width: 'calc(100% - 105px)'
+        width: 'calc(100% - 125px)'
     }
 };
 

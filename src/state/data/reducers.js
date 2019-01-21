@@ -15,7 +15,8 @@ export type DataState = {
     loading: {[string]: boolean},
     failures: {[string]: string},
     resources: {[IRI:string]: Individual},
-    ontology: Ontology | null
+    ontology: Ontology | null,
+    assocResources:{[string]:{}}
     //graphText:string | null
 }
 
@@ -23,6 +24,7 @@ const DEFAULT_STATE: DataState = {
     loading: {},
     failures: {},
     resources: {},
+    assocResources: {},
     ontology: null,
     //graphText:null
 }
@@ -41,8 +43,29 @@ export const loading = (state: DataState, action: actions.LoadingAction) => {
 reducers[actions.TYPES.loading] = loading;
 
 
+/*
+export const assocResources = (state: DataState, action: Action) => {
+
+let assocResources = state.assocResources
+if(!assocResources) assocResources = {}
+assocResources = {...assocResources, ...action.meta }
+
+    return {
+        ...state,
+        assocResources
+    }
+}
+reducers[actions.TYPES.assocResources] = assocResources;
+*/
+
 export const loadedResource = (state: DataState, action: actions.LoadedResourceAction) => {
     state = loading(state, actions.loading(action.payload.IRI, false));
+
+
+    let assocResources = state.assocResources
+    if(!assocResources) assocResources = {}
+    assocResources = {...assocResources, ...action.payload.assocResources }
+
 
     /*
     // no need to do anything more in actions finally
@@ -57,6 +80,7 @@ export const loadedResource = (state: DataState, action: actions.LoadedResourceA
 
       return {
       ...state,
+      assocResources,
 
       /*
       graph:{

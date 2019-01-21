@@ -25,3 +25,7 @@ export const getResults = (state: DataState, IRI: string): [] => {
 export const getConfig = (state: DataState): [] => {
     return state.config;
 }
+
+export const getAssocResources = (state: DataState): [] => {
+    return state.assocResources;
+}

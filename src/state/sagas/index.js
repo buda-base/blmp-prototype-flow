@@ -49,17 +49,21 @@ export function* loadResource(IRI) {
 
    yield put(dataActions.loading(IRI, true));
    try {
-      let individual = yield call([api, api.getResource], IRI);
+      let assoR = yield call([api, api.loadAssocResources], IRI);
+      //yield put(dataActions.assocResources(IRI, assoR.data));
 
+      let individual = yield call([api, api.getResource], IRI);
       let onto = store.getState().data.ontology
       individual.addDefaultProperties(onto._classes[individual._types[0]],true)
 
-      yield put(dataActions.loadedResource(IRI, individual));
+      yield put(dataActions.loadedResource(IRI, individual,assoR.data));
       // IRI might only be the resource ID so make sure the
       // actual IRI is set as well.
       if (individual.id !== IRI) {
-         yield put(dataActions.loadedResource(individual.id, individual));
+         yield put(dataActions.loadedResource(individual.id, individual,assoR.data));
       }
+
+
    } catch(e) {
       yield put(dataActions.resourceFailed(IRI, e.message));
       yield put(dataActions.loading(IRI, false));

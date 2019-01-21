@@ -25,6 +25,17 @@ export const loading = (id: string, isLoading: boolean): LoadingAction => {
     }
 }
 
+/*
+TYPES.assocResources = 'ASSOC_RESOURCES';
+export const assocResources = (IRI: string, res:{}): Action => {
+    return {
+        type: TYPES.assocResources,
+        payload: IRI,
+        meta:res
+    }
+}
+*/
+
 TYPES.loadResource = 'LOAD_RESOURCE';
 export const loadResource = (IRI: string): Action => {
     return {
@@ -85,16 +96,18 @@ export type LoadedResourceAction = {
     type: string,
     payload: {
         IRI: string,
-        individual: Individual
+        individual: Individual,
+        assocResources?:{}
     }
 }
 TYPES.loadedResource = 'LOADED_RESOURCE';
-export const loadedResource = (IRI: string, individual: Individual): LoadedResourceAction => {
+export const loadedResource = (IRI: string, individual: Individual,assocResources:{}): LoadedResourceAction => {
     return {
         type: TYPES.loadedResource,
         payload: {
             IRI,
-            individual
+            individual,
+            assocResources
         }
     }
 }

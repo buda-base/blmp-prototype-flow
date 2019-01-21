@@ -239,7 +239,7 @@ export default class API {
 
         return new Promise((resolve, reject) => {
 
-            this._fetch( url+(!usePost?"":"?"+this.getAuthStr())
+            this._fetch( url  // +(!usePost?"":"?"+this.getAuthStr())
                   /*
                ,  {
                method: 'GET',
@@ -290,6 +290,18 @@ export default class API {
         if(!returnDataOnly) return this._ontology;
         else return ontologyData ;
     }
+
+   _assocResourcesPath(IRI:string): string {
+
+       if(IRI.indexOf(':') === -1) IRI = "bdr:"+IRI
+
+       let config = store.getState().data.config.ldspdi
+       let url = config.endpoints[config.index] ;
+
+        let path = url +  "/lib/allAssocResource?R_RES=" + IRI;
+
+        return path;
+   }
 
     get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;
@@ -465,6 +477,13 @@ export default class API {
         } catch(e) {
             throw e;
         }
+    }
+
+    async loadAssocResources(IRI:string): Promise<string>
+    {
+       let resource =  JSON.parse(await this.getURLContents(this._assocResourcesPath(IRI),false));
+       console.log("assocResources",resource)
+       return resource ;
     }
 
     async getResource(id: string): Promise<Individual | null> {

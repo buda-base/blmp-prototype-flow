@@ -36,6 +36,7 @@ const mapStateToProps = (state, ownProps) => {
     let graphText ;
 
     let addedFoundResource  ;
+    let assocResources
 
     let loaded ;
 
@@ -49,6 +50,7 @@ const mapStateToProps = (state, ownProps) => {
             individual = editingResource;
             editingResourceIsLoading = selectors.isResourceLoading(state, editingResourceIRI);
             editingResourceError = selectors.getResourceError(state, editingResourceIRI);
+            assocResources = selectors.getAssocResources(state);
 
         }
 
@@ -81,7 +83,7 @@ const mapStateToProps = (state, ownProps) => {
     config = selectors.getConfig(state);
     hostError = selectors.getResourceError(state, "host");
 
-    // console.log("state=",state,ownProps);
+    //console.log("state=",state,ownProps);
 
     const props = {
       ...ownProps,
@@ -100,11 +102,12 @@ const mapStateToProps = (state, ownProps) => {
         results,
         config,
         hostError,
+        assocResources,
         addedFoundResource,
         ...widthInfo
     }
 
-    //console.log("props",props)
+    console.log("props",props)
     // console.log("mapstate2prop?TabContent",state,ownProps,props);
 
     return props ;

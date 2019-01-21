@@ -89,6 +89,7 @@ type IndividualPropertyProps = {
    tooltip: string,
    showLabel: boolean,
    nested: boolean,
+   assocResources:{[string]:{}}
 }
 
 type CollapState = {
@@ -295,6 +296,7 @@ render() {
       <IconButton
          onClick={this._list ? this.handleClick : onTapAdd}
          style={iconStyle}
+         {...(this.props.title === 'ID'?{disabled:true,title:"only one allowed"}:{})}
       >
          <AddCircleIcon style={circleStyle}/>
       </IconButton>
@@ -382,23 +384,24 @@ render() {
          }
       }
       view = <IndividualView
-      onSelectedResource={this.props.onSelectedResource}
-      onIndividualUpdated={this.props.onIndividualUpdated}
-      onClick={onClick}
-      individual={propertyValue}
-      isEditable={isEditable}
-      isExpandable={true}
-      isExpanded={false}
-      level={this.props.level + 1}
-      nested={true}
-      ontology={this.props.ontology}
-      titleView={titleView}
-      className={classN}
-      showLabel={true}
-      propertyType={this.props.propertyType}
-      onTapAdd={onTapAdd}
-      onAddResource={this.props.onAddResource}
-      />;
+               assocResources={this.props.assocResources}
+               onSelectedResource={this.props.onSelectedResource}
+               onIndividualUpdated={this.props.onIndividualUpdated}
+               onClick={onClick}
+               individual={propertyValue}
+               isEditable={isEditable}
+               isExpandable={true}
+               isExpanded={false}
+               level={this.props.level + 1}
+               nested={true}
+               ontology={this.props.ontology}
+               titleView={titleView}
+               className={classN}
+               showLabel={true}
+               propertyType={this.props.propertyType}
+               onTapAdd={onTapAdd}
+               onAddResource={this.props.onAddResource}
+            />;
 
 
       //                 console.log("view2",view)
@@ -462,7 +465,7 @@ render() {
 
       let inline = (valueRows.length === 1) ;
 
-      console.log('rows',valueRows)
+      //console.log('rows',valueRows)
 
       return (
          <List  className={(this.props.level == 0 ?"encaps":"")+ (inline?" ListFlex":"")+" DontFlex"} >
@@ -503,6 +506,7 @@ type Props = {
    onTapAdd?: (individual: Individual, property: RDFProperty) => void,
    onAddResource?: (individual: Individual, property: RDFProperty) => void,
    onClick?: () => void,
+   assocResources:{[string]:{}},
    individual: Individual,
    isEditable: boolean,
    isExpandable?: boolean,
@@ -840,6 +844,7 @@ export default class IndividualView extends React.Component<Props, State> {
    propertyType={propertyType}
    title={title}
    tooltip={tooltip}
+   assocResources={this.props.assocResources}
    {...this.props.individual.id.match(/([_A-Z]+[0-9]+)+$/) ? { showLabel : true }:{} }
    />;
 
@@ -1088,20 +1093,21 @@ export default class IndividualView extends React.Component<Props, State> {
       };
 
       return <IndividualProperty
-      nested={this.props.nested}
-      isEditable={() => true}
-      onIndividualUpdated={this.props.onIndividualUpdated}
-      onLiteralChanged={onChange}
-      onSelectedResource={this.props.onSelectedResource}
-      onTapAdd={this.props.onTapAdd}
-      onAddResource={this.props.onAddResource}
-      individual={this.props.individual}
-      level={this.props.level}
-      ontology={this.props.ontology}
-      property={idProperty}
-      propertyValues={propertyValues}
-      title={"ID"}
-      tooltip={"ID"}
+         assocResources={this.props.assocResources}
+         nested={this.props.nested}
+         isEditable={() => true}
+         onIndividualUpdated={this.props.onIndividualUpdated}
+         onLiteralChanged={onChange}
+         onSelectedResource={this.props.onSelectedResource}
+         onTapAdd={this.props.onTapAdd}
+         onAddResource={this.props.onAddResource}
+         individual={this.props.individual}
+         level={this.props.level}
+         ontology={this.props.ontology}
+         property={idProperty}
+         propertyValues={propertyValues}
+         title={"ID"}
+         tooltip={"ID"}
       />;
    }
 
@@ -1124,20 +1130,21 @@ export default class IndividualView extends React.Component<Props, State> {
       return (
          <List>
          <IndividualProperty
-         nested={this.props.nested}
-         isEditable={(propertyValue: any) => this.props.nested && this.props.isEditable }
-         onIndividualUpdated={this.props.onIndividualUpdated}
-         onLiteralChanged={onLiteralChanged}
-         onSelectedResource={this.props.onSelectedResource}
-         onTapAdd={onTapAdd}//this.props.onAddResource}
-         onAddResource={this.props.onAddResource}
-         individual={this.props.individual}
-         level={this.props.level}
-         ontology={this.props.ontology}
-         property={labelProperty}
-         propertyValues={labels}
-         title={"Label"}
-         tooltip={"Labels"}
+            nested={this.props.nested}
+            isEditable={(propertyValue: any) => this.props.nested && this.props.isEditable }
+            onIndividualUpdated={this.props.onIndividualUpdated}
+            onLiteralChanged={onLiteralChanged}
+            onSelectedResource={this.props.onSelectedResource}
+            onTapAdd={onTapAdd}//this.props.onAddResource}
+            onAddResource={this.props.onAddResource}
+            individual={this.props.individual}
+            level={this.props.level}
+            ontology={this.props.ontology}
+            property={labelProperty}
+            propertyValues={labels}
+            title={"Label"}
+            tooltip={"Labels"}
+            assocResources={this.props.assocResources}
          />
          </List>
       )
@@ -1181,7 +1188,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
          if (this.props.individual.types[0])
          {
-            subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0]);
+            subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0])+ " / case 0";
          }
 
          if (labels && labels.length > 0) {
@@ -1190,8 +1197,14 @@ export default class IndividualView extends React.Component<Props, State> {
          } else if (this.props.individual.id) {
             if(!this.props.individual.hasGeneratedId)
             {
+               const bdr = "http://purl.bdrc.io/resource/"
                title = this.props.ontology.getMainLabel(this.props.individual.id);
-               subtitle = '' ;
+               subtitle = '' // 'case1 ('+title+')' ;
+               if(this.props.assocResources && this.props.assocResources[bdr+title.toUpperCase()])
+               {
+                  subtitle = title
+                  title = this.props.assocResources[bdr+title.toUpperCase()].filter(e => e.type && e.type.match(/skos[/]core#prefLabel/) ).map(e => e.value) ;
+               }
             }
             else
             {
@@ -1203,12 +1216,12 @@ export default class IndividualView extends React.Component<Props, State> {
 
                title = this.props.ontology.getMainLabel(this.props.individual.types[0])
 
-               subtitle = '' ; //this.props.ontology.getMainLabel(this.props.propertyType);
+               subtitle = 'case2' ; //this.props.ontology.getMainLabel(this.props.propertyType);
             }
          } else {
             title = <i>&lt;no id&gt;</i>;
 
-            subtitle = '' ;
+            subtitle = 'case3' ;
          }
 
 
@@ -1216,7 +1229,7 @@ export default class IndividualView extends React.Component<Props, State> {
          {
             //subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
 
-            subtitle = '' ;
+            subtitle = 'case4' ;
          }
 
 
@@ -1316,8 +1329,8 @@ export default class IndividualView extends React.Component<Props, State> {
    render() {
 
          // COMM
-         //         console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
-         //         console.log(this.props);
+               console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
+               console.log("iV assoR",this.props.assocResources);
 
       this.prepareRender()
 
@@ -1352,7 +1365,7 @@ export default class IndividualView extends React.Component<Props, State> {
       );
 
 
-      //         console.groupEnd()
+               console.groupEnd()
 
       return ret ;
 
