@@ -27,8 +27,11 @@ li.noPad { padding-right:0; }
 
 /* .ListItemNoSec > span + p:last-child { display:none; } */
 .ListItemInline { display:inline-block !important;}
-.ListItemInline + li:last-child {  }
-.isEditable .encaps.ListFlex,.ListFlex { display:flex !important; }
+.ListItemInline + li:last-child { flex-grow:1 }
+.isEditable .encaps.ListFlex,.ListFlex { display:flex !important; flex-wrap:wrap; }
+.ListItemInline > li { padding-right:0 !important; }
+.ListItemInline + [role=button] ~ .inCollapse  { flex-grow:1; }
+.individualView.RDFCompo p { font-size:16px; }
 
 .individualView >  ul > div { padding:0 }
 
@@ -36,8 +39,8 @@ li.noPad { padding-right:0; }
 /* .literalView { flex:none !important; } */
 .literalView > div:first-child:last-child { width:calc(100% - 20px); }
 
-button.removeButton { height:46px; width:24px;height:24px;margin-top:-24px;}
-.plusBut,.remoBut { position:relative !important; margin-top:0px !important;display:flex;align-items:center;right:0 !important;transform:none !important;top:0!important;}
+button.removeButton { height:46px; width:24px;height:24px;margin-top:-7px; padding:0;}
+.plusBut,.remoBut { position: relative !important; margin-top:0px !important;display:flex;align-items:center;right:0 !important;transform:none !important;top:0!important;}
 /* .remoBut.ind { margin-right:24px; } */
 .encaps > li > div { transform:none; }
 
