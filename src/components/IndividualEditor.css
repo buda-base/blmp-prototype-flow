@@ -27,6 +27,7 @@ li.noPad { padding-right:0; }
 
 /* .ListItemNoSec > span + p:last-child { display:none; } */
 .ListItemInline { display:inline-block !important;}
+.ListItemInline.w100sibling + * { width:100%;}
 .ListItemInline + li:last-child { flex-grow:1 }
 .isEditable .encaps.ListFlex,.ListFlex { display:flex !important; flex-wrap:wrap; }
 .ListItemInline > li { padding-right:0 !important; }

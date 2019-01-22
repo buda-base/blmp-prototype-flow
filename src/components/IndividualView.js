@@ -384,6 +384,7 @@ render() {
          }
       }
       view = <IndividualView
+               ref="indiView"
                assocResources={this.props.assocResources}
                onSelectedResource={this.props.onSelectedResource}
                onIndividualUpdated={this.props.onIndividualUpdated}
@@ -427,8 +428,12 @@ render() {
          </IconButton>;
    }
 
+
+   //console.log("view",view)
+
    valueRows.push(
       <ListItem
+         className={"youpi"}
          key={key}
          style={listItemStyle} >
          {view}
@@ -442,7 +447,7 @@ render() {
 
    // console.groupEnd();
 
-   if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"
+   if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"  // when too much element to view at once (LogEntry, teacherOf, etc.)
    || this.props.propertyValues.length > 10)
    {
       let collapseId = [this.props.individual.id, 'level', this.props.level, 0, 'collapsed'].join('_');
@@ -469,21 +474,22 @@ render() {
 
       return (
          <List  className={(this.props.level == 0 ?"encaps":"")+ (inline?" ListFlex":"")+" DontFlex"} >
-         <div className={inline?"ListItemInline":""}>{propertySubheader}</div>
-         <ListItem button onClick={handleCollapse}>
-         <ListItemText
-         disableTypography
-         primary={(this.state.collapseState[collapseId] ? "hide":"show")+" ("+this.props.propertyValues.length+")"}
-         style={headingStyles}
-         />
-         {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
-         </ListItem>
-         <Collapse
-            className={"inCollapse " + this.state.collapseState[collapseId] }
-            in={this.state.collapseState[collapseId]}
-            style={dataRowStyle} >
-         {valueRows}
-         </Collapse>
+            <div className={inline?"ListItemInline":""}>{propertySubheader}</div>
+            <ListItem button onClick={handleCollapse}>
+               <ListItemText
+                  disableTypography
+                  primary={(this.state.collapseState[collapseId] ? "hide":"show")+" ("+this.props.propertyValues.length+")"}
+                  style={ headingStyles }
+               />
+                  {this.state.collapseState[collapseId] ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse
+                  className={"inCollapse " + this.state.collapseState[collapseId] }
+                  in={this.state.collapseState[collapseId]}
+                  style={dataRowStyle}
+            >
+               {valueRows}
+            </Collapse>
          </List>);
       }
       else
@@ -493,8 +499,8 @@ render() {
          //console.log('rows',valueRows)
 
          return (<List className={(this.props.level == 0 ?"encaps":"")+ (inline?" ListFlex":"")}>
-            <div className={inline?"ListItemInline":""}>{propertySubheader}</div>
-            {valueRows}
+            <div className={(inline?"ListItemInline":"")+(this.refs.indiView && this.refs.indiView.isCollapse ? " w100sibling":"")}>{propertySubheader}</div>
+               {valueRows}
             </List>);
          }
       }
@@ -960,7 +966,7 @@ export default class IndividualView extends React.Component<Props, State> {
             }
          }
 
-         lists.push(
+         if(propertyData.rows.length > 0) lists.push(
             <List key={collapseId}>{propertyData.rows}</List>
          )
 
@@ -991,7 +997,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
       if(newprops.length > 0) {
           const tree= this.props.individual._propTree
-         console.log("tree",this.props.individual.id,tree)
+         //console.log("tree",this.props.individual.id,tree)
 
          const greenColor = {
             fill: green[800]
@@ -1019,7 +1025,7 @@ export default class IndividualView extends React.Component<Props, State> {
             )
          }
 
-         console.log("poplist",poplist);
+         //console.log("poplist",poplist);
 
 
           let collapseList = []
@@ -1073,6 +1079,8 @@ export default class IndividualView extends React.Component<Props, State> {
          ) ;
          //<List>{newprops}</List>)
       }
+
+      //console.log("L",lists)
 
       return lists;
    }
@@ -1204,7 +1212,7 @@ export default class IndividualView extends React.Component<Props, State> {
                {
                   subtitle = title
                   title = this.props.assocResources[bdr+title.toUpperCase()].filter(e => e.type && e.type.match(/skos[/]core#prefLabel/) ).map((e,i) => (i>0?"; ":"")+e.value) ;
-                  console.log("subT",title,subtitle)
+                  //console.log("subT",title,subtitle)
                }
             }
             else
@@ -1313,6 +1321,10 @@ export default class IndividualView extends React.Component<Props, State> {
        }
        */
 
+   get isCollapse() {
+      return ( (this._idList && this._idList.length > 0) || (this._labList && this._labList.length > 0) || (this._propList && this._propList.length > 0) )
+   }
+
    prepareRender()
    {
 
@@ -1325,13 +1337,14 @@ export default class IndividualView extends React.Component<Props, State> {
 
       this._labList = /*this._labList ||*/ this.getLabelsList()
 
+      //console.log("prepR",this._idList,this._propList,this._labList)
    }
 
    render() {
 
          // COMM
-               console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
-               console.log("iV assoR",this.props.assocResources);
+               //console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
+               //console.log("iV assoR",this.props.assocResources);
 
       this.prepareRender()
 
@@ -1351,22 +1364,26 @@ export default class IndividualView extends React.Component<Props, State> {
          classes.push(this.props.className);
       }
 
+
+
       let ret = (
-         <div className={classnames(...classes,"open"+ this.state.isExpanded )} onClick={this.props.onClick}>
+         <div className={classnames(...classes,"open"+ this.state.isExpanded, "isCollapse-"+this.isCollapse)} onClick={this.props.onClick}>
          {this.getNestedTitleList()}
-         <Collapse
-            in={this.state.isExpanded}
-            className={"inCollapse nohide "+ this.state.isExpanded }
-            >
-         {this._idList}
-         {this._labList}
-         {this._propList}
-         </Collapse>
+         { this.isCollapse &&
+            <Collapse
+               in={this.state.isExpanded}
+               className={"inCollapse nohide "+ this.state.isExpanded }
+               >
+            {this._idList}
+            {this._labList}
+            {this._propList}
+            </Collapse>
+         }
          </div>
       );
 
 
-               console.groupEnd()
+               //console.groupEnd()
 
       return ret ;
 
