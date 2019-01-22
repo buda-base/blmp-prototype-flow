@@ -10,8 +10,14 @@ import store from "../index.js";
 
 // no need ... for now
 const mapStateToProps = (state,ownProps) => {
-    let props = { ...ownProps, assocResources:state.data.assocResources }
 
+   let props = { ...ownProps }
+
+   let editingResourceIRI = ownProps.individual.id
+   if (editingResourceIRI) {
+       let assocResources = selectors.getAssocResources(state, editingResourceIRI);
+       props = { ...props, assocResources }
+   }
     console.log("iVc ms2p",props)
 
     return props ;

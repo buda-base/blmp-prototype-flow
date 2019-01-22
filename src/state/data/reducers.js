@@ -16,7 +16,7 @@ export type DataState = {
     failures: {[string]: string},
     resources: {[IRI:string]: Individual},
     ontology: Ontology | null,
-    assocResources:{[string]:{}}
+    assocResources:{[string]:{[string]:{}}}
     //graphText:string | null
 }
 
@@ -64,7 +64,7 @@ export const loadedResource = (state: DataState, action: actions.LoadedResourceA
 
     let assocResources = state.assocResources
     if(!assocResources) assocResources = {}
-    assocResources = {...assocResources, ...action.payload.assocResources }
+    assocResources = {...assocResources, [action.payload.IRI]:action.payload.assocResources }
 
 
     /*

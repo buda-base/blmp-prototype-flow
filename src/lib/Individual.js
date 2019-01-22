@@ -106,7 +106,7 @@ export default class Individual {
          this._hasGeneratedId = true;
       }
 
-      console.log("addProps",c,this._properties) //,c,c?c._properties:'undef');
+      //console.log("addProps",c,this._properties) //,c,c?c._properties:'undef');
 
       if(c) {
 
@@ -120,7 +120,7 @@ export default class Individual {
            let head = queue[0]
            queue.shift()
 
-            console.log("head",head)
+           //console.log("head",head)
 
            for(let s in head._superclasses) {
              queue = queue.concat(head._superclasses[s]._superclasses) ;
@@ -139,7 +139,7 @@ export default class Individual {
            if(!p.match(/\/toberemoved\//)) {
                props.push(p)
 
-               console.log("p",p)
+               //console.log("p",p)
 
                this._propTree[p] = "/class"
              }
@@ -149,13 +149,13 @@ export default class Individual {
 
          for(let s in sup){
 
-             console.log("sup",s)
+            //console.log("sup",s)
 
             for(let p of Object.keys(sup[s]._properties)) {
                if(!p.match(/\/toberemoved\//)) {
                    props.push(p)
 
-                   console.log("q",p)
+                   //console.log("q",p)
 
                    this._propTree[p] = "/super"
 
@@ -173,7 +173,7 @@ export default class Individual {
 
                   if(!anno._IRI.match(/toberemoved/)) {
 
-                     //console.log("q",anno._IRI)
+                     // // console.log("q",anno._IRI)
 
                      props.push(anno._IRI);
 
@@ -182,7 +182,7 @@ export default class Individual {
                      if(!p.match(/\/toberemoved\//)) {
                          props.push(p)
 
-                         console.log("r",p)
+                         //console.log("r",p)
 
                          this._propTree[p] = "/annotations" ;
                       }
@@ -192,13 +192,13 @@ export default class Individual {
           }
           for(let p in props){
 
-             console.log("s",onto._properties[props[p]])
+             //console.log("s",onto._properties[props[p]])
 
              this.addProperty(props[p]);
 
           }
 
-          console.log("propTree",this._propTree)
+          //console.log("propTree",this._propTree)
       }
    }
 

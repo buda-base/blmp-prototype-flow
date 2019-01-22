@@ -429,7 +429,7 @@ render() {
 
    valueRows.push(
       <ListItem
-         key={0}
+         key={key}
          style={listItemStyle} >
          {view}
          <ListItemSecondaryAction
@@ -490,7 +490,7 @@ render() {
       {
          let inline = (valueRows.length === 1) ;
 
-         console.log('rows',valueRows)
+         //console.log('rows',valueRows)
 
          return (<List className={(this.props.level == 0 ?"encaps":"")+ (inline?" ListFlex":"")}>
             <div className={inline?"ListItemInline":""}>{propertySubheader}</div>
@@ -829,23 +829,23 @@ export default class IndividualView extends React.Component<Props, State> {
    //         console.log("tapAdd2",property.IRI,property,onTapAdd)
 
    const propertyView = <IndividualProperty
-   nested={this.props.nested}
-   isEditable={isEditable}
-   onIndividualUpdated={this.props.onIndividualUpdated}
-   onLiteralChanged={onLiteralChanged}
-   onSelectedResource={this.props.onSelectedResource}
-   onTapAdd={onTapAdd}
-   onAddResource={this.props.onAddResource}
-   individual={this.props.individual}
-   level={this.props.level}
-   ontology={this.props.ontology}
-   property={property}
-   propertyValues={propertyValues}
-   propertyType={propertyType}
-   title={title}
-   tooltip={tooltip}
-   assocResources={this.props.assocResources}
-   {...this.props.individual.id.match(/([_A-Z]+[0-9]+)+$/) ? { showLabel : true }:{} }
+      nested={this.props.nested}
+      isEditable={isEditable}
+      onIndividualUpdated={this.props.onIndividualUpdated}
+      onLiteralChanged={onLiteralChanged}
+      onSelectedResource={this.props.onSelectedResource}
+      onTapAdd={onTapAdd}
+      onAddResource={this.props.onAddResource}
+      individual={this.props.individual}
+      level={this.props.level}
+      ontology={this.props.ontology}
+      property={property}
+      propertyValues={propertyValues}
+      propertyType={propertyType}
+      title={title}
+      tooltip={tooltip}
+      assocResources={this.props.assocResources}
+      {...this.props.individual.id.match(/([_A-Z]+[0-9]+)+$/) ? { showLabel : true }:{} }
    />;
 
    //         console.log("propView",propertyView.props.title,propertyView)
@@ -1203,7 +1203,8 @@ export default class IndividualView extends React.Component<Props, State> {
                if(this.props.assocResources && this.props.assocResources[bdr+title.toUpperCase()])
                {
                   subtitle = title
-                  title = this.props.assocResources[bdr+title.toUpperCase()].filter(e => e.type && e.type.match(/skos[/]core#prefLabel/) ).map(e => e.value) ;
+                  title = this.props.assocResources[bdr+title.toUpperCase()].filter(e => e.type && e.type.match(/skos[/]core#prefLabel/) ).map((e,i) => (i>0?"; ":"")+e.value) ;
+                  console.log("subT",title,subtitle)
                }
             }
             else
