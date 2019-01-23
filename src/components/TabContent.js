@@ -21,6 +21,8 @@ import Individual from 'lib/Individual';
 
 import {auth} from "../routes"
 
+import SHACLValidator from "shacl-js"
+
 import './TabContent.css';
 
 type Props = {
@@ -153,12 +155,29 @@ class TabContent extends Component<Props, State> {
             return;
         }
 
-        //console.log("updateGraph",this.props.individual)
+        console.log("updateGraph",this.props.individual)
 
         let serializer = new Serializer();
         const baseURI = 'http://purl.bdrc.io/ontology/core/';
         serializer.serialize(this.props.individual, baseURI, this.props.individual.namespaces)
-            .then((str) => {
+            .then(async (str) => {
+
+               let shapes = (await (await fetch("https://raw.githubusercontent.com/buda-base/lds-pdi/master/src/main/resources/"
+                                                   +this.props.individual.types[0].replace(/^.*?[/]([^/]+)$/,"$1")+"Shape.ttl")).text())
+
+               var validator = new SHACLValidator();
+                  validator.validate(str, "text/turtle", shapes, "text/turtle", function (e, report) {
+                      console.log("Conforms? " + report.conforms(), report,validator);
+                      if (report.conforms() === false) {
+                          report.results().forEach(function(result) {
+                              console.log(" - Severity: " + result.severity() + " for " + result.sourceConstraintComponent());
+                          });
+                      }
+                  });
+
+
+
+
                 this.setState((prevState, props) => {
 
                     return {

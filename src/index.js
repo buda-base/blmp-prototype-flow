@@ -69,14 +69,15 @@ ReactDOM.render(
 );
 
 
-// let id = "W000" ;
-// setTimeout(function(){ store.dispatch(data.createResource(id)) },750)
-// setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },1000)
+//let id = "T000" ;
+//setTimeout(function(){ store.dispatch(data.createResource(id)) },750)
+//setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },1000)
 
 
 let id = "W22084" ;
 //let id = "P1583" ;
 //let id = "G521" ;
+//let id = "T1" ;
 setTimeout(function(){ store.dispatch(data.loadResource(id)) },250)
 setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },500)
 //setTimeout(function(){ store.dispatch(ui.newTab()) },750)

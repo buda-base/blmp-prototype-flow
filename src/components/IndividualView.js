@@ -1204,7 +1204,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
          if (this.props.individual.types[0])
          {
-            subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0])+ " / case 0";
+            subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0]) //+ " / case 0";
          }
 
          if (labels && labels.length > 0) {
@@ -1218,7 +1218,7 @@ export default class IndividualView extends React.Component<Props, State> {
                subtitle = '' // 'case1 ('+title+')' ;
                if(this.props.assocResources && this.props.assocResources[bdr+title.toUpperCase()])
                {
-                  subtitle = title + " / case 1"
+                  subtitle = title //+ " / case 1"
                   title = this.props.assocResources[bdr+title.toUpperCase()].filter(e => e.type && e.type.match(/skos[/]core#prefLabel/) ).map(e => e.value).join("; ") ;
                   //console.log("subT",title,subtitle)
                }
@@ -1253,7 +1253,7 @@ export default class IndividualView extends React.Component<Props, State> {
                            return val ;
                         }).join("; ")
                         return str ;
-                     }).join(" | ") + ' / case2' ; //this.props.ontology.getMainLabel(this.props.propertyType);
+                     }).join(" | ")  //+ ' / case2' ; //this.props.ontology.getMainLabel(this.props.propertyType);
 
                }
                else subtitle = '' ;
@@ -1261,14 +1261,14 @@ export default class IndividualView extends React.Component<Props, State> {
          } else {
             title = <i>&lt;no id&gt;</i>;
 
-            subtitle = 'case3' ;
+            subtitle = '' //'case3' ;
          }
 
 
          if(this.props.propertyType && this.props.level >= 2)
          {
 
-            subtitle = this.props.ontology.getMainLabel(this.props.individual.id) + "/ case 4";
+            subtitle = this.props.ontology.getMainLabel(this.props.individual.id) //+ "/ case 4";
             //subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
 
             //subtitle = 'case4' ;

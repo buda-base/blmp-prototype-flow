@@ -25,7 +25,9 @@
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
     "redux-saga": "^0.15.6",
+    "shacl-js": "^0.0.1",
     "string-to-stream": "^1.1.0",
+    "timers-browserify": "^2.0.10",
     "url-parse": "^1.1.9"
   },
   "devDependencies": {
