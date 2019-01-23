@@ -9,6 +9,8 @@ import * as ui from '../state/ui/actions'
 export default class Auth {
 
    auth1 : WebAuth ;
+   tokenRenewalTimeout;
+
 
 
   setConfig(config)
@@ -37,6 +39,8 @@ export default class Auth {
     });
     */
     this.setConfig.bind(this)
+
+    this.scheduleRenewal();
   }
 
   handleAuthentication() {
@@ -52,12 +56,30 @@ export default class Auth {
     });
   }
 
+  renewSession() {
+     if(!this.auth1)  console.log("no auth ??",this)
+     else {
+        console.log("renewing token...")
+       this.auth1.checkSession({}, (err, authResult) => {
+           if (authResult && authResult.accessToken && authResult.idToken) {
+             this.setSession(authResult);
+           } else if (err) {
+             this.logout();
+             console.log(err);
+             alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
+           }
+       });
+    }
+  }
+
   setSession(authResult) {
     // Set the time that the Access Token will expire at
     let expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
     localStorage.setItem('access_token', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
+    // automatically try to renew token on expiration
+    this.scheduleRenewal();
     // navigate to the home route
     history.replace('/');
   }
@@ -67,6 +89,8 @@ export default class Auth {
     localStorage.removeItem('access_token');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
+    // Clear token renewal
+    clearTimeout(this.tokenRenewalTimeout);
     // navigate to the home route
     history.replace('/');
     store.dispatch(ui.loggedOut())
@@ -78,4 +102,15 @@ export default class Auth {
     let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
     return new Date().getTime() < expiresAt;
   }
+
+   scheduleRenewal() {
+      let expiresAt = JSON.parse(localStorage.getItem('expires_at'));
+      const timeout = expiresAt - Date.now();
+      console.log("tO",timeout)
+      if (timeout > 0) {
+        this.tokenRenewalTimeout = setTimeout(() => {
+          this.renewSession();
+       }, timeout - 10000);
+      }
+   }
 }
