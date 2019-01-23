@@ -318,9 +318,9 @@ render() {
    // Values
 
    let valueRows = [];
+   let view = null;
    for (let propertyValue of this.props.propertyValues) {
       let sty = ""
-      let view = null;
       let titleView = undefined;
       let isEditable = !this.props.nested || this.props.isEditable(propertyValue);
       let classes = ['individualRow'];
@@ -383,8 +383,10 @@ render() {
             break;
          }
       }
+
+
+      //console.log("ref",propertyValue._uniqueId)
       view = <IndividualView
-               ref="indiView"
                assocResources={this.props.assocResources}
                onSelectedResource={this.props.onSelectedResource}
                onIndividualUpdated={this.props.onIndividualUpdated}
@@ -403,6 +405,7 @@ render() {
                onTapAdd={onTapAdd}
                onAddResource={this.props.onAddResource}
             />;
+
 
 
       //                 console.log("view2",view)
@@ -496,10 +499,12 @@ render() {
       {
          let inline = (valueRows.length === 1) ;
 
-         //console.log('rows',valueRows)
+         //console.log('rows',valueRows,view)
+         //if(Object.keys(this.refs).length > 0)console.log("refs!",this.refs)
+         //if(this.refs["indiView"]) console.log(this.refs["indiView"].props.individual._uniqueId)
 
          return (<List className={(this.props.level == 0 ?"encaps":"")+ (inline?" ListFlex":"")}>
-            <div className={(inline?"ListItemInline":"")+(this.refs.indiView && this.refs.indiView.isCollapse ? " w100sibling":"")}>{propertySubheader}</div>
+            <div className={(inline?"ListItemInline":"") /*+(valueRows.length === 1 && view.isCollapse ? " w100sibling":"")*/}>{propertySubheader}</div>
                {valueRows}
             </List>);
          }
@@ -544,6 +549,9 @@ export default class IndividualView extends React.Component<Props, State> {
          isExpanded: props.isExpanded,
          open: false,
       }
+
+      this.isCollapse.bind(this)
+
    }
 
 /*
@@ -1210,8 +1218,8 @@ export default class IndividualView extends React.Component<Props, State> {
                subtitle = '' // 'case1 ('+title+')' ;
                if(this.props.assocResources && this.props.assocResources[bdr+title.toUpperCase()])
                {
-                  subtitle = title
-                  title = this.props.assocResources[bdr+title.toUpperCase()].filter(e => e.type && e.type.match(/skos[/]core#prefLabel/) ).map((e,i) => (i>0?"; ":"")+e.value) ;
+                  subtitle = title + " / case 1"
+                  title = this.props.assocResources[bdr+title.toUpperCase()].filter(e => e.type && e.type.match(/skos[/]core#prefLabel/) ).map(e => e.value).join("; ") ;
                   //console.log("subT",title,subtitle)
                }
             }
@@ -1225,7 +1233,30 @@ export default class IndividualView extends React.Component<Props, State> {
 
                title = this.props.ontology.getMainLabel(this.props.individual.types[0])
 
-               subtitle = 'case2' ; //this.props.ontology.getMainLabel(this.props.propertyType);
+               console.log("case2",this.props.individual,this.state)
+
+               if(!this.state.isExpanded) {
+
+                  const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+
+                  subtitle = Object.keys(this.props.individual._properties)
+                     .filter(e => e !== rdf+'type' && this.props.individual._properties[e].length > 0)
+                     .map(e => {
+                        let str = this.props.ontology.getMainLabel(e)+": "
+                        str += this.props.individual._properties[e].map(v => {
+                           let val = ""
+                           if(v.value) val = v.value
+                           else if(v.id && this.props.assocResources && this.props.assocResources[v.id]) {
+                              val = this.props.assocResources[v.id].filter(f => f.type && f.type.match(/skos[/]core#prefLabel/) ).map(f => f.value).join("; ") ;
+                           }
+                           else val = this.props.ontology.getMainLabel(v.id)
+                           return val ;
+                        }).join("; ")
+                        return str ;
+                     }).join(" | ") + ' / case2' ; //this.props.ontology.getMainLabel(this.props.propertyType);
+
+               }
+               else subtitle = '' ;
             }
          } else {
             title = <i>&lt;no id&gt;</i>;
@@ -1236,9 +1267,11 @@ export default class IndividualView extends React.Component<Props, State> {
 
          if(this.props.propertyType && this.props.level >= 2)
          {
+
+            subtitle = this.props.ontology.getMainLabel(this.props.individual.id) + "/ case 4";
             //subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
 
-            subtitle = 'case4' ;
+            //subtitle = 'case4' ;
          }
 
 
@@ -1321,8 +1354,13 @@ export default class IndividualView extends React.Component<Props, State> {
        }
        */
 
-   get isCollapse() {
-      return ( (this._idList && this._idList.length > 0) || (this._labList && this._labList.length > 0) || (this._propList && this._propList.length > 0) )
+   isCollapse() {
+
+      if( (this._idList && this._idList.length > 0) || (this._labList && this._labList.length > 0) || (this._propList && this._propList.length > 0) )
+         return true
+      else {
+         return false
+      }
    }
 
    prepareRender()
@@ -1367,9 +1405,9 @@ export default class IndividualView extends React.Component<Props, State> {
 
 
       let ret = (
-         <div className={classnames(...classes,"open"+ this.state.isExpanded, "isCollapse-"+this.isCollapse)} onClick={this.props.onClick}>
+         <div className={classnames(...classes,"open"+ this.state.isExpanded, "isCollapse-"+this.isCollapse())} onClick={this.props.onClick}>
          {this.getNestedTitleList()}
-         { this.isCollapse &&
+         { this.isCollapse() &&
             <Collapse
                in={this.state.isExpanded}
                className={"inCollapse nohide "+ this.state.isExpanded }
@@ -1381,6 +1419,8 @@ export default class IndividualView extends React.Component<Props, State> {
          }
          </div>
       );
+
+
 
 
                //console.groupEnd()
