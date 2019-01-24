@@ -235,7 +235,7 @@ class TabContent extends Component<Props, State> {
             this.updateGraphText();
         }
 
-         console.log("tabrender",this.props,this.state)
+         //console.log("tabrender",this.props,this.state)
 
         if(this.props.addedFoundResource) this._cache[this.props.editingResourceIRI] = false
         this.prepareRender()

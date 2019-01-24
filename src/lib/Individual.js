@@ -98,7 +98,7 @@ export default class Individual {
    addDefaultProperties(c:RDFClass,addAnno:boolean=false)
    {
 
-         // console.log("id?",this._id)
+          console.log("id?",this._id,c)
 
       if (this._id === undefined) {
          // console.log("id set")
@@ -115,12 +115,16 @@ export default class Individual {
 
          let sup = [].concat(c._superclasses)
          let queue = sup.slice()
+
+
+         console.log("queue",queue,sup)
+
          while( queue.length > 0 )
          {
            let head = queue[0]
            queue.shift()
 
-           //console.log("head",head)
+           console.log("head",head._superclasses,sup)
 
            for(let s in head._superclasses) {
              queue = queue.concat(head._superclasses[s]._superclasses) ;
@@ -130,7 +134,7 @@ export default class Individual {
            // console.log("queue",queue)
          }
 
-         // console.log("sup",sup)
+         console.log("sup",sup)
 
          let onto = store.getState().data.ontology
          let props = []

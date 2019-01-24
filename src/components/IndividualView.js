@@ -291,7 +291,7 @@ render() {
    const listStyle = {padding:"0 16px 0 0",margin:"0px 0px 5px 0px"}
    //,boxShadow: "0px 5px 5px -4px rgba(0,0,0,0.2)"}
 
-   console.log("property",this.props)
+   //console.log("property",this.props)
 
    const propertySubheader = [<ListItem style={listStyle} >
    {this.props.isEditable() &&  //!this.props.nested && this.props.level < 1 &&
@@ -299,7 +299,7 @@ render() {
       <IconButton
          onClick={this._list ? this.handleClick : onTapAdd}
          style={iconStyle}
-         title={ "Add "
+         title={ "add a new "
             //+ (this.props.property&&this.props.property.ranges?this.props.property.ranges.map(e => this.props.ontology.getMainLabel(e)):"")
             + (this.props.propertyType?this.props.ontology.getMainLabel(this.props.propertyType):"")}
          {...(this.props.title === 'ID'?{disabled:true,title:"only one allowed"}:{})}
@@ -634,7 +634,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
 
       //
-      console.log("add",this.props.individual,propertyType,property,type);
+      console.log("add",this.props.individual,propertyType,property,type,val);
 
       if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
       {
@@ -654,13 +654,15 @@ export default class IndividualView extends React.Component<Props, State> {
          if (ontology.isClass(propertyRange)) {
             const propertyIndividual = new Individual();
 
+
             if(val && val != "") {
                let v = ontology._classes[propertyRange] ;
                if(v && !v.hasSuperclass(typeIRI)) { propertyIndividual.addType(val); }
                else { propertyIndividual.id = val ; }
-               propertyIndividual.addDefaultProperties(ontology._classes[val])
+               propertyIndividual.addDefaultProperties(ontology._classes[val])               
             }
-            else { propertyIndividual.addType(propertyRange);
+            else {
+               propertyIndividual.addType(propertyRange);
                propertyIndividual.addDefaultProperties(ontology._classes[propertyRange])
             }
             this._editableIndividuals.push(propertyIndividual);
@@ -1073,7 +1075,7 @@ export default class IndividualView extends React.Component<Props, State> {
           }
 
          // console.log("newprops",newprops,propertyTypes,this.props)
-         lists.push(
+         if(this.props.isEditable) lists.push(
             <List key={0}>
                <ListItem style={{paddingLeft:0}}>
                   <ListItemIcon>
@@ -1248,7 +1250,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
                title = this.props.ontology.getMainLabel(this.props.individual.types[0])
 
-               console.log("case2",this.props.individual,this.state)
+               //console.log("case2",this.props.individual,this.state)
 
                if(!this.state.isExpanded) {
 
