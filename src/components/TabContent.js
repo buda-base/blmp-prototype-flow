@@ -57,6 +57,7 @@ type Props = {
 
 type State = {
     reset:boolean,
+    graphId:string | null,
     graphText: string | null,
     hidePreview: boolean,
     splitWidth: number,
@@ -184,7 +185,8 @@ class TabContent extends Component<Props, State> {
 
                            return {
                                ...prevState,
-                               graphText: rep+"\n\n"+str
+                               graphText: rep+"\n\n"+str,
+                               graphId:that.props.individual._id
                            }
                       });
                   });
@@ -214,6 +216,8 @@ class TabContent extends Component<Props, State> {
         {
             let ref = this.props.editingResourceIRI
 
+            //this.updateGraphText();
+
             // console.log("cache",this.props.editingResourceIRI,this._cache)
 
             this._cache[ref] = this._cache[ref] ||
@@ -227,11 +231,11 @@ class TabContent extends Component<Props, State> {
    }
 
     render() {
-        if (!this.state.graphText && this.props.individual) {
+        if (this.props.individual && (!this.state.graphText || this.props.individual.id !== this.state.graphId) ) {
             this.updateGraphText();
         }
 
-        // console.log("tabrender",this.props)
+         console.log("tabrender",this.props,this.state)
 
         if(this.props.addedFoundResource) this._cache[this.props.editingResourceIRI] = false
         this.prepareRender()
