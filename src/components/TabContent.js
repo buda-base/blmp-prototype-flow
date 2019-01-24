@@ -155,36 +155,39 @@ class TabContent extends Component<Props, State> {
             return;
         }
 
-        console.log("updateGraph",this.props.individual)
+        console.log("updateGraph",this.props.individual,this.props.config.ldspdi)
 
         let serializer = new Serializer();
         const baseURI = 'http://purl.bdrc.io/ontology/core/';
         serializer.serialize(this.props.individual, baseURI, this.props.individual.namespaces)
             .then(async (str) => {
 
-               let shapes = (await (await fetch("https://raw.githubusercontent.com/buda-base/lds-pdi/master/src/main/resources/"
-                                                   +this.props.individual.types[0].replace(/^.*?[/]([^/]+)$/,"$1")+"Shape.ttl")).text())
+               let shapes = (await (await fetch( this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index] + "/shacl/"
+                                                 +this.props.individual.types[0].replace(/^.*?[/]([^/]+)$/,"$1")+"Shape")).text())
+
+               let that = this
 
                var validator = new SHACLValidator();
                   validator.validate(str, "text/turtle", shapes, "text/turtle", function (e, report) {
-                      console.log("Conforms? " + report.conforms(), report,validator);
+
+                      let rep = "# Conforms? " + report.conforms()
+
+                      console.log(rep, report, validator);
+
                       if (report.conforms() === false) {
                           report.results().forEach(function(result) {
-                              console.log(" - Severity: " + result.severity() + " for " + result.sourceConstraintComponent());
+                              rep += "\n# - Severity: " + result.severity() + " for " + result.sourceConstraintComponent();
                           });
                       }
+
+                      that.setState((prevState, props) => {
+
+                           return {
+                               ...prevState,
+                               graphText: rep+"\n\n"+str
+                           }
+                      });
                   });
-
-
-
-
-                this.setState((prevState, props) => {
-
-                    return {
-                        ...prevState,
-                        graphText: str
-                    }
-                });
             });
     }
 
@@ -327,7 +330,7 @@ class TabContent extends Component<Props, State> {
                             ref={(split) => this._secondarySplitPane = split} >
                             <SplitPane split="horizontal" size={90} allowResize={false} >
                                <div>
-                                    <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.props.hidePreview ? "Show" : "Hide") +  " Preview"}</Button>
+                                    <Button raised style={previewToggleStyle} onClick={toggleShowPreview}>{(this.props.hidePreview ? "Show" : "Hide") +  " TTL CODE"}</Button>
                                </div>
                                <ResourceViewContainer
                                     ontology={this.props.ontology}
