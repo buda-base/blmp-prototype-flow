@@ -290,12 +290,18 @@ render() {
    const popStyle = {horizontal: 'left', vertical: 'bottom'} ;
    const listStyle = {padding:"0 16px 0 0",margin:"0px 0px 5px 0px"}
    //,boxShadow: "0px 5px 5px -4px rgba(0,0,0,0.2)"}
+
+   console.log("property",this.props)
+
    const propertySubheader = [<ListItem style={listStyle} >
    {this.props.isEditable() &&  //!this.props.nested && this.props.level < 1 &&
       <ListItemIcon>
       <IconButton
          onClick={this._list ? this.handleClick : onTapAdd}
          style={iconStyle}
+         title={ "Add "
+            //+ (this.props.property&&this.props.property.ranges?this.props.property.ranges.map(e => this.props.ontology.getMainLabel(e)):"")
+            + (this.props.propertyType?this.props.ontology.getMainLabel(this.props.propertyType):"")}
          {...(this.props.title === 'ID'?{disabled:true,title:"only one allowed"}:{})}
       >
          <AddCircleIcon style={circleStyle}/>
@@ -421,12 +427,21 @@ render() {
       }
    };
    let removeButton = "";
+
+   let txtRemo = "remove "
+   if(!propertyValue._id) txtRemo += propertyValue._value
+   else if(!propertyValue._hasGeneratedId) txtRemo += this.props.ontology.getMainLabel(propertyValue._id)
+   else txtRemo += this.props.ontology.getMainLabel(propertyValue._types[0])
+   txtRemo += " from " + this.props.ontology.getMainLabel(this.props.property.IRI)
+   //txtRemo += "\n"+JSON.stringify(propertyValue,null,3)
+
    if (isEditable && this.props.title != "ID") {
       const style = {...redColor, ...iconSizes.small} ;
       removeButton =
          <IconButton
             onClick={onTapRemove}
-            className="removeButton"   >
+            className="removeButton"
+            title={txtRemo} >
             <RemoveCircleIcon style={style}/>
          </IconButton>;
    }
@@ -1325,7 +1340,7 @@ export default class IndividualView extends React.Component<Props, State> {
             listItem.push(
                <ListItemSecondaryAction className="plusBut">
                <IconButton
-               onClick={this.onOpenNewTab.bind(this)}
+                  onClick={this.onOpenNewTab.bind(this)}
                >
                <AddBoxIcon />
                </IconButton>
