@@ -117,24 +117,23 @@ export default class Individual {
          let queue = sup.slice()
 
 
-         console.log("queue",queue,sup)
+         //console.log("queue",queue,sup)
 
          while( queue.length > 0 )
          {
            let head = queue[0]
            queue.shift()
 
-           console.log("head",head._superclasses,sup)
+           //console.log("head",head.IRI)
 
-           for(let s in head._superclasses) {
-             queue = queue.concat(head._superclasses[s]._superclasses) ;
-             sup = sup.concat(head._superclasses[s]._superclasses) ;
-           }
+           queue = queue.concat(head._superclasses) ;
+
+           sup = sup.concat(head._superclasses) ;
 
            // console.log("queue",queue)
          }
 
-         console.log("sup",sup)
+         //console.log("sup",sup)
 
          let onto = store.getState().data.ontology
          let props = []

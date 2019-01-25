@@ -659,7 +659,7 @@ export default class IndividualView extends React.Component<Props, State> {
                let v = ontology._classes[propertyRange] ;
                if(v && !v.hasSuperclass(typeIRI)) { propertyIndividual.addType(val); }
                else { propertyIndividual.id = val ; }
-               propertyIndividual.addDefaultProperties(ontology._classes[val])               
+               propertyIndividual.addDefaultProperties(ontology._classes[val])
             }
             else {
                propertyIndividual.addType(propertyRange);
@@ -1237,6 +1237,10 @@ export default class IndividualView extends React.Component<Props, State> {
                {
                   subtitle = title //+ " / case 1"
                   title = this.props.assocResources[bdr+title.toUpperCase()].filter(e => e.type && e.type.match(/skos[/]core#prefLabel/) ).map(e => e.value).join("; ") ;
+                  if(title === "") {
+                     title = this.props.ontology.getMainLabel(this.props.individual.id);
+                     subtitle = "" ;
+                  }
                   //console.log("subT",title,subtitle)
                }
             }
