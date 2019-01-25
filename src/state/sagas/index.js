@@ -49,7 +49,12 @@ export function* loadResource(IRI) {
 
    yield put(dataActions.loading(IRI, true));
    try {
-      let assoR = yield call([api, api.loadAssocResources], IRI);
+
+      let assoR = {};
+      let config = store.getState().data.config
+      if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline") {
+         assoR = yield call([api, api.loadAssocResources], IRI);
+      }
       //yield put(dataActions.assocResources(IRI, assoR.data));
 
       let individual = yield call([api, api.getResource], IRI);

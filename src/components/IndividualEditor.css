@@ -13,6 +13,8 @@
 /* .prefLabel  */
 .literalView { line-height:1.1 !important; display:flex;align-items: flex-end;}
 
+.Pane.horizontal.Pane1  { min-height:90px; height:auto !important; }
+
 .inDivHeading { display:flex; align-items: center; justify-content: space-between; width:100%; position:relative; }
 .inDivHeading > div:last-child { margin:0 15px; font-size:20px; text-align:right; }
 

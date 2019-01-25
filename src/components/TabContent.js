@@ -22,6 +22,12 @@ import Individual from 'lib/Individual';
 import {auth} from "../routes"
 
 import SHACLValidator from "shacl-js"
+import * as rdf from 'rdflib';
+import N3Parser from 'rdf-parser-n3';
+import jsonldSerializer from 'rdf-serializer-jsonld';
+import JsonLdSerializerExt from 'rdf-serializer-jsonld-ext';
+import rdfext from 'rdf-ext';
+import stringToStream from 'string-to-stream';
 
 import './TabContent.css';
 
@@ -165,6 +171,43 @@ class TabContent extends Component<Props, State> {
 
                let shapes = (await (await fetch( this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index] + "/shacl/"
                                                  +this.props.individual.types[0].replace(/^.*?[/]([^/]+)$/,"$1")+"Shape")).text())
+
+
+            /*
+               let store = rdf.graph()
+
+               let n3res ;
+               rdf.parse(shapes, store, "tmp:shape", "text/n3", (error, n3res) => {
+                   if (!error) {
+                      console.log("n3",n3res)
+
+                       rdf.serialize(shapes, n3res, "tmp:shape", "application/ld+json", (error2, res) => {
+                          if (!error2) {
+                              console.log("jsonld",res) // not working...?
+                          }
+                          else {
+                              console.error(error2);
+                          }
+
+                       })
+                   }
+               });
+            */
+
+               let parser = new N3Parser({factory: rdf});
+               let quadStream = parser.import(stringToStream(shapes));
+
+               /*
+               let serializer = new jsonldSerializer();
+               let jsonldStream = serializer.import(quadStream);
+               let jsonld = '';
+               jsonldStream.on('data', data => console.log('jsonld', data)); // outputs an flat array
+               */
+
+               let serializer = new JsonLdSerializerExt({flatten:true})
+               let jsonldStream = serializer.import(quadStream)
+               jsonldStream.on('data', data => console.log("data",data));  // outputs a @graph
+
 
                let that = this
 
