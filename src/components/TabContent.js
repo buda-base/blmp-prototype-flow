@@ -169,8 +169,8 @@ class TabContent extends Component<Props, State> {
         serializer.serialize(this.props.individual, baseURI, this.props.individual.namespaces)
             .then(async (str) => {
 
-               let shapes = (await (await fetch( this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index] + "/shacl/"
-                                                 +this.props.individual.types[0].replace(/^.*?[/]([^/]+)$/,"$1")+"Shape")).text())
+               let shapes = (await (await fetch( this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index] + "/shape/"
+                                                 +this.props.individual.types[0].replace(/^.*?[/]([^/]+)$/,"$1"))).text())
 
 
             /*
