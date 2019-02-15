@@ -101,16 +101,17 @@ function* indexDBcheck(host:string)
 }
 
 
-function fsAPIcheck(host:string)
+function* fsAPIcheck(host:string)
 {
 
    let config = store.getState().data.config
-   console.log("ldspdi",config.ldspdi,window.navigator.storage)
+   console.log("ldspdi",config.ldspdi)
    if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline")
    {
-      console.log("checked config")
+      let navig = window.navigator || navigator
+      console.log("checked config",navig)
 
-      if (window.navigator.storage && window.navigator.storage.persist)
+      if (navig.storage && navig.storage.persist)
       {
 
          console.log("checked storage")
@@ -125,8 +126,8 @@ function fsAPIcheck(host:string)
 
          //v2
          async function isStoragePersisted() {
-           return await window.navigator.storage && window.navigator.storage.persisted &&
-             window.navigator.storage.persisted();
+           return await navig.storage && navig.storage.persisted &&
+               navig.storage.persisted();
          }
 
          isStoragePersisted().then(async isPersisted => {
@@ -135,7 +136,7 @@ function fsAPIcheck(host:string)
            } else {
              console.log(":( Storage is not persisted.");
              console.log("Trying to persist..:");
-             if (await window.navigator.storage.persist()) {
+             if (await navig.storage.persist()) {
                console.log(":) We successfully turned the storage to be persisted.");
              } else {
                console.log(":( Failed to make storage persisted");
@@ -143,7 +144,7 @@ function fsAPIcheck(host:string)
            }
          })
 
-         window.navigator.storage.estimate().then(function(estimate) {
+         navig.storage.estimate().then(function(estimate) {
             console.log("quota="+estimate.usage+"/"+estimate.quota)
 
             // /!\ not supported in Firefox /!\
@@ -170,13 +171,13 @@ function fsAPIcheck(host:string)
       }
 
 
-      //yield put(dataActions.chosenHost(host));
-      //yield put(dataActions.hostError("offline","offline endpoint"));
+      yield put(dataActions.chosenHost(host));
+      yield put(dataActions.hostError("offline","offline endpoint"));
    }
    else {
 
-      //yield put(dataActions.chosenHost(host));
-      //yield put(dataActions.hostError(host,"offline endpoint"));
+      yield put(dataActions.chosenHost(host));
+      yield put(dataActions.hostError(host,"offline endpoint"));
    }
 }
 
