@@ -262,7 +262,7 @@ export default class ResourceSelector extends React.Component<Props> {
          host = this.props.config.ldspdi.endpoints[this.props.config.ldspdi.index]
          menu = this.props.config.ldspdi.endpoints.map((e,k) => <MenuItem key={k} onClick={(ev) => this.handleMenu(ev,e)}>{e}</MenuItem> )
          menu.push(<TextField
-            key={0}
+            key={75}
             style={textStyle}
             label="New URL"
             id="url"
@@ -467,7 +467,7 @@ export default class ResourceSelector extends React.Component<Props> {
                </Typography>
                {loggedIn &&
                   [
-                     <div key={0} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
+                     <div key={72} style={{display:"flex",justifyContent:"space-between",alignItems:"baseline"}}>
                         <TextField
                            autoFocus
                            label="Resource ID"

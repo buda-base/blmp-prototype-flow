@@ -75,43 +75,129 @@ export function* loadResource(IRI) {
    }
 }
 
+function* indexDBcheck(host:string)
+{
+
+   let config = store.getState().data.config
+   console.log("ldspdi",config.ldspdi)
+   if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline")
+   {
+      if(window.confirm("[experimental feature]\nstart populating indexedDB from previous endpoint ?\n"+config.ldspdi.endpoints[config.ldspdi.index]))
+      {
+         alert("[experimental feature]\nplease wait until endpoint actually set to 'Offline'\n(this may take several minutes\nopen console/network to view progress)")
+         yield put(dataActions.hostError("offline","offline endpoint"));
+         populateDB(api);
+      }
+      else {
+         yield put(dataActions.chosenHost(host));
+         yield put(dataActions.hostError("offline","offline endpoint"));
+      }
+   }
+   else {
+
+      yield put(dataActions.chosenHost(host));
+      yield put(dataActions.hostError(host,"offline endpoint"));
+   }
+}
+
+
+function* fsAPIcheck(host:string)
+{
+
+   let config = store.getState().data.config
+   console.log("ldspdi",config.ldspdi)
+   if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline")
+   {
+
+      if (window.navigator.storage && window.navigator.storage.persist)
+      {
+         /* // check permanent-storage permission (Firefox only)
+         window.navigator.permissions.query({name:'persistent-storage'}).then(function(permissionStatus) {
+            console.log('persistent-storage permission status is ', permissionStatus.state);
+         }).catch( (failure) => {
+            console.error("permissions",failure,window.navigator.permissions);
+         });
+         */
+
+         //v2
+         async function isStoragePersisted() {
+           return await window.navigator.storage && window.navigator.storage.persisted &&
+             window.navigator.storage.persisted();
+         }
+
+         isStoragePersisted().then(async isPersisted => {
+           if (isPersisted) {
+             console.log(":) Storage is successfully persisted.");
+           } else {
+             console.log(":( Storage is not persisted.");
+             console.log("Trying to persist..:");
+             if (await window.navigator.storage.persist()) {
+               console.log(":) We successfully turned the storage to be persisted.");
+             } else {
+               console.log(":( Failed to make storage persisted");
+             }
+           }
+         })
+
+         window.navigator.storage.estimate().then(function(estimate) {
+            console.log("quota="+estimate.usage+"/"+estimate.quota)
+
+            // /!\ not supported in Firefox /!\
+            window.webkitRequestFileSystem(window.PERSISTENT, 10*1024*1024*1024, (fs) => {
+               console.log('Opened file system: ', fs);
+            }, (error) => {
+               console.error("FS error",error)
+            });
+
+         })
+
+         /* //v1
+         window.navigator.storage.persist().then(function(persistent) {
+            console.log("storage",window.navigator.storage)
+            if (persistent)
+               console.log("Storage will not be cleared except by explicit user action");
+            else
+               console.log("Storage may be cleared by the UA under storage pressure.");
+         }).catch( (failure) => {
+            console.error("persist",failure);
+         });
+         */
+
+      }
+
+
+      yield put(dataActions.chosenHost(host));
+      yield put(dataActions.hostError("offline","offline endpoint"));
+   }
+   else {
+
+      yield put(dataActions.chosenHost(host));
+      yield put(dataActions.hostError(host,"offline endpoint"));
+   }
+}
+
+
+
 export function* chooseHost(host:string) {
 
 
    if(host === "offline") {
 
-      let config = store.getState().data.config
-      console.log("ldspdi",config.ldspdi)
-      if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline")
+      //yield call(indexDBcheck, host);
+      yield call(fsAPIcheck, host);
+   }
+   else {
+
+      try
       {
-         if(window.confirm("[experimental feature]\nstart populating indexedDB from previous endpoint ?\n"+config.ldspdi.endpoints[config.ldspdi.index]))
-         {
-            alert("[experimental feature]\nplease wait until endpoint actually set to 'Offline'\n(this may take several minutes\nopen console/network to view progress)")
-            yield put(dataActions.hostError("offline","offline endpoint"));
-            populateDB(api);
-         }
-         else {
-            yield put(dataActions.chosenHost(host));
-            yield put(dataActions.hostError("offline","offline endpoint"));
-         }
-      }
-      else {
-
+         yield call([api, api.testHost], host);
          yield put(dataActions.chosenHost(host));
-         yield put(dataActions.hostError(host,"offline endpoint"));
       }
-      return
-   }
-
-   try
-   {
-      yield call([api, api.testHost], host);
-      yield put(dataActions.chosenHost(host));
-   }
-   catch(e)
-   {
-      yield put(dataActions.chosenHost(host));
-      yield put(dataActions.hostError(host,e.message));
+      catch(e)
+      {
+         yield put(dataActions.chosenHost(host));
+         yield put(dataActions.hostError(host,e.message));
+      }
    }
 }
 
