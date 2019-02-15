@@ -101,11 +101,11 @@ function* indexDBcheck(host:string)
 }
 
 
-function* fsAPIcheck(host:string)
+function fsAPIcheck(host:string)
 {
 
    let config = store.getState().data.config
-   console.log("ldspdi",config.ldspdi)
+   console.log("ldspdi",config.ldspdi,window.navigator.storage)
    if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline")
    {
       console.log("checked config")
@@ -170,13 +170,13 @@ function* fsAPIcheck(host:string)
       }
 
 
-      yield put(dataActions.chosenHost(host));
-      yield put(dataActions.hostError("offline","offline endpoint"));
+      //yield put(dataActions.chosenHost(host));
+      //yield put(dataActions.hostError("offline","offline endpoint"));
    }
    else {
 
-      yield put(dataActions.chosenHost(host));
-      yield put(dataActions.hostError(host,"offline endpoint"));
+      //yield put(dataActions.chosenHost(host));
+      //yield put(dataActions.hostError(host,"offline endpoint"));
    }
 }
 
