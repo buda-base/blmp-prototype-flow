@@ -108,9 +108,13 @@ function* fsAPIcheck(host:string)
    console.log("ldspdi",config.ldspdi)
    if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline")
    {
+      console.log("checked config")
 
       if (window.navigator.storage && window.navigator.storage.persist)
       {
+
+         console.log("checked storage")
+
          /* // check permanent-storage permission (Firefox only)
          window.navigator.permissions.query({name:'persistent-storage'}).then(function(permissionStatus) {
             console.log('persistent-storage permission status is ', permissionStatus.state);
