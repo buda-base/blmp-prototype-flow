@@ -155,6 +155,31 @@ class TabContent extends Component<Props, State> {
          }})(this,width), 500) ;
     }
 
+    updateGraphText() {
+
+        if (!this.props.individual) {
+            return;
+        }
+
+        console.log("updateGraph",this.props.individual)
+
+        let serializer = new Serializer();
+        const baseURI = 'http://purl.bdrc.io/ontology/core/';
+        serializer.serialize(this.props.individual, baseURI, this.props.individual.namespaces)
+            .then((str) => {
+                this.setState((prevState, props) => {
+
+                    return {
+                        ...prevState,
+                        graphText: str
+                    }
+                });
+            });
+    }
+
+    // with SHACL validation - WIP 
+
+    /*
 
     updateGraphText() {
 
@@ -173,36 +198,36 @@ class TabContent extends Component<Props, State> {
                                                  +this.props.individual.types[0].replace(/^.*?[/]([^/]+)$/,"$1"))).text())
 
 
-            /*
-               let store = rdf.graph()
+            
+            //    let store = rdf.graph()
 
-               let n3res ;
-               rdf.parse(shapes, store, "tmp:shape", "text/n3", (error, n3res) => {
-                   if (!error) {
-                      console.log("n3",n3res)
+            //    let n3res ;
+            //    rdf.parse(shapes, store, "tmp:shape", "text/n3", (error, n3res) => {
+            //        if (!error) {
+            //           console.log("n3",n3res)
 
-                       rdf.serialize(shapes, n3res, "tmp:shape", "application/ld+json", (error2, res) => {
-                          if (!error2) {
-                              console.log("jsonld",res) // not working...?
-                          }
-                          else {
-                              console.error(error2);
-                          }
+            //            rdf.serialize(shapes, n3res, "tmp:shape", "application/ld+json", (error2, res) => {
+            //               if (!error2) {
+            //                   console.log("jsonld",res) // not working...?
+            //               }
+            //               else {
+            //                   console.error(error2);
+            //               }
 
-                       })
-                   }
-               });
-            */
+            //            })
+            //        }
+            //    });
+            
 
                let parser = new N3Parser({factory: rdf});
                let quadStream = parser.import(stringToStream(shapes));
 
-               /*
-               let serializer = new jsonldSerializer();
-               let jsonldStream = serializer.import(quadStream);
-               let jsonld = '';
-               jsonldStream.on('data', data => console.log('jsonld', data)); // outputs an flat array
-               */
+               
+            //    let serializer = new jsonldSerializer();
+            //    let jsonldStream = serializer.import(quadStream);
+            //    let jsonld = '';
+            //    jsonldStream.on('data', data => console.log('jsonld', data)); // outputs an flat array
+               
 
                let serializer = new JsonLdSerializerExt({flatten:true})
                let jsonldStream = serializer.import(quadStream)
@@ -233,8 +258,12 @@ class TabContent extends Component<Props, State> {
                            }
                       });
                   });
+
             });
+
     }
+
+    */
 
     resetRender()
     {
@@ -274,7 +303,9 @@ class TabContent extends Component<Props, State> {
    }
 
     render() {
-        if (this.props.individual && (!this.state.graphText || this.props.individual.id !== this.state.graphId) ) {
+
+        //if (this.props.individual && (!this.state.graphText || this.props.individual.id !== this.state.graphId) ) { /* WIP SHACL */        
+        if (!this.state.graphText && this.props.individual) {
             this.updateGraphText();
         }
 
