@@ -426,7 +426,7 @@ export default class API {
           // let url = "http://localhost:8080/resource/templates" ; //this._getResourceURL(id);
 
           let config = store.getState().data.config.ldspdi
-          let url = config.endpoints[config.index]+"/query" ;
+          let url = config.endpoints[config.index]+"/query/table" ;
           let data = this.getSearchContents(url, key);
 
          // console.log("_reData");
