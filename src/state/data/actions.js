@@ -1,5 +1,5 @@
 // @flow
-import { createAction } from 'redux-actions';
+// import { createAction } from 'redux-actions';
 import type { Action } from 'state/actions';
 import Individual from 'lib/Individual';
 import Ontology from '../../lib/Ontology';

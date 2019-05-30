@@ -1,6 +1,6 @@
 // @flow
-import * as ui from '../state/ui/actions';
-import store from 'index';
+// import * as ui from '../state/ui/actions';
+// import store from 'index';
 import React, { Component } from 'react';
 
 import SplitPane from 'react-split-pane';
@@ -21,13 +21,13 @@ import Individual from 'lib/Individual';
 
 import {auth} from "../routes"
 
-import SHACLValidator from "shacl-js"
-import * as rdf from 'rdflib';
-import N3Parser from 'rdf-parser-n3';
-import jsonldSerializer from 'rdf-serializer-jsonld';
-import JsonLdSerializerExt from 'rdf-serializer-jsonld-ext';
-import rdfext from 'rdf-ext';
-import stringToStream from 'string-to-stream';
+// import SHACLValidator from "shacl-js"
+// import * as rdf from 'rdflib';
+// import N3Parser from 'rdf-parser-n3';
+// import jsonldSerializer from 'rdf-serializer-jsonld';
+// import JsonLdSerializerExt from 'rdf-serializer-jsonld-ext';
+// import rdfext from 'rdf-ext';
+// import stringToStream from 'string-to-stream';
 
 import './TabContent.css';
 
@@ -113,7 +113,7 @@ class TabContent extends Component<Props, State> {
 
     updateSplitWidth(width : number)
     {
-      if(this.updaSpli != 0) clearTimeout(this.updaSpli);
+      if(this.updaSpli !== 0) clearTimeout(this.updaSpli);
       this.updaSpli = setTimeout((function(that,wid)
       {
          return function() {
@@ -135,7 +135,7 @@ class TabContent extends Component<Props, State> {
     }
 
     updateSubSplitWidth(width : number) {
-      if(this.updaSuSpli != 0) clearTimeout(this.updaSuSpli);
+      if(this.updaSuSpli !== 0) clearTimeout(this.updaSuSpli);
       this.updaSuSpli = setTimeout((function(that,wid)
       {
          return function() {

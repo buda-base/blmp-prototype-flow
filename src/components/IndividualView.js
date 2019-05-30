@@ -9,14 +9,14 @@ import formatIRI from '../lib/formatIRI';
 import classnames from 'classnames';
 import { DATATYPE_PROPERTY, OBJECT_PROPERTY, ANNOTATION_PROPERTY } from '../lib/Ontology';
 import RDFProperty from '../lib/RDFProperty';
-import type { RDFComment } from '../lib/RDFProperty';
+// import type { RDFComment } from '../lib/RDFProperty';
 import capitalize from '../lib/capitalize';
 import { REMOTE_ENTITIES } from '../api/api';
 import store from "../index.js";
 import * as ui from 'state/ui/actions';
 
 // redux
-import * as uiActions from 'state/ui/actions';
+// import * as uiActions from 'state/ui/actions';
 
 // rdf components
 import RDFComponents from './RDF/rdf_components';
@@ -36,7 +36,7 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import {red, green} from '@material-ui/core/colors';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import Popover from '@material-ui/core/Popover';
-import Menu from '@material-ui/core/Menu';
+// import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 
@@ -156,7 +156,7 @@ constructor(props: Props) {
              //console.log("k",k)
 
             let v =  this.props.propertyValues[k]
-            if(!v || v._types.length == 0) continue ;
+            if(!v || v._types.length === 0) continue ;
             for(i in v._types) {
                let u = v._types[i]
 
@@ -435,7 +435,7 @@ render() {
    txtRemo += " from " + this.props.ontology.getMainLabel(this.props.property.IRI)
    //txtRemo += "\n"+JSON.stringify(propertyValue,null,3)
 
-   if (isEditable && this.props.title != "ID") {
+   if (isEditable && this.props.title !== "ID") {
       const style = {...redColor, ...iconSizes.small} ;
       removeButton =
          <IconButton
@@ -465,7 +465,7 @@ render() {
 
    // console.groupEnd();
 
-   if(this.props.propertyType == "http://purl.bdrc.io/ontology/admin/logEntry"  // when too much element to view at once (LogEntry, teacherOf, etc.)
+   if(this.props.propertyType === "http://purl.bdrc.io/ontology/admin/logEntry"  // when too much element to view at once (LogEntry, teacherOf, etc.)
    || this.props.propertyValues.length > 10)
    {
       let collapseId = [this.props.individual.id, 'level', this.props.level, 0, 'collapsed'].join('_');
@@ -491,7 +491,7 @@ render() {
       //console.log('rows',valueRows)
 
       return (
-         <List  className={(this.props.level == 0 ?"encaps":"")+ (inline?" ListFlex":"")+" DontFlex"} >
+         <List  className={(this.props.level === 0 ?"encaps":"")+ (inline?" ListFlex":"")+" DontFlex"} >
             <div className={inline?"ListItemInline":""}>{propertySubheader}</div>
             <ListItem button onClick={handleCollapse}>
                <ListItemText
@@ -518,7 +518,7 @@ render() {
          //if(Object.keys(this.refs).length > 0)console.log("refs!",this.refs)
          //if(this.refs["indiView"]) console.log(this.refs["indiView"].props.individual._uniqueId)
 
-         return (<List className={(this.props.level == 0 ?"encaps":"")+ (inline?" ListFlex":"")}>
+         return (<List className={(this.props.level === 0 ?"encaps":"")+ (inline?" ListFlex":"")}>
             <div className={(inline?"ListItemInline":"") /*+(valueRows.length === 1 && view.isCollapse ? " w100sibling":"")*/}>{propertySubheader}</div>
                {valueRows}
             </List>);
@@ -636,7 +636,7 @@ export default class IndividualView extends React.Component<Props, State> {
       //
       console.log("add",this.props.individual,propertyType,property,type,val);
 
-      if(property.IRI == "http://www.w3.org/2000/01/rdf-schema#label")
+      if(property.IRI === "http://www.w3.org/2000/01/rdf-schema#label")
       {
          const literal = new Literal("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", '');
          individual.addProperty(propertyType, literal);
@@ -655,7 +655,7 @@ export default class IndividualView extends React.Component<Props, State> {
             const propertyIndividual = new Individual();
 
 
-            if(val && val != "") {
+            if(val && val !== "") {
                let v = ontology._classes[propertyRange] ;
                if(v && !v.hasSuperclass(typeIRI)) { propertyIndividual.addType(val); }
                else { propertyIndividual.id = val ; }
@@ -700,8 +700,8 @@ export default class IndividualView extends React.Component<Props, State> {
 
    getAvailableProperties(): {} {
       const ontology = this.props.ontology;
-      const individual = this.props.individual;
-      const type = individual.types[0];
+      // const individual = this.props.individual;
+      // const type = individual.types[0];
 
       /*
       console.log("ontology",ontology);
@@ -748,7 +748,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
       //         console.log("availProp",availableProps)
 
-      let rows = [];
+      // let rows = [];
       let props = {};
       const availablePropsIRIs = availableProps.map(prop => {
          props[prop.IRI] = prop;
@@ -766,11 +766,11 @@ export default class IndividualView extends React.Component<Props, State> {
          {
             //if (propKey != "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
             //&& propKey != "http://purl.bdrc.io/ontology/admin/status"  )
-            {
+            // {
                //                   console.log("skipping",propKey)
                continue;
 
-            }
+            // }
          }
 
          existingProps[propKey] = setProps[propKey];
@@ -935,7 +935,7 @@ export default class IndividualView extends React.Component<Props, State> {
       for(let a in annotationRows)
       {
          //             console.log("a",annotationRows[a]);
-         if(annotationRows[a].props.propertyType == "http://www.w3.org/2004/02/skos/core#prefLabel")
+         if(annotationRows[a].props.propertyType === "http://www.w3.org/2004/02/skos/core#prefLabel")
          {
             objectRows.unshift(annotationRows[a])
             delete annotationRows[a]
@@ -960,25 +960,25 @@ export default class IndividualView extends React.Component<Props, State> {
          }
       ];
 
-      const headingStyles = {
-         fontSize: '21px',
-         fontWeight: 'bold',
-         padding: '10px 0 10px 0',
-         margin: '0'
-      };
+      // const headingStyles = {
+      //    fontSize: '21px',
+      //    fontWeight: 'bold',
+      //    padding: '10px 0 10px 0',
+      //    margin: '0'
+      // };
 
-      const dataRowStyle = {
-         marginLeft: ((this.props.level + 1) * 20) + 'px'
-      };
+      // const dataRowStyle = {
+      //    marginLeft: ((this.props.level + 1) * 20) + 'px'
+      // };
 
       let lists: (?React.Element<*>)[] = [];
       let newprops: (?React.Element<*>)[] = [];
       for (let [index, propertyData] of propertyTypes.entries()) {
          let collapseId = [this.props.individual.id, 'level', this.props.level, index, 'collapsed'].join('_');
 
-         let handleCollapse = () => {
-            this.toggleCollapseState(collapseId);
-         };
+         // let handleCollapse = () => {
+         //    this.toggleCollapseState(collapseId);
+         // };
 
          //if (this.props.nested) {
 
@@ -1341,7 +1341,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
          </ListItem>)
 
-         if(this.props.nested && this.props.level == 0)
+         if(this.props.nested && this.props.level === 0)
          {
             listItem.push(
                <ListItemSecondaryAction className="plusBut">

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './IndividualEditor.css';
 import IndividualViewContainer from 'containers/IndividualViewContainer';
 
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 
 
 

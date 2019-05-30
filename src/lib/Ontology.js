@@ -1,6 +1,7 @@
 // @flow
 import * as rdf from 'rdflib';
-import { IndexedFormula, Namespace, Node, NamedNode, Statement } from 'rdflib';
+// import { IndexedFormula, Namespace, Node, NamedNode, Statement } from 'rdflib';
+import { IndexedFormula, Namespace, Node, NamedNode } from 'rdflib';
 import {BlankNode} from 'rdflib';
 import RDFClass from './RDFClass';
 import RDFProperty from './RDFProperty';
@@ -14,8 +15,8 @@ import Individual from './Individual';
 const RDF  = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 const RDFS = Namespace('http://www.w3.org/2000/01/rdf-schema#');
 const OWL  = Namespace('http://www.w3.org/2002/07/owl#');
-const BDRC = Namespace('http://purl.bdrc.io/ontology/');
-const BDRC_ROOT = Namespace('http://purl.bdrc.io/ontology/root#');
+// const BDRC = Namespace('http://purl.bdrc.io/ontology/');
+// const BDRC_ROOT = Namespace('http://purl.bdrc.io/ontology/root#');
 
 const TYPE = RDF('type');
 const CLASS = OWL('Class');
@@ -31,10 +32,10 @@ export const ANNOTATION_PROPERTY = OWL('AnnotationProperty');
 const UNION_OF = OWL('unionOf');
 const INDIVIDUAL = OWL('NamedIndividual');
 
-type PropertyData = {
-    domains: string[];
-    ranges: string[];
-}
+// type PropertyData = {
+//     domains: string[];
+//     ranges: string[];
+// }
 
 export default class Ontology {
     _store: IndexedFormula;
@@ -131,17 +132,17 @@ export default class Ontology {
        if(this._classes[txt])
        {
           let s = this._classes[txt].label ;
-          if(s && s != '') str = s ;
+          if(s && s !== '') str = s ;
        }
        else if(this._properties[txt])
        {
           let s = this._properties[txt].label ;
-          if(s && s != '') str = s ;
+          if(s && s !== '') str = s ;
        }
        else if(this._individuals[txt])
        {
           let s = this._individuals[txt]._label ;
-          if(s && s != '') str = s ;
+          if(s && s !== '') str = s ;
        }
 
        //console.log("mLab",txt,str,this,this._classes[txt],this._properties[txt],this._individuals[txt])

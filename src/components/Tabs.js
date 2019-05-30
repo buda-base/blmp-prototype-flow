@@ -41,7 +41,7 @@ export default class TabsBar extends Component<Props> {
 //         console.log("closeTab?",i,tabId,this.props);
         event.stopPropagation();
         this.props.onCloseTab(tabId);
-        if(i == this.props.selectedTabIndex)
+        if(i === this.props.selectedTabIndex)
         {
            //this.props.onSelectTab(this.props.tabData[this.props.tabData.length-1].tabId);
 

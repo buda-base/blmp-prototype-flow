@@ -1,19 +1,19 @@
 // @flow
 import React from 'react';
 import RDFComponent from './RDFComponent';
-import formatIRI from '../../lib/formatIRI';
+// import formatIRI from '../../lib/formatIRI';
 
-import Paper from '@material-ui/core/Paper';
+// import Paper from '@material-ui/core/Paper';
 
 import Popover from '@material-ui/core/Popover';
-import Menu from '@material-ui/core/Menu/Menu.js';
+// import Menu from '@material-ui/core/Menu/Menu.js';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+// import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+// import ListSubheader from '@material-ui/core/ListSubheader';
+// import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+// import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import store from "../../index.js"
 

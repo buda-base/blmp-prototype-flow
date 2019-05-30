@@ -97,7 +97,7 @@ export default class Graph {
 
          // console.log("getIndiv",id,Graph.current,this._store);
 
-         let init = true ;
+         // let init = true ;
 
          let individual = new Individual(id);
 
@@ -143,7 +143,7 @@ export default class Graph {
             }
 
             this._updateIndividual(individual, prop.value, individualRange, statement.object);
-            init = false ;
+            // init = false ;
          }
 
          // console.log("indiv fin",individual);
@@ -154,7 +154,7 @@ export default class Graph {
       _updateIndividual(individual: Individual, property: string, propertyRange: string, object: Node) {
          if (this._ontology.isClass(propertyRange) && object instanceof NamedNode) {
 
-            if(object.value != Graph.current && !Graph.individuAll[object.value]) {
+            if(object.value !== Graph.current && !Graph.individuAll[object.value]) {
                //                let value = Graph.individuAll[object.value]
                let value = this.getIndividualWithId(object.value);
                //                   console.log("recursive loop ?",individual.id,Graph.current,object.value)

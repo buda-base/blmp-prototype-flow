@@ -1,4 +1,4 @@
-import Auth from 'Auth/Auth';
+// import Auth from 'Auth/Auth';
 import { call, put, takeLatest, select, all } from 'redux-saga/effects';
 import { INITIATE_APP } from 'state/actions';
 import * as dataActions from 'state/data/actions';
@@ -7,7 +7,7 @@ import selectors from 'state/selectors';
 import bdrcApi from 'api/api';
 import store from 'index';
 import {auth} from '../../routes';
-import populateDB from "offline/populateDB"
+// import populateDB from "offline/populateDB"
 
 const api = new bdrcApi();
 
@@ -75,30 +75,30 @@ export function* loadResource(IRI) {
    }
 }
 
-function* indexDBcheck(host:string)
-{
+// function* indexDBcheck(host:string)
+// {
 
-   let config = store.getState().data.config
-   console.log("ldspdi",config.ldspdi)
-   if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline")
-   {
-      if(window.confirm("[experimental feature]\nstart populating indexedDB from previous endpoint ?\n"+config.ldspdi.endpoints[config.ldspdi.index]))
-      {
-         alert("[experimental feature]\nplease wait until endpoint actually set to 'Offline'\n(this may take several minutes\nopen console/network to view progress)")
-         yield put(dataActions.hostError("offline","offline endpoint"));
-         populateDB(api);
-      }
-      else {
-         yield put(dataActions.chosenHost(host));
-         yield put(dataActions.hostError("offline","offline endpoint"));
-      }
-   }
-   else {
+//    let config = store.getState().data.config
+//    console.log("ldspdi",config.ldspdi)
+//    if(config.ldspdi && config.ldspdi.endpoints[config.ldspdi.index] !== "offline")
+//    {
+//       if(window.confirm("[experimental feature]\nstart populating indexedDB from previous endpoint ?\n"+config.ldspdi.endpoints[config.ldspdi.index]))
+//       {
+//          alert("[experimental feature]\nplease wait until endpoint actually set to 'Offline'\n(this may take several minutes\nopen console/network to view progress)")
+//          yield put(dataActions.hostError("offline","offline endpoint"));
+//          populateDB(api);
+//       }
+//       else {
+//          yield put(dataActions.chosenHost(host));
+//          yield put(dataActions.hostError("offline","offline endpoint"));
+//       }
+//    }
+//    else {
 
-      yield put(dataActions.chosenHost(host));
-      yield put(dataActions.hostError(host,"offline endpoint"));
-   }
-}
+//       yield put(dataActions.chosenHost(host));
+//       yield put(dataActions.hostError(host,"offline endpoint"));
+//    }
+// }
 
 
 function* fsAPIcheck(host:string)

@@ -4,9 +4,9 @@ import createReducer from 'lib/createReducer';
 import * as actions from './actions';
 import type { TabAction, AddingResource } from './actions';
 import * as uiActions from 'state/ui/actions';
-import Individual from 'lib/Individual';
-import RDFProperty from 'lib/RDFProperty';
-import selectors from 'state/selectors';
+// import Individual from 'lib/Individual';
+// import RDFProperty from 'lib/RDFProperty';
+// import selectors from 'state/selectors';
 
 export type TabState = {
     tabId: number,

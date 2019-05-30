@@ -1,7 +1,6 @@
-
 import personsID from "./data"
-import api from 'api/api';
-import * as idb from 'idb'
+// import api from 'api/api';
+// import * as idb from 'idb'
 import store from '../index';
 import * as dataActions from '../state/data/actions';
 
@@ -22,13 +21,13 @@ async function populateDB(api) {
 		if(!thisDb.objectStoreNames.contains("objects")) {
 			console.log("need to make the objectstore");
 			let objectStore = thisDb.createObjectStore("objects");
-			//objectStore.createIndex("title", "title", { unique: false });
+			// objectStore.createIndex("title", "title", { unique: false });
 		}
 
 		if(!thisDb.objectStoreNames.contains("ontology")) {
 			console.log("need to make the onoltogy objectstore");
 			let objectStore = thisDb.createObjectStore("ontology");
-			//objectStore.createIndex("title", "title", { unique: false });
+			// objectStore.createIndex("title", "title", { unique: false });
 		}
 	}
 

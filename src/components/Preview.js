@@ -9,9 +9,9 @@ hljs.registerLanguage('ttl', ttl);
 export default class Preview extends Component {
     _code: Component<any>;
 
-    constructor(props) {
-        super(props);
-    }
+    // constructor(props) {
+    //     super(props);
+    // }
 
     componentDidUpdate() {
         hljs.highlightBlock(this._code);

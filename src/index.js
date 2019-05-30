@@ -1,8 +1,8 @@
-import React from 'react';
+// import React from 'react';
 import ReactDOM from 'react-dom';
-import * as ui from 'state/ui/actions';
-import * as data from 'state/data/actions';
-import AppContainer from './containers/AppContainer';
+// import * as ui from 'state/ui/actions';
+// import * as data from 'state/data/actions';
+// import AppContainer from './containers/AppContainer';
 import './index.css';
 
 // Redux

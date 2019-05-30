@@ -51,7 +51,7 @@ export default class IndividualHeading extends React.Component {
         if (this.props.individual) { // && this.props.individual.types[0]) {
            let pref = formatIRI(this.props.individual.id).replace(/^([A-Z][A-Z]?).*$/,"$1")
            subtitle = prefix[pref]
-           if(subtitle == undefined) subtitle = "?" ;
+           if(subtitle === undefined) subtitle = "?" ;
         }
 
 //         subtitle = formatIRI(this.props.individual.types[0]);

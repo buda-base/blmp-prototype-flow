@@ -1,6 +1,6 @@
 // @flow
-import * as ui from '../state/ui/actions';
-import store from 'index';
+// import * as ui from '../state/ui/actions';
+// import store from 'index';
 import React, {Component} from 'react';
 import './LiteralView.css';
 import TextField from '@material-ui/core/TextField';
@@ -10,11 +10,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 // import DatePicker from '@material-ui/core/DatePicker';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
+// import FormHelperText from '@material-ui/core/FormHelperText';
 import Literal from '../lib/Literal';
-import Collapse from '@material-ui/core/Collapse';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import ExpandLess from '@material-ui/icons/ExpandLess';
+// import Collapse from '@material-ui/core/Collapse';
+// import ExpandMore from '@material-ui/icons/ExpandMore';
+// import ExpandLess from '@material-ui/icons/ExpandLess';
 
 const styles = {
     inlineSelect: {
@@ -51,14 +51,14 @@ const langs = {
 };
 
 // some structure like that
-const langTree = {
-   'bo' : [ 'bo-x-ewts' ],
-   'en' : [ 'en-x-mixed' ],
-   'fr' : [ ],
-   'pi' : [ 'pi-Sinh', 'pi-Thai', 'pi-x-iast' ],
-   'sa' : [ 'sa-x-ndia' ],
-   'zh' : [ 'zh-Hans', 'zh-Hant','zh-Latn-pinyin', 'zh-x-wade' ]
-};
+// const langTree = {
+//    'bo' : [ 'bo-x-ewts' ],
+//    'en' : [ 'en-x-mixed' ],
+//    'fr' : [ ],
+//    'pi' : [ 'pi-Sinh', 'pi-Thai', 'pi-x-iast' ],
+//    'sa' : [ 'sa-x-ndia' ],
+//    'zh' : [ 'zh-Hans', 'zh-Hant','zh-Latn-pinyin', 'zh-x-wade' ]
+// };
 
 
 interface Props {
@@ -88,7 +88,7 @@ export default class LiteralView extends Component<Props, State> {
         super(props);
 
         let language = (props.literal.language !== undefined) ? props.literal.language : 'en';
-        for(let l in langs) { if(l.toLowerCase() == language.toLowerCase()) { language = l ; } }
+        for(let l in langs) { if(l.toLowerCase() === language.toLowerCase()) { language = l ; } }
         this.props.literal.language = language ;
 
 //         console.log("lang",language)
@@ -217,7 +217,7 @@ export default class LiteralView extends Component<Props, State> {
                     onChange={this.valueChanged.bind(this)}
                 />
             } else {
-                const valueFloatingLabel = (this.props.literal.hasLanguage && this.props.isEditable) ? " " : "";
+                // const valueFloatingLabel = (this.props.literal.hasLanguage && this.props.isEditable) ? " " : "";
                 value = <TextField
                     // floatingLabelText={valueFloatingLabel}
                     // floatingLabelFixed={true}

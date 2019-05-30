@@ -88,7 +88,8 @@ export default class API {
 
       console.log("key",key);
 
-      let res = {}, text
+      // let res = {}, text
+      let text;
       param = { searchType:"BLMP",LG_NAME:"bo-x-ewts",I_LIM:500, ...param }
       if(key.indexOf("\"") === -1) key = "\""+key+"\""
       param["L_NAME"] = key ;

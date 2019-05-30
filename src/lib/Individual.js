@@ -90,7 +90,7 @@ export default class Individual {
         if (!this._properties[name]) {
             this._properties[name] = [];
         }
-        if(value && value != {}) this._properties[name].push(value);
+        if(value && value !== {}) this._properties[name].push(value);
 
         // console.log("addI",name,value)
     }

@@ -1,5 +1,6 @@
 import * as rdf from 'rdflib';
-import { IndexedFormula, Namespace, BlankNode } from 'rdflib';
+import { IndexedFormula, Namespace } from 'rdflib';
+// import { IndexedFormula, Namespace, BlankNode } from 'rdflib';
 import Individual from './Individual';
 import Literal from './Literal';
 
@@ -10,9 +11,9 @@ const TYPE = RDF('type');
 export default class Serializer {
     _addTypes: boolean;
 
-    constructor() {
+    // constructor() {
 
-    }
+    // }
 
     serialize(individual: Individual, baseURI, namespaces={}, addTypes=false) {
         let store = new rdf.graph();

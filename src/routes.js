@@ -1,8 +1,7 @@
-// src/routes.js
-
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import AppContainer from 'containers/AppContainer';
-import React,{Component} from 'react';
+// import React,{Component} from 'react';
+import React from 'react';
 import { Route, Router } from 'react-router-dom';
 import AuthCallbackContainer from './Auth/Callback';
 import Auth from './Auth/Auth';
@@ -12,7 +11,7 @@ import indigo from '@material-ui/core/colors/indigo';
 import { Provider } from 'react-redux';
 import { CookiesProvider } from 'react-cookie';
 import store from 'index';
-import Loader from "react-loader"
+// import Loader from "react-loader"
 
 const theme = createMuiTheme({
    typography: {

@@ -7,7 +7,7 @@ import * as actions from './actions';
 import type { OntologyAction } from './actions';
 import Individual from 'lib/Individual';
 import Ontology from '../../lib/Ontology';
-import Serializer from '../../lib/Serializer';
+// import Serializer from '../../lib/Serializer';
 
 
 export type DataState = {

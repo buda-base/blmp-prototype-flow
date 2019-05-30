@@ -1,11 +1,11 @@
 // @flow
-import Auth from 'Auth/Auth';
-import React from 'react';
+// import Auth from 'Auth/Auth';
+// import React from 'react';
 import { connect } from 'react-redux';
 import * as ui from 'state/ui/actions';
 import selectors from 'state/selectors';
 import Tabs from 'components/Tabs';
-import store from "../index.js";
+// import store from "../index.js";
 
 const mapStateToProps = (state,ownProps) => {
     const tabsOrder: number[] = selectors.getTabsOrder(state);

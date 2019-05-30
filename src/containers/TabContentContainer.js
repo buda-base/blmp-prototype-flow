@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { connect } from 'react-redux';
 
 import * as ui from 'state/ui/actions';
@@ -33,11 +33,11 @@ const mapStateToProps = (state, ownProps) => {
     let selectedResourceIRI;
 
     let widthInfo ;
-    let graphText ;
+    // let graphText ;
 
     let addedFoundResource  ;
 
-    let loaded ;
+    // let loaded ;
 
     if (tabId) {
 
