@@ -131,7 +131,7 @@ export default class TabsBar extends Component<Props> {
                    {
               !isAuthenticated() && (
                   <Button
-                    bsStyle="primary"
+                    //bsStyle="primary"
                     className="btn-margin"
                     onClick={this.login.bind(this)}
                   >
@@ -142,7 +142,7 @@ export default class TabsBar extends Component<Props> {
             {
               isAuthenticated() && (
                   <Button
-                    bsStyle="primary"
+                    //bsStyle="primary"
                     className="btn-margin"
                     onClick={this.logout.bind(this)}
                   >
