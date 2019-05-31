@@ -824,64 +824,64 @@ export default class IndividualView extends React.Component<Props, State> {
          /*
          if (propertyValue && propertyValue instanceof Individual) {
          if (this._editableIndividuals.indexOf(propertyValue) !== -1) {
-         isEditable = true;
-      } else {
-      isEditable = false;
-   }
-   }
-   */
-   return isEditable;
-   };
-
-   let onTapAdd = (id,prop,val) => {
-      this.addProperty(property.IRI,null,val);
-   }
-
-   //         console.log("tapAdd1",onTapAdd)
-
-   for (let range of property.ranges) {
-      if (REMOTE_ENTITIES.indexOf(range) !== -1)
-      {
-         let addResource = (a:Individual,b:RDFProperty) =>
-         {
-            // console.log("addR!!!",a,b)
-            this.props.onAddResource(a,b);
-            this.forceUpdate();
-            if (this.props.onIndividualUpdated) {
-               this.props.onIndividualUpdated();
-            }
+            isEditable = true;
+         } else {
+            isEditable = false;
          }
+         }
+         */
+         return isEditable;
+      };
 
-         onTapAdd = addResource;
-         break;
+      let onTapAdd = (id,prop,val) => {
+         this.addProperty(property.IRI,null,val);
       }
-   }
 
-   //         console.log("tapAdd2",property.IRI,property,onTapAdd)
+      //         console.log("tapAdd1",onTapAdd)
 
-   const propertyView = <IndividualProperty
-      nested={this.props.nested}
-      isEditable={isEditable}
-      onIndividualUpdated={this.props.onIndividualUpdated}
-      onLiteralChanged={onLiteralChanged}
-      onSelectedResource={this.props.onSelectedResource}
-      onTapAdd={onTapAdd}
-      onAddResource={this.props.onAddResource}
-      individual={this.props.individual}
-      level={this.props.level}
-      ontology={this.props.ontology}
-      property={property}
-      propertyValues={propertyValues}
-      propertyType={propertyType}
-      title={title}
-      tooltip={tooltip}
-      assocResources={this.props.assocResources}
-      {...this.props.individual.id.match(/([_A-Z]+[0-9]+)+$/) ? { showLabel : true }:{} }
-   />;
+      for (let range of property.ranges) {
+         if (REMOTE_ENTITIES.indexOf(range) !== -1)
+         {
+            let addResource = (a:Individual,b:RDFProperty) =>
+            {
+               // console.log("addR!!!",a,b)
+               this.props.onAddResource(a,b);
+               this.forceUpdate();
+               if (this.props.onIndividualUpdated) {
+                  this.props.onIndividualUpdated();
+               }
+            }
 
-   //         console.log("propView",propertyView.props.title,propertyView)
+            onTapAdd = addResource;
+            break;
+         }
+      }
 
-   return propertyView ;
+      //         console.log("tapAdd2",property.IRI,property,onTapAdd)
+
+      const propertyView = <IndividualProperty
+         nested={this.props.nested}
+         isEditable={isEditable}
+         onIndividualUpdated={this.props.onIndividualUpdated}
+         onLiteralChanged={onLiteralChanged}
+         onSelectedResource={this.props.onSelectedResource}
+         onTapAdd={onTapAdd}
+         onAddResource={this.props.onAddResource}
+         individual={this.props.individual}
+         level={this.props.level}
+         ontology={this.props.ontology}
+         property={property}
+         propertyValues={propertyValues}
+         propertyType={propertyType}
+         title={title}
+         tooltip={tooltip}
+         assocResources={this.props.assocResources}
+         {...this.props.individual.id.match(/([_A-Z]+[0-9]+)+$/) ? { showLabel : true }:{} }
+      />;
+
+      //         console.log("propView",propertyView.props.title,propertyView)
+
+      return propertyView ;
    }
 
    handleClick = (event) => {
