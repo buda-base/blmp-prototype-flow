@@ -85,7 +85,7 @@ export default class ResourceSelector extends React.Component<Props> {
       this.state = {
          open: false,
          isOpening : false,
-         resource:null
+         resource:''
       };
    }
 
