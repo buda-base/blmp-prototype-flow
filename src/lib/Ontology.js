@@ -206,11 +206,11 @@ export default class Ontology {
         indiv = indiv.reduce((result, cur) => {
 
            let tmp = this.getStatements(cur.subject,TYPE);
-//            console.log(tmp[1].object.value);
-//            console.log(this._classes[tmp[1].object.value])
-           if(this._classes[tmp[1].object.value].hasSuperclass("http://purl.bdrc.io/ontology/core/Type"))
+           let val = this._classes[tmp[1].object.value]
+           //console.log("exIndiv",tmp[1].object.value,val);
+           if(val && val.hasSuperclass("http://purl.bdrc.io/ontology/core/Type"))  
            {
-               this._classes[tmp[1].object.value].addValue(cur.subject.value)
+               val.addValue(cur.subject.value)
                RDFComponents[tmp[1].object.value]=Type.default;
            }
            /*
@@ -486,7 +486,7 @@ export default class Ontology {
         let rdfClass = this._classes[classIRI];
 
 
-                   console.log("class",classIRI,rdfClass)
+        //console.log("class",classIRI,rdfClass)
 
         if (!rdfClass) {
             rdfClass = new RDFClass(classIRI);

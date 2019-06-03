@@ -305,12 +305,19 @@ export default class API {
    }
 
     get _ontologyPath(): string {
+        
+        /*
         let path = ONTOLOGY_PATH;
         if (this._server) {
             path = this._server + '/' + ONTOLOGY_PATH;
         }
-
-        return path;
+        return path
+        */
+        
+        let config = store.getState().data.config.ldspdi
+        let url = config.endpoints[config.index]+"/ontology/admin.ttl" ;
+        return url
+        
     }
 
     get _configPath(): string {
@@ -331,7 +338,7 @@ export default class API {
     }
 
     async _processOntologyData(ontologyData: string): Promise<Ontology> {
-        const mimeType = 'application/rdf+xml';
+        const mimeType = 'text/turtle'; //'application/rdf+xml' //'application/ld+json' 
         let ontology = await Ontology.create(
             ontologyData, ONTOLOGY_BASE_IRI, mimeType
         );
