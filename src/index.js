@@ -40,11 +40,13 @@ const logger = store => next => action => {
 }
 
 const sagaMiddleware = createSagaMiddleware();
+const devToolsOptions = {trace:true};
+const composeEnhancers = composeWithDevTools(devToolsOptions);
 let store;
 //if (process.env.NODE_ENV === 'development') {
     store = createStore(
         rootReducer,
-        composeWithDevTools(
+        composeEnhancers(
             applyMiddleware(sagaMiddleware,logger)
         )
     );
