@@ -268,7 +268,7 @@ export default class API {
                     text = reqText;
 
                      // console.log("text",reqText.length)
-                     if(minSize && reqText.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
+                     //if(minSize && reqText.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
 
                     resolve(text);
                 }).catch((e) => {

@@ -201,14 +201,14 @@ export default class Ontology {
     }
 
     extractIndividuals() {
-        let indiv = this.getStatements(undefined, TYPE, INDIVIDUAL);
+        let indiv = this.getStatements(undefined, TYPE, undefined);
 
         indiv = indiv.reduce((result, cur) => {
 
            let tmp = this.getStatements(cur.subject,TYPE);
            let val = this._classes[tmp[1].object.value]
            //console.log("exIndiv",tmp[1].object.value,val);
-           if(val && val.hasSuperclass("http://purl.bdrc.io/ontology/core/Type"))  
+           if(val && (val.hasAncestorclass("http://purl.bdrc.io/ontology/core/Type") || val.hasAncestorclass("http://purl.bdrc.io/ontology/admin/Type"))) 
            {
                val.addValue(cur.subject.value)
                RDFComponents[tmp[1].object.value]=Type.default;
