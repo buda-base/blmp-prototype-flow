@@ -26,6 +26,8 @@ const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_BASE_IRI = 'http://purl.bdrc.io/ontology/core/';
 const BASE_IRI = 'http://purl.bdrc.io/resource/';
 const TURTLE_MIME_TYPE = 'text/turtle' ;
+const RDF_XML_MIME_TYPE = 'application/rdf+xml' ;
+const JSON_LD_MIME_TYPE = 'application/ld+json' ;
 
 export const REMOTE_ENTITIES = [
     "http://purl.bdrc.io/ontology/core/Corporation",
@@ -338,7 +340,7 @@ export default class API {
     }
 
     async _processOntologyData(ontologyData: string): Promise<Ontology> {
-        const mimeType = 'text/turtle'; //'application/rdf+xml' //'application/ld+json' 
+        const mimeType = TURTLE_MIME_TYPE; 
         let ontology = await Ontology.create(
             ontologyData, ONTOLOGY_BASE_IRI, mimeType
         );
