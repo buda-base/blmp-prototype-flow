@@ -62,7 +62,7 @@ async function populateDB(api) {
       let i = 0
       for(let d of personsID) {
          let res = await api._getResourceData(d.res.value)
-         //console.log("res",res)
+         console.log("res",res)
 
          var transaction = db.transaction(["objects"], "readwrite");
          transaction.oncomplete = function(event) {

@@ -269,7 +269,7 @@ export default class API {
                 response.text().then((reqText) => {
                     text = reqText;
 
-                     // console.log("text",reqText.length)
+                     console.log("text",reqText.length)
                      //if(minSize && reqText.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
 
                     resolve(text);
