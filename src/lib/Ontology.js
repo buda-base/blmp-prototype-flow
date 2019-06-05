@@ -203,25 +203,39 @@ export default class Ontology {
     extractIndividuals() {
         let indiv = this.getStatements(undefined, TYPE, undefined);
 
-        indiv = indiv.reduce((result, cur) => {
+        indiv.forEach( cur => {
+            
+            let obj = cur.object.value;
+            
+            // only consider objects whose namespaces is part of BDRC's ontology,
+            // i.e. objects whose namespaces is not RDFS or OWL
+            if ( obj.indexOf(RDFS('').value) !== 0 && obj.indexOf(OWL('').value) !== 0 ) {
 
-           let tmp = this.getStatements(cur.subject,TYPE);
-           let val = this._classes[tmp[1].object.value]
-           //console.log("exIndiv",tmp[1].object.value,val);
-           if(val && (val.hasAncestorclass("http://purl.bdrc.io/ontology/core/Type") || val.hasAncestorclass("http://purl.bdrc.io/ontology/admin/Type"))) 
-           {
-               val.addValue(cur.subject.value)
-               RDFComponents[tmp[1].object.value]=Type.default;
-           }
-           /*
-           else {
+                // console.log('cur:');
+                // console.log(cur);
 
-            console.log("not a type",cur.subject.value,tmp[1].object.value);
+                let tmp = this.getStatements(cur.subject,TYPE);
+                // console.log('extractIndividuals:');
+                // console.log(tmp);
+                let val = this._classes[tmp[0].object.value]
+                //console.log("exIndiv",tmp[1].object.value,val);
+                if(val && (val.hasAncestorclass("http://purl.bdrc.io/ontology/core/Type") || val.hasAncestorclass("http://purl.bdrc.io/ontology/admin/Type"))) 
+                {
+                   val.addValue(cur.subject.value)
+                   RDFComponents[tmp[0].object.value]=Type.default;
+                }
 
+                /*
+                else {
+
+                console.log("not a type",cur.subject.value,tmp[1].object.value);
+
+                }
+                */
+
+                this._individuals[cur.subject.value] = new Individual(cur.subject.value,this.getLabel(cur.subject),this.getComments(cur.subject))
             }
-            */
 
-            this._individuals[cur.subject.value] = new Individual(cur.subject.value,this.getLabel(cur.subject),this.getComments(cur.subject))
 
         }, []);
 
