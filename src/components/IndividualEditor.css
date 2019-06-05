@@ -76,4 +76,4 @@ button.removeButton { height:46px; width:24px;height:24px;margin-top:-7px; paddi
 
 .tabResourceSelector .individualView .prefLabel { text-align:right;}
 
-.Tabs { display:flex;align-items:center;justify-content: space-between;}
+.TabsBar { display:flex;align-items:center;justify-content: space-between;}

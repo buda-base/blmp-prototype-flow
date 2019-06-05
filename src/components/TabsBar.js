@@ -1,10 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import IconButton from '@material-ui/core/IconButton';
+import { AppBar, Button, IconButton, Tabs, Tab } from '@material-ui/core/';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import Button from '@material-ui/core/Button';
 import HighlighOffIcon from '@material-ui/icons/HighlightOff';
 import Individual from 'lib/Individual';
 import formatIRI from 'lib/formatIRI';
@@ -83,10 +80,12 @@ export default class TabsBar extends Component<Props> {
       const { isAuthenticated } = this.props.auth;
 
         return(
-            <div className="Tabs">
+            <div className="TabsBar">
                 <Tabs
-                     //onChange={this._onSelectTab.bind(this)}
-                     value={ this.props.selectedTabIndex !== -1 ? this.props.selectedTabIndex : 0 }
+                    // variant="scrollable"
+                    // scrollButtons="none"
+                    //onChange={this._onSelectTab.bind(this)}
+                    value={ this.props.selectedTabIndex !== -1 ? this.props.selectedTabIndex : 0 }
                 >
                     {this.props.tabData.map((data,i) => {
                         return (
@@ -128,8 +127,8 @@ export default class TabsBar extends Component<Props> {
                     </IconButton>
                 </Tabs>
                 <div className="auth">
-                   {
-              !isAuthenticated() && (
+                {
+                  !isAuthenticated() && (
                   <Button
                     //bsStyle="primary"
                     className="btn-margin"
@@ -137,21 +136,20 @@ export default class TabsBar extends Component<Props> {
                   >
                     Log In
                   </Button>
-                )
-            }
-            {
-              isAuthenticated() && (
-                  <Button
-                    //bsStyle="primary"
-                    className="btn-margin"
-                    onClick={this.logout.bind(this)}
-                  >
-                    Log Out
-                  </Button>
-                )
-            }
+                  )
+                }
+                {
+                  isAuthenticated() && (
+                      <Button
+                        //bsStyle="primary"
+                        className="btn-margin"
+                        onClick={this.logout.bind(this)}
+                      >
+                        Log Out
+                      </Button>
+                    )
+                }
                 </div>
-
             </div>
         );
     }

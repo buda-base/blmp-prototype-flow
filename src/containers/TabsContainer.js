@@ -4,7 +4,7 @@
 import { connect } from 'react-redux';
 import * as ui from 'state/ui/actions';
 import selectors from 'state/selectors';
-import Tabs from 'components/Tabs';
+import TabsBar from 'components/TabsBar';
 // import store from "../index.js";
 
 const mapStateToProps = (state,ownProps) => {
@@ -50,6 +50,6 @@ const mapDispatchToProps = (dispatch) => {
 const TabsContainer = connect(
     mapStateToProps,
     mapDispatchToProps
-)(Tabs);
+)(TabsBar);
 
 export default TabsContainer;
