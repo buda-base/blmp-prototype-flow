@@ -1,3 +1,22 @@
+/*
+----------------
+ ONTOLOGY CLASS
+----------------
+
+Imports the entities of an OWL2 ontology file.
+
+OWL2 ontology primer: https://www.w3.org/TR/owl-primer/
+
+The imported entities (=data) include:
+ -individuals (objects - Real World Objects)
+ -classes (categories)
+ -properties (relations):
+  -object properties (object to object relation)
+  -datatype properties (object to literal (data) value relation)
+  -annotation properties (information about the ontology)
+
+*/
+
 // @flow
 import * as rdf from 'rdflib';
 // import { IndexedFormula, Namespace, Node, NamedNode, Statement } from 'rdflib';
@@ -26,8 +45,11 @@ const RANGE = RDFS('range');
 const DOMAIN = RDFS('domain');
 const COMMENT = RDFS('comment');
 const LABEL = RDFS('label');
+// OWL Datatype Properties: https://www.w3.org/TR/owl-primer/#Datatypes
 export const DATATYPE_PROPERTY = OWL('DatatypeProperty');
+// OWL Object Properties: https://www.w3.org/TR/owl-primer/#Object_Properties
 export const OBJECT_PROPERTY = OWL('ObjectProperty');
+// OWL Annotation Properties: https://www.w3.org/TR/owl-primer/#Document_Information_and_Annotations
 export const ANNOTATION_PROPERTY = OWL('AnnotationProperty');
 const UNION_OF = OWL('unionOf');
 const INDIVIDUAL = OWL('NamedIndividual');
@@ -74,14 +96,17 @@ export default class Ontology {
 
         let dProps,oProps,aProps ;
 
+        // Get OWL Datatype Properties
         const datatypeProps = this.addPropertyType(
             DATATYPE_PROPERTY.value,
             dProps = this.getProperties(DATATYPE_PROPERTY)
         );
+        // Get OWL Object Properties
         const objectProperties = this.addPropertyType(
             OBJECT_PROPERTY.value,
             oProps = this.getProperties(OBJECT_PROPERTY)
         );
+        // Get OWL Annotation Properties
         const annotationProperties = this.addPropertyType(
             ANNOTATION_PROPERTY.value,
             aProps = this.getProperties(ANNOTATION_PROPERTY)
