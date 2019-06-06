@@ -230,14 +230,15 @@ export default class Ontology {
 
         indiv.forEach( cur => {
             let type = cur.object.value;
-            // only consider types whose namespaces is part of BDRC's ontology,
-            // i.e. objects whose namespaces is not RDFS or OWL
+            // only consider individuals with types whose namespaces is part of BDRC's ontology,
+            // i.e. objects (in subject-predicate-object) whose namespaces are not RDFS or OWL
             if ( !type.startsWith(RDFS('').value) && !type.startsWith(OWL('').value) ) {
-                let cl = this._classes[type.value]
+                let cl = this._classes[type]
                 if(cl && (cl.hasAncestorclass("http://purl.bdrc.io/ontology/core/Type") || cl.hasAncestorclass("http://purl.bdrc.io/ontology/admin/Type"))) 
                 {
+                   console.log('subject',cur.subject.value);
                    cl.addValue(cur.subject.value)
-                   RDFComponents[type.value] = Type.default;
+                   RDFComponents[type] = Type.default;
                 }
                 this._individuals[cur.subject.value] = new Individual(cur.subject.value, this.getLabel(cur.subject), this.getComments(cur.subject))
             }
