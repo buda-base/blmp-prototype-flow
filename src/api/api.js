@@ -20,7 +20,7 @@ export const directoryPrefixes = {
 }
 
 const OBJECT_PATH = '/objects';
-const ONTOLOGY_PATH = '/bdrc.owl'
+const ONTOLOGY_PATH = '/admin.ttl'
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_BASE_IRI = 'http://purl.bdrc.io/ontology/core/';
@@ -308,16 +308,16 @@ export default class API {
 
     get _ontologyPath(): string {
         
-        /*
-        let path = ONTOLOGY_PATH;
+        // use this part to use the local ontolgy file
+        /*let path = ONTOLOGY_PATH;
         if (this._server) {
-            path = this._server + '/' + ONTOLOGY_PATH;
+            path = this._server + ONTOLOGY_PATH;
         }
-        return path
-        */
+        return path*/
         
+        // use this part to use the online ontolgy file
         let config = store.getState().data.config.ldspdi
-        let url = config.endpoints[config.index]+"/ontology/admin.ttl" ;
+        let url = config.endpoints[config.index] + "/ontology" + ONTOLOGY_PATH;
         return url
         
     }
