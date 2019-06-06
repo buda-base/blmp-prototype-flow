@@ -20,7 +20,8 @@ export const directoryPrefixes = {
 }
 
 const OBJECT_PATH = '/objects';
-const ONTOLOGY_PATH = '/admin.ttl'
+const ONTOLOGY_ADMIN_PATH = '/admin.ttl'
+const ONTOLOGY_CORE_PATH = '/core.ttl'
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_BASE_IRI = 'http://purl.bdrc.io/ontology/core/';
@@ -286,7 +287,11 @@ export default class API {
         let ontologyData
 
         if (!this._ontology || returnDataOnly) {
-            ontologyData = await this.getURLContents(this._ontologyPath,false,false);
+            // load admin ontology
+            ontologyData = await this.getURLContents(this._ontologyPath + ONTOLOGY_ADMIN_PATH,false,false);
+            this._ontology = await this._processOntologyData(ontologyData);
+            // load core ontology
+            ontologyData = await this.getURLContents(this._ontologyPath + ONTOLOGY_CORE_PATH,false,false);
             this._ontology = await this._processOntologyData(ontologyData);
         }
 
@@ -309,15 +314,18 @@ export default class API {
     get _ontologyPath(): string {
         
         // use this part to use the local ontolgy file
-        /*let path = ONTOLOGY_PATH;
+        /*
+        let path = '';
         if (this._server) {
-            path = this._server + ONTOLOGY_PATH;
+            path = this._server;
         }
-        return path*/
+        return path
+        */
         
         // use this part to use the online ontolgy file
+        
         let config = store.getState().data.config.ldspdi
-        let url = config.endpoints[config.index] + "/ontology" + ONTOLOGY_PATH;
+        let url = config.endpoints[config.index] + "/ontology";
         return url
         
     }
