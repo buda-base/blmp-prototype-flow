@@ -52,7 +52,7 @@ export const OBJECT_PROPERTY = OWL('ObjectProperty');
 // OWL Annotation Properties: https://www.w3.org/TR/owl-primer/#Document_Information_and_Annotations
 export const ANNOTATION_PROPERTY = OWL('AnnotationProperty');
 const UNION_OF = OWL('unionOf');
-const INDIVIDUAL = OWL('NamedIndividual');
+// const INDIVIDUAL = OWL('NamedIndividual');
 
 // type PropertyData = {
 //     domains: string[];

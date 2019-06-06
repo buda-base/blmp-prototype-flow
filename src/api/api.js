@@ -1,5 +1,5 @@
 // @flow
-import md5 from 'md5';
+// import md5 from 'md5';
 import Graph from '../lib/Graph';
 import Ontology from '../lib/Ontology';
 import Individual from '../lib/Individual';
@@ -19,7 +19,7 @@ export const directoryPrefixes = {
     'W': 'works'
 }
 
-const OBJECT_PATH = '/objects';
+// const OBJECT_PATH = '/objects';
 const ONTOLOGY_ADMIN_PATH = '/admin.ttl'
 const ONTOLOGY_CORE_PATH = '/core.ttl'
 const CONFIG_PATH = '/config.json'
@@ -321,7 +321,7 @@ export default class API {
         }
         return path
         */
-        
+
         // use this part to use the online ontolgy file
         
         let config = store.getState().data.config.ldspdi
@@ -395,7 +395,7 @@ export default class API {
             throw new InvalidResource('The resource does not start with valid characters.');
         }
 
-        let dir = directoryPrefixes[firstChars];
+        // let dir = directoryPrefixes[firstChars];
         /*console.log('dir',dir,firstChars);
         if (!dir) // || !id.match(/^([a-zA-Z0-9]{2,})+$/))
         {
@@ -413,8 +413,8 @@ export default class API {
         }
 
 
-        const checksum = md5(id);
-        const objectDir = checksum.substr(0, 2);
+        // const checksum = md5(id);
+        // const objectDir = checksum.substr(0, 2);
 
 
 
