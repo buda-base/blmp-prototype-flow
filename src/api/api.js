@@ -388,12 +388,14 @@ export default class API {
         }
 
         let dir = directoryPrefixes[firstChars];
+        /*console.log('dir',dir,firstChars);
         if (!dir) // || !id.match(/^([a-zA-Z0-9]{2,})+$/))
         {
             throw new InvalidResource('The resource does not contain only valid characters.')
             //else throw new InvalidResource('The resource does not contain enough valid characters.');
         }
-        else if(id.match(/^([a-zA-Z])$/))
+        else*/
+        if(id.match(/^([a-zA-Z])$/))
         {
             throw new InvalidResource('The resource has not enough valid characters.')
         }
@@ -408,15 +410,15 @@ export default class API {
 
 
 
-         let url = [OBJECT_PATH, dir, objectDir, id].join('/') + '.ttl';
-         if(id.match(/^(([CR])|(PR(HD)?))[0-9]+/)) url = [OBJECT_PATH, dir, id].join('/') + '.ttl';
+         // let url = [OBJECT_PATH, dir, objectDir, id].join('/') + '.ttl';
+         // if(id.match(/^(([CR])|(PR(HD)?))[0-9]+/)) url = [OBJECT_PATH, dir, id].join('/') + '.ttl';
 
 
 
          // url = "http://buda1.bdrc.io:13280/resource/"+id ;
          // url = "http://localhost:8080/resource/"+id ;
          let config = store.getState().data.config.ldspdi
-         url = config.endpoints[config.index]+"/resource/"+id+".ttl" ;
+         let url = config.endpoints[config.index]+"/resource/"+id+".ttl" ;
 
 
 //         console.log([OBJECT_PATH, dir, objectDir, id, url])
