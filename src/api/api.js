@@ -287,9 +287,12 @@ export default class API {
         let ontologyData
 
         if (!this._ontology || returnDataOnly) {
-            // load admin ontology
-            ontologyData = await this.getURLContents(this._ontologyPath + ONTOLOGY_ADMIN_PATH,false,false);
-            this._ontology = await this._processOntologyData(ontologyData);
+            
+            // use this part to use the all data local ontolgy file
+            /*ontologyData = await this.getURLContents('/admin.alldata.ttl',false,false);
+            this._ontology = await this._processOntologyData(ontologyData);*/
+
+            // use this part to use the online ontolgy file
             // load core ontology
             ontologyData = await this.getURLContents(this._ontologyPath + ONTOLOGY_CORE_PATH,false,false);
             this._ontology = await this._processOntologyData(ontologyData);
