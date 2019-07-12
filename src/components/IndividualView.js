@@ -253,12 +253,16 @@ handleMenu = (event, value : string = "") => {
    })
 };
 
+isExpandable() {
+   return this.props.isExpandable
+}
+
 
 render() {
 
    // COMM
-   // console.groupCollapsed("indiProp.render",this.props.title)
-   // console.log(this.props)
+    console.groupCollapsed("indiProp.render",this.props.title)
+   //console.log(this.props)
 
    const greenColor = {
       fill: green[800]
@@ -291,7 +295,7 @@ render() {
    const listStyle = {padding:"0 16px 0 0",margin:"0px 0px 5px 0px"}
    //,boxShadow: "0px 5px 5px -4px rgba(0,0,0,0.2)"}
 
-   //console.log("property",this.props)
+   console.log("property",this.props)
 
    const propertySubheader = [<ListItem style={listStyle} >
    {this.props.isEditable() &&  //!this.props.nested && this.props.level < 1 &&
@@ -351,10 +355,12 @@ render() {
       } else if (propertyValue instanceof Individual ) {
 
          sty = "ind" ;
+   
+         console.log("propV", propertyValue)
 
          const onClick = () => {
             if (!propertyValue.hasGeneratedId && this.props.onSelectedResource
-               && propertyValue.id.match(/([_A-Z]+[0-9]+)+$/)
+               && propertyValue.id.match(/[/](([WPCRTLOG]|UT)[A-Z_0-9]+)+$/)
             ) {
 
                // here is where to check whether resource is viewable on central panel
@@ -463,7 +469,7 @@ render() {
       //              this.props.isExpanded &&
    }
 
-   // console.groupEnd();
+   console.groupEnd();
 
    if(this.props.propertyType === "http://purl.bdrc.io/ontology/admin/logEntry"  // when too much element to view at once (LogEntry, teacherOf, etc.)
    || this.props.propertyValues.length > 10)
@@ -757,7 +763,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
       //         console.log("availPropIRI",availablePropsIRIs)
 
-      //         console.log("propertyList",setProps)
+      console.log("propertyList",setProps)
 
       let existingProps = {};
       for (let propKey in setProps) {
@@ -777,7 +783,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
       }
 
-      //         console.log("existProps",existingProps)
+      console.log("existProps",existingProps)
 
       if (!removeUnsetProps) {
          for (let availableProp of availableProps) {
@@ -1115,7 +1121,7 @@ export default class IndividualView extends React.Component<Props, State> {
       const idLiteral = new Literal(STRING_TYPE, this.props.individual.id);
       const propertyValues = [idLiteral];
 
-      //console.log("getId:propVal",propertyValues,this.props.individual.id);
+      console.log("getId:propVal",propertyValues,this.props.individual.id);
 
       const onChange = (value) => {
          this.props.individual.id = value;
@@ -1212,12 +1218,15 @@ export default class IndividualView extends React.Component<Props, State> {
       if (!this.props.nested && !this.props.titleView) return null;
 
       let titleView = this.props.titleView;
+
+      console.log("tV",titleView)
+
       if (!titleView) {
          let title = '';
          let subtitle = '';
          let labels = this.props.individual.getProperty("http://www.w3.org/2000/01/rdf-schema#label");
 
-         //console.log("labels",labels)
+         console.log("labels",labels)
 
          if (this.props.individual.types[0])
          {
@@ -1228,7 +1237,7 @@ export default class IndividualView extends React.Component<Props, State> {
             title = labels[0].value;
             //subtitle = '' ;
          } else if (this.props.individual.id) {
-            if(!this.props.individual.hasGeneratedId)
+            if(!this.props.individual.hasGeneratedId && !this.props.isExpandable)
             {
                const bdr = "http://purl.bdrc.io/resource/"
                title = this.props.ontology.getMainLabel(this.props.individual.id);
@@ -1402,12 +1411,12 @@ export default class IndividualView extends React.Component<Props, State> {
    render() {
 
          // COMM
-               //console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
-               //console.log("iV assoR",this.props.assocResources);
+               console.groupCollapsed("indiView/"+this.props.level+"/render",this.props.individual.id,this.props.individual.types[0])
+               console.log("iV assoR",this.props.assocResources);
 
       this.prepareRender()
 
-      //         console.groupEnd();
+              console.groupEnd();
 
       //         console.log("labList",labList);
       //         console.log("propList",propList);

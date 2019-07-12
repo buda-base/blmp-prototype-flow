@@ -1,7 +1,7 @@
 // import React from 'react';
 import ReactDOM from 'react-dom';
-// import * as ui from 'state/ui/actions';
-// import * as data from 'state/data/actions';
+import * as ui from 'state/ui/actions';
+import * as data from 'state/data/actions';
 // import AppContainer from './containers/AppContainer';
 import './index.css';
 
@@ -31,11 +31,11 @@ auth.login();
 
 const logger = store => next => action => {
   // console logging commented as using Redux debug tools
-  // console.group(action.type)
-  // console.info('dispatching', action)
+  console.group(action.type)
+  console.info('dispatching', action)
   let result = next(action)
-  // console.log('next state', store.getState())
-  // console.groupEnd(action.type)
+  console.log('next state', store.getState())
+  console.groupEnd(action.type)
   return result
 }
 
@@ -77,11 +77,16 @@ ReactDOM.render(
 //setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },1000)
 
 
-//let id = "W22084" ;
-//let id = "P1583" ;
-//let id = "G521" ;
-//let id = "T2423" ;
-//setTimeout(function(){ store.dispatch(data.loadResource(id)) },250)
-//setTimeout(function(){ store.dispatch(ui.editingResource(1,id)) },500)
-//setTimeout(function(){ store.dispatch(ui.newTab()) },750)
+let id, ids = [ "P1" ] //"W22084" , "P1583", "G521", "T2423" ] ;
+let loader = (n,iri,t = 0,newTab) => {
+    setTimeout(function(){ id = iri },t+50)
+    if(newTab) setTimeout(function(){ store.dispatch(ui.newTab()) },t+100)
+    setTimeout(function(){ store.dispatch(data.loadResource(id)) },t+250)
+    setTimeout(function(){ store.dispatch(ui.editingResource(n,id)) },t+500)
+}
+for(let i in ids) {
+    i = Number(i)
+    loader(i+1,ids[i],i*1000,false)
+}
+
 // setTimeout(function(){ store.dispatch(ui.togglePreviewPanel(1)) },1000)
