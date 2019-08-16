@@ -199,7 +199,7 @@ export default class ResourceSelector extends React.Component<Props> {
          const searchTerm = this._textfield.value;
          if (searchTerm)
          {
-            this.props.findResource(searchTerm.toUpperCase());
+            this.props.findResource(searchTerm.toUpperCase().replace(/^bdr:/i,""));
          }
       }
       else {

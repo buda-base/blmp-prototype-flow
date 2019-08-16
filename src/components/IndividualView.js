@@ -1230,25 +1230,26 @@ export default class IndividualView extends React.Component<Props, State> {
 
          if (this.props.individual.types[0])
          {
-            subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0]) //+ " / case 0";
+            subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0]) // + " / case 0";
          }
 
          if (labels && labels.length > 0) {
             title = labels[0].value;
             //subtitle = '' ;
          } else if (this.props.individual.id) {
-            if(!this.props.individual.hasGeneratedId && !this.props.isExpandable)
+
+            if(!this.props.individual.hasGeneratedId && !this.isCollapse() || (!this.props.isEditable && this.props.level === 0) ) //!this.props.isExpandable ) 
             {
                const bdr = "http://purl.bdrc.io/resource/"
                title = this.props.ontology.getMainLabel(this.props.individual.id);
-               subtitle = '' // 'case1 ('+title+')' ;
+               subtitle = this.props.ontology.getMainLabel(this.props.individual.types[0]) // + " / case1 " //('+title+')' ;
                if(this.props.assocResources && this.props.assocResources[bdr+title.toUpperCase()])
                {
-                  subtitle = title //+ " / case 1"
+                  subtitle = title //+ " / case 1a"
                   title = this.props.assocResources[bdr+title.toUpperCase()].filter(e => e.type && e.type.match(/skos[/]core#prefLabel/) ).map(e => e.value).join("; ") ;
                   if(title === "") {
                      title = this.props.ontology.getMainLabel(this.props.individual.id);
-                     subtitle = "" ;
+                     subtitle = "" // " / case 1b" ;
                   }
                   //console.log("subT",title,subtitle)
                }
@@ -1265,33 +1266,42 @@ export default class IndividualView extends React.Component<Props, State> {
 
                //console.log("case2",this.props.individual,this.state)
 
-               if(!this.state.isExpanded) {
+               if(this.isCollapse()) {
+                  if(!this.state.isExpanded) {
 
-                  const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+                     const rdf  = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
-                  subtitle = Object.keys(this.props.individual._properties)
-                     .filter(e => e !== rdf+'type' && this.props.individual._properties[e].length > 0)
-                     .map(e => {
-                        let str = this.props.ontology.getMainLabel(e)+": "
-                        str += this.props.individual._properties[e].map(v => {
-                           let val = ""
-                           if(v.value) val = v.value
-                           else if(v.id && this.props.assocResources && this.props.assocResources[v.id]) {
-                              val = this.props.assocResources[v.id].filter(f => f.type && f.type.match(/skos[/]core#prefLabel/) ).map(f => f.value).join("; ") ;
-                           }
-                           else val = this.props.ontology.getMainLabel(v.id)
-                           return val ;
-                        }).join("; ")
-                        return str ;
-                     }).join(" | ")  //+ ' / case2' ; //this.props.ontology.getMainLabel(this.props.propertyType);
+                     subtitle = Object.keys(this.props.individual._properties)
+                        .filter(e => e !== rdf+'type' && this.props.individual._properties[e].length > 0)
+                        .map(e => {
+                           let str = this.props.ontology.getMainLabel(e)+": "
+                           str += this.props.individual._properties[e].map(v => {
+                              let val = ""
+                              if(v.value) val = v.value
+                              else if(v.id && this.props.assocResources && this.props.assocResources[v.id]) {
+                                 val = this.props.assocResources[v.id].filter(f => f.type && f.type.match(/skos[/]core#prefLabel/) ).map(f => f.value).join("; ") ;
+                              }
+                              else val = this.props.ontology.getMainLabel(v.id)
+                              return val ;
+                           }).join("; ")
+                           return str ;
+                        })
+                        .join(" | ") 
+                        //+ ' / case2a'   ; 
+                  }
+                  else {
+                     subtitle = '' // 'case2b'  ;         
+                  }
+                  //subtitle = this.props.ontology.getMainLabel(this.props.propertyType) + ' / case2a' ;
 
                }
-               else subtitle = '' ;
+            
+               else subtitle = '' //'case2c'  ;   
             }
          } else {
             title = <i>&lt;no id&gt;</i>;
 
-            subtitle = '' //'case3' ;
+            subtitle = '' // 'case3' ;
          }
 
 
@@ -1300,7 +1310,6 @@ export default class IndividualView extends React.Component<Props, State> {
 
             subtitle = this.props.ontology.getMainLabel(this.props.individual.id) //+ "/ case 4";
             //subtitle = this.props.ontology.getMainLabel(this.props.propertyType);
-
             //subtitle = 'case4' ;
          }
 
