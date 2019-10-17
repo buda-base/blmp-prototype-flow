@@ -22,6 +22,7 @@ export const directoryPrefixes = {
 // const OBJECT_PATH = '/objects';
 const ONTOLOGY_ADMIN_PATH = '/admin.ttl'
 const ONTOLOGY_CORE_PATH = '/core.ttl'
+const ONTOLOGY_DATA_PATH = '/data/ttl'
 const CONFIG_PATH = '/config.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_BASE_IRI = 'http://purl.bdrc.io/ontology/core/';
@@ -294,7 +295,7 @@ export default class API {
 
             // use this part to use the online ontolgy file
             // load core ontology
-            ontologyData = await this.getURLContents(this._ontologyPath + ONTOLOGY_CORE_PATH,false,false);
+            ontologyData = await this.getURLContents(this._ontologyPath + ONTOLOGY_DATA_PATH,false,false);
             this._ontology = await this._processOntologyData(ontologyData);
         }
 

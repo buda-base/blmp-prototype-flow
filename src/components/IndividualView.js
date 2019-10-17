@@ -68,6 +68,7 @@ const getListItemStyle = (level) => {
 };
 
 
+const ontoIRI = 'http://www.w3.org/2002/07/owl#ontology';
 const typeIRI = 'http://purl.bdrc.io/ontology/core/Type';
 const facetIRI = 'http://purl.bdrc.io/ontology/core/Facet';
 
@@ -136,14 +137,17 @@ constructor(props: Props) {
    for(let i in this.props.property.ranges)
    {
       let t = this.props.property.ranges[i]
+      
+      console.log("t",t,onto._classes[t])
 
-      if(onto._classes[t] && onto._classes[t].hasAncestorclass(typeIRI))
+      if(onto._classes[t] && onto._classes[t].hasAncestorclass(ontoIRI))
       {
          this._list = onto._classes[t]._values.map((val) =>
          {
 
             return ( <MenuItem onClick={(ev) => this.handleMenu(ev,val)}>{onto.getMainLabel(val)}</MenuItem> )
          })
+
       }
       else if(onto._classes[t] && onto._classes[t].hasAncestorclass(facetIRI))
       {
@@ -663,7 +667,7 @@ export default class IndividualView extends React.Component<Props, State> {
 
             if(val && val !== "") {
                let v = ontology._classes[propertyRange] ;
-               if(v && !v.hasSuperclass(typeIRI)) { propertyIndividual.addType(val); }
+               if(v && !v.hasSuperclass(ontoIRI)) { propertyIndividual.addType(val); }
                else { propertyIndividual.id = val ; }
                propertyIndividual.addDefaultProperties(ontology._classes[val])
             }
